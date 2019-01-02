@@ -32,10 +32,7 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
             };
             // Use initial input to frob the widgets asynchronously.
             Dictionary<string, Task<int>> frobRequests = new Dictionary<string, Task<int>>(_widgets.Count);
-            foreach (Widget widget in _widgets.Values)
-            {
-                frobRequests[widget.Name] = widget.Frob4(InitialInput);
-            }
+            foreach (Widget widget in _widgets.Values) frobRequests[widget.Name] = widget.Frob4(InitialInput);
             await Task.WhenAll(frobRequests.Values);
             // Use the output of each widget's frob method to bork the widget asynchronously.
             Dictionary<string, Task<int>> borkRequests = new Dictionary<string, Task<int>>(_widgets.Count);

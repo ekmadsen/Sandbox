@@ -32,10 +32,7 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
             };
             // Use initial input to frob the widgets asynchronously.
             Dictionary<string, Task<(string WidgetName, int FrobValue)>> frobRequests = new Dictionary<string, Task<(string, int)>>(_widgets.Count);
-            foreach (Widget widget in _widgets.Values)
-            {
-                frobRequests[widget.Name] = widget.Frob5(InitialInput);
-            }
+            foreach (Widget widget in _widgets.Values) frobRequests[widget.Name] = widget.Frob5(InitialInput);
             // Monitor frobbing.
             Dictionary<string, Task<(string WidgetName, int BorkValue)>> borkRequests = new Dictionary<string, Task<(string, int)>>(_widgets.Count);
             while (frobRequests.Count > 0)

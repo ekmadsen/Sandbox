@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace ErikTheCoder.Sandbox.WhatRunsWhen
 {
+    // This static class writes to the console in a thread-safe manner.
     public static class ConsoleWriter
     {
         private static readonly object _syncLock = new object();
@@ -20,7 +21,6 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
 
         public static void WriteLine(Stopwatch Stopwatch, string Message = null, ConsoleColor Color = ConsoleColor.White)
         {
-            // Write to console in a thread-safe manner.
             lock (_syncLock)
             {
                 Console.ForegroundColor = Color;

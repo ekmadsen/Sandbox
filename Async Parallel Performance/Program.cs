@@ -53,21 +53,12 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
                 "http://www.irs.gov/statistics/soi-tax-stats-individual-income-tax-statistics-zip-code-data-soi"
             };
             _webPageDownloads = new Dictionary<string, WebPageDownload>();
-            foreach (string url in urls)
-            {
-                _webPageDownloads[url] = new WebPageDownload(url);
-            }
+            foreach (string url in urls) _webPageDownloads[url] = new WebPageDownload(url);
             // Create sequential directory or purge files.
             DirectoryInfo directory = new DirectoryInfo(Path.Combine(_directory, "Sequential"));
             Console.Write($"Purging files from {directory} directory...  ");
-            if (!directory.Exists)
-            {
-                directory.Create();
-            }
-            foreach (FileInfo file in directory.EnumerateFiles())
-            {
-                file.Delete();
-            }
+            if (!directory.Exists) directory.Create();
+            foreach (FileInfo file in directory.EnumerateFiles()) file.Delete();
             Console.WriteLine("completed.");
             Console.WriteLine();
             // Download web pages sequentially.
@@ -85,14 +76,8 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
             // Create concurrent directory or purge files.
             directory = new DirectoryInfo(Path.Combine(_directory, "Concurrent"));
             Console.Write($"Purging files from {directory} directory...  ");
-            if (!directory.Exists)
-            {
-                directory.Create();
-            }
-            foreach (FileInfo file in directory.EnumerateFiles())
-            {
-                file.Delete();
-            }
+            if (!directory.Exists) directory.Create();
+            foreach (FileInfo file in directory.EnumerateFiles()) file.Delete();
             Console.WriteLine("completed.");
             Console.WriteLine();
             // Download web pages concurrently.
