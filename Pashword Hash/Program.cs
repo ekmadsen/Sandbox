@@ -5,11 +5,12 @@ namespace ErikTheCoder.Sandbox.PasswordHash
 {
     public static class Program
     {
-        public static void Main(string[] Args)
+        public static void Main()
         {
             const int saltLength = 16;
             const int hashLength = 32;
             const int iterations = 1000;
+            // ReSharper disable once StringLiteralTypo
             const string password = "OpenSeysMe";
             (string salt, string hash) = Password.Hash(password, saltLength, hashLength, iterations);
             Console.WriteLine($"Salt = {salt}.");
