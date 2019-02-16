@@ -163,7 +163,7 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
                     // Download the HTTP body asynchronously.
                     bodyDownloads[url] = DownloadWebPageAsync(webPageDownload, Directory, task.Result);
                 }
-                // Monitor body dowloads.
+                // Monitor body downloads.
                 while (bodyDownloads.Count > 0)
                 {
                     // As web servers respond with body data, update status.
