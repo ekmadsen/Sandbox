@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Numerics;
 using JetBrains.Annotations;
 
@@ -53,7 +52,7 @@ namespace ErikTheCoder.Sandbox.AsymmetricCryptography
                     Console.WriteLine("Provide a maximum integer value as the second parameter.");
                     return;
                 }
-                else if (string.Equals(technique, "big", StringComparison.CurrentCultureIgnoreCase))
+                if (string.Equals(technique, "big", StringComparison.CurrentCultureIgnoreCase))
                 {
                     TestWithBigIntegers();
                     return;

@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Async Parallel Performance"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "What Runs When", "What Runs When\What Runs When.csproj", "{C56C9880-80D3-4DEB-8020-D68855D2E36F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Encrypt Decrypt", "Encrypt Decrypt\Encrypt Decrypt.csproj", "{89A7414D-50C2-40B1-99BA-97A68F293672}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{C56C9880-80D3-4DEB-8020-D68855D2E36F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C56C9880-80D3-4DEB-8020-D68855D2E36F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C56C9880-80D3-4DEB-8020-D68855D2E36F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89A7414D-50C2-40B1-99BA-97A68F293672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89A7414D-50C2-40B1-99BA-97A68F293672}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89A7414D-50C2-40B1-99BA-97A68F293672}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89A7414D-50C2-40B1-99BA-97A68F293672}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
