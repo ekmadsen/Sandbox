@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Numerics;
 
 
@@ -32,10 +33,28 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
             WriteLine($"Received encrypted message \"{EncryptedMessage}\"");
             string message = DecryptMessage(EncryptedMessage);
             WriteLine($"Decrypted message is       \"{message}\"");
-            string responseMessage = $"{message}  Roger that.";
+            string responseMessage = GetResponseMessage(message);
             string encryptedResponseMessage = EncryptMessage(responseMessage);
             WriteLine($"Sending encrypted message  \"{encryptedResponseMessage}\"", ConsoleColor.Yellow);
             return encryptedResponseMessage;
+        }
+
+
+        private string GetResponseMessage(string Message)
+        {
+            switch (Message)
+            {
+                case "Roger.":
+                    return "Huh?";
+                case "Request vector.  Over.":
+                    return "What?";
+                case "We have clearance, Clarence.":
+                    return "Roger, Roger.  What's our vector, Victor?";
+                case "Surely you can't be serious?":
+                    return "I am serious.  And don't call me Shirley.";
+                default:
+                    return $"{Message}  Airplane!";
+            };
         }
     }
 }

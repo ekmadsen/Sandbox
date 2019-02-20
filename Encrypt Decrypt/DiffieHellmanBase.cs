@@ -39,7 +39,7 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
             byte[] messageBytes = Encoding.UTF8.GetBytes(Message);
             if (messageBytes.Length > SharedKey.Length) throw new ArgumentException($"{nameof(Message)} is too long.");
             // XOR message and shared key.
-            // XOR is a reversible operation (if c = a XOR b then a = c XOR y).
+            // XOR is a reversible operation (if c = a XOR b then a = c XOR b).
             byte[] encryptedMessageBytes = new byte[messageBytes.Length];
             for (int index = 0; index < messageBytes.Length; index++) encryptedMessageBytes[index] = messageBytes[index] ^= SharedKey[index];
             // Convert encrypted message bytes to Base64 text (to eliminate control characters).
@@ -53,7 +53,7 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
             byte[] encryptedMessageBytes = Convert.FromBase64String(EncryptedMessage);
             if (encryptedMessageBytes.Length > SharedKey.Length) throw new ArgumentException($"{nameof(EncryptedMessage)} is too long.");
             // XOR message and shared key.
-            // XOR is a reversible operation (if c = a XOR b then a = c XOR y).
+            // XOR is a reversible operation (if c = a XOR b then a = c XOR b).
             byte[] messageBytes = new byte[encryptedMessageBytes.Length];
             for (int index = 0; index < encryptedMessageBytes.Length; index++) messageBytes[index] = encryptedMessageBytes[index] ^= SharedKey[index];
             // Convert message bytes to text.
