@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Encrypt Decrypt": {
+      "commandName": "Project",
+      "commandLineArgs": "aes 32"
+    }
+  }
+}

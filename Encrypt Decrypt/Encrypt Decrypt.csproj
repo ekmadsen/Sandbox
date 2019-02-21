@@ -7,4 +7,8 @@
     <AssemblyName>ErikTheCoder.Sandbox.EncryptDecrypt</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.5.0" />
+  </ItemGroup>
+
 </Project>

@@ -6,6 +6,33 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
 {
     public class Client : DiffieHellmanBase
     {
+        private Func<BigInteger, CipherBase> _createCipher;
+        private bool _disposed;
+
+
+        public Client(int KeyLength, Func<BigInteger, CipherBase> CreateCipher) : base(KeyLength)
+        {
+            _createCipher = CreateCipher;
+        }
+
+
+        ~Client() => Dispose(false);
+
+
+        protected override void Dispose(bool Disposing)
+        {
+            if (_disposed) return;
+            if (Disposing)
+            {
+                // Dispose managed objects.
+                _createCipher = null;
+            }
+            // Dispose unmanaged objects.
+            _disposed = true;
+            base.Dispose(Disposing);
+        }
+
+
         // Perform Diffie-Hellman key exchange.
         public void InitiateKeyExchange(Server Server)
         {
@@ -22,10 +49,10 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
             };
             WriteLine(clientPublicKey.ToString(), ConsoleColor.Yellow);
             PublicKey serverPublicKey = Server.ReceiveClientPublicKey(clientPublicKey);
-            // Compute shared key.
+            // Compute shared key and create cipher.
             BigInteger sharedKey = ComputeSharedKey(serverPublicKey.M, a, n);
-            WriteLine($"{nameof(SharedKey)} = {sharedKey}.");
-            SharedKey = sharedKey.ToByteArray();
+            WriteLine($"Shared Key = {sharedKey}.");
+            Cipher = _createCipher(sharedKey);
         }
 
 

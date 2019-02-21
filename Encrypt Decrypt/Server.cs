@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Numerics;
 
 
@@ -7,15 +6,42 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
 {
     public class Server : DiffieHellmanBase
     {
+        private Func<BigInteger, CipherBase> _createCipher;
+        private bool _disposed;
+
+
+        public Server(int KeyLength, Func<BigInteger, CipherBase> CreateCipher) : base(KeyLength)
+        {
+            _createCipher = CreateCipher;
+        }
+
+
+        ~Server() => Dispose(false);
+
+
+        protected override void Dispose(bool Disposing)
+        {
+            if (_disposed) return;
+            if (Disposing)
+            {
+                // Dispose managed objects.
+                _createCipher = null;
+            }
+            // Dispose unmanaged objects.
+            _disposed = true;
+            base.Dispose(Disposing);
+        }
+
+
         // Perform Diffie-Hellman key exchange.
         public PublicKey ReceiveClientPublicKey(PublicKey ClientPublicKey)
         {
-            // Compute shared key.
+            // Compute shared key and create cipher.
             BigInteger b = GetRandomPositiveBigInteger();
             BigInteger m2 = BigInteger.ModPow(ClientPublicKey.G, b, ClientPublicKey.N);
             BigInteger sharedKey = ComputeSharedKey(ClientPublicKey.M, b, ClientPublicKey.N);
-            WriteLine($"{nameof(SharedKey)} = {sharedKey}.");
-            SharedKey = sharedKey.ToByteArray();
+            WriteLine($"Shared Key = {sharedKey}.");
+            Cipher = _createCipher(sharedKey);
             // Send public key to client.
             PublicKey serverPublicKey = new PublicKey
             {
@@ -40,7 +66,7 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
         }
 
 
-        private string GetResponseMessage(string Message)
+        private static string GetResponseMessage(string Message)
         {
             switch (Message)
             {
@@ -54,7 +80,7 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
                     return "I am serious.  And don't call me Shirley.";
                 default:
                     return $"{Message}  Airplane!";
-            };
+            }
         }
     }
 }

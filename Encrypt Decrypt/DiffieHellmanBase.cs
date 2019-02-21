@@ -1,31 +1,61 @@
 ﻿using System;
 using System.Numerics;
-using System.Text;
+using System.Security.Cryptography;
 
 
 namespace ErikTheCoder.Sandbox.EncryptDecrypt
 {
-    public abstract class DiffieHellmanBase
+    public abstract class DiffieHellmanBase : IDisposable
     {
-        private const int _bigIntBufferLength = 128;
-        private readonly byte[] _buffer;
-        private readonly Random _random;
-        
-
-        protected byte[] SharedKey { private get; set; }
+        private readonly int _keyLength;
+        private byte[] _buffer;
+        private RNGCryptoServiceProvider _random;
+        private bool _disposed;
 
 
-        protected DiffieHellmanBase()
+        protected CipherBase Cipher { private get; set; }
+
+
+        protected DiffieHellmanBase(int KeyLength)
         {
-            _buffer = new byte[_bigIntBufferLength];
-            _random = new Random();
+            _keyLength = KeyLength;
+            _buffer = new byte[KeyLength];
+            _random = new RNGCryptoServiceProvider();
+        }
+
+
+        ~DiffieHellmanBase() => Dispose(false);
+
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+
+        protected virtual void Dispose(bool Disposing)
+        {
+            if (_disposed) return;
+            if (Disposing)
+            {
+                // Dispose managed objects.
+                _buffer = null;
+                _random = null;
+            }
+            // Dispose unmanaged objects.
+            _random?.Dispose();
+            _random = null;
+            Cipher?.Dispose();
+            Cipher = null;
+            _disposed = true;
         }
 
 
         protected BigInteger GetRandomPositiveBigInteger()
         {
-            _random.NextBytes(_buffer);
-            _buffer[_bigIntBufferLength - 1] &= 0x7F; // Force sign bit to positive.  See https://docs.microsoft.com/en-us/dotnet/api/system.numerics.biginteger.-ctor.
+            _random.GetBytes(_buffer);
+            _buffer[_keyLength - 1] &= 0x7F; // Force sign bit to positive.  See https://docs.microsoft.com/en-us/dotnet/api/system.numerics.biginteger.-ctor.
             return new BigInteger(_buffer);
         }
 
@@ -33,32 +63,10 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
         protected static BigInteger ComputeSharedKey(BigInteger M, BigInteger Secret, BigInteger N) => BigInteger.ModPow(M, Secret, N);
 
 
-        protected string EncryptMessage(string Message)
-        {
-            // Convert message to byte array.
-            byte[] messageBytes = Encoding.UTF8.GetBytes(Message);
-            if (messageBytes.Length > SharedKey.Length) throw new ArgumentException($"{nameof(Message)} is too long.");
-            // XOR message and shared key.
-            // XOR is a reversible operation (if c = a XOR b then a = c XOR b).
-            byte[] encryptedMessageBytes = new byte[messageBytes.Length];
-            for (int index = 0; index < messageBytes.Length; index++) encryptedMessageBytes[index] = messageBytes[index] ^= SharedKey[index];
-            // Convert encrypted message bytes to Base64 text (to eliminate control characters).
-            return Convert.ToBase64String(encryptedMessageBytes);
-        }
+        protected string EncryptMessage(string Message) => Cipher.Encrypt(Message);
 
 
-        protected string DecryptMessage(string EncryptedMessage)
-        {
-            // Convert encrypted message to byte array.
-            byte[] encryptedMessageBytes = Convert.FromBase64String(EncryptedMessage);
-            if (encryptedMessageBytes.Length > SharedKey.Length) throw new ArgumentException($"{nameof(EncryptedMessage)} is too long.");
-            // XOR message and shared key.
-            // XOR is a reversible operation (if c = a XOR b then a = c XOR b).
-            byte[] messageBytes = new byte[encryptedMessageBytes.Length];
-            for (int index = 0; index < encryptedMessageBytes.Length; index++) messageBytes[index] = encryptedMessageBytes[index] ^= SharedKey[index];
-            // Convert message bytes to text.
-            return Encoding.UTF8.GetString(messageBytes);
-        }
+        protected string DecryptMessage(string EncryptedMessage) => Cipher.Decrypt(EncryptedMessage);
 
 
         protected void WriteLine(string Message) => WriteLine(Message, Console.ForegroundColor);
