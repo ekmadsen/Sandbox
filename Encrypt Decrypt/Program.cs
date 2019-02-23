@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
+using ErikTheCoder.Logging;
 
 
 namespace ErikTheCoder.Sandbox.EncryptDecrypt
@@ -8,24 +10,25 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
     {
         public static void Main(string[] Arguments)
         {
-            Console.WriteLine();
-            // Read cipher name from command line arguments.
-            Func<BigInteger, CipherBase> createCipher;
-            string cipherName = (Arguments.Length > 0) ? Arguments[0] : null;
-            switch (cipherName)
+            try
             {
-                case "xor":
-                    createCipher = CreateXorCipher;
-                    break;
-                case "aes":
-                    createCipher = CreateAesCipher;
-                    break;
-                default:
-                    throw new ArgumentException(cipherName is null ? "Specify a cipher name." : $"{cipherName} Cipher not supported." );
+                Run(Arguments);
             }
-            // Read key length from command line arguments.
-            if (Arguments.Length < 2) throw new ArgumentException("Specify a key length.");
-            if (!int.TryParse(Arguments[1], out int keyLength)) throw new ArgumentException("Key length not supported.");
+            catch (Exception exception)
+            {
+                // This code is not thread safe.  But this program uses a single thread, so no issue.
+                ConsoleColor restoreColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(exception.GetSummary(true, true));
+                Console.ForegroundColor = restoreColor;
+            }
+        }
+
+
+        private static void Run(IReadOnlyList<string> Arguments)
+        {
+            Console.WriteLine();
+            (Func<BigInteger, CipherBase> createCipher, int keyLength) = ParseCommandLine(Arguments);
             // Create client and server.
             using (Client client = new Client(keyLength, createCipher))
             {
@@ -39,11 +42,36 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
                         Console.WriteLine();
                         Console.Write("Enter a message to send to server:  ");
                         string message = Console.ReadLine();
+                        if (string.IsNullOrEmpty(message)) return;
                         Console.WriteLine();
                         client.SendMessageToServer(message, server);
                     }
                 }
             }
+        }
+
+
+        private static (Func<BigInteger, CipherBase> CreateCipher, int KeyLength) ParseCommandLine(IReadOnlyList<string> Arguments)
+        {
+            // Parse cipher name.
+            Func<BigInteger, CipherBase> createCipher;
+            string cipherName = (Arguments.Count > 0) ? Arguments[0] : null;
+            switch (cipherName)
+            {
+                case "xor":
+                    createCipher = CreateXorCipher;
+                    break;
+                case "aes":
+                    createCipher = CreateAesCipher;
+                    break;
+                default:
+                    throw new ArgumentException(cipherName is null ? "Specify a cipher name." : $"{cipherName} Cipher not supported.");
+            }
+            // Parse key length.
+            if (Arguments.Count < 2) throw new ArgumentException("Specify a key length.");
+            string keyLengthText = Arguments[1];
+            if (!int.TryParse(keyLengthText, out int keyLength)) throw new ArgumentException($"Key length {keyLengthText} not supported.");
+            return (createCipher, keyLength);
         }
 
 

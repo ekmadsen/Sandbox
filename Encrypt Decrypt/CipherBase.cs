@@ -9,7 +9,7 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
         private bool _disposed;
 
 
-        protected byte[] SharedKey { get; set; }
+        protected byte[] SharedKey { get; private set; }
 
 
         protected CipherBase(BigInteger SharedKey)

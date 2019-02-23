@@ -16,7 +16,7 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
         {
             // Convert message to byte array.
             byte[] messageBytes = Encoding.UTF8.GetBytes(Message);
-            if (messageBytes.Length > SharedKey.Length) throw new ArgumentException($"{nameof(Message)} is too long.");
+            if (messageBytes.Length > SharedKey.Length) throw new ArgumentException($"{nameof(Message)} is too long.  Increase key length.");
             // XOR message and shared key.
             // XOR is a reversible operation (if c = a XOR b then a = c XOR b).
             byte[] encryptedMessageBytes = new byte[messageBytes.Length];
