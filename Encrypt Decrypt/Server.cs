@@ -10,7 +10,7 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
         private bool _disposed;
 
 
-        public Server(int KeyLength, Func<BigInteger, CipherBase> CreateCipher) : base(KeyLength)
+        public Server(Func<BigInteger, CipherBase> CreateCipher, int KeyLength) : base(KeyLength)
         {
             _createCipher = CreateCipher;
         }

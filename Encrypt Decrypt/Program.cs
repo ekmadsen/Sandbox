@@ -30,9 +30,9 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
             Console.WriteLine();
             (Func<BigInteger, CipherBase> createCipher, int keyLength) = ParseCommandLine(Arguments);
             // Create client and server.
-            using (Client client = new Client(keyLength, createCipher))
+            using (Client client = new Client(createCipher, keyLength))
             {
-                using (Server server = new Server(keyLength, createCipher))
+                using (Server server = new Server(createCipher, keyLength))
                 {
                     // Perform Diffie-Hellman key exchange.
                     client.InitiateKeyExchange(server);
