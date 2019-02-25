@@ -20,7 +20,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Async Parallel Performance"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "What Runs When", "What Runs When\What Runs When.csproj", "{C56C9880-80D3-4DEB-8020-D68855D2E36F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Encrypt Decrypt", "Encrypt Decrypt\Encrypt Decrypt.csproj", "{89A7414D-50C2-40B1-99BA-97A68F293672}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Encrypt Decrypt", "Encrypt Decrypt\Encrypt Decrypt.csproj", "{89A7414D-50C2-40B1-99BA-97A68F293672}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper Json Complex Object Graph", "Dapper Json Complex Object Graph\Dapper Json Complex Object Graph.csproj", "{46BACCE5-0BAE-40BB-B746-9711BD6388E0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper Populate Database", "Dapper Populate Database\Dapper Populate Database.csproj", "{0B8B6E5D-2B90-4B4A-AD05-522A6931CAB1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper Contract", "Dapper Contract\Dapper Contract.csproj", "{306EA230-AD60-4E41-BB7A-36D900BFCC7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dapper Client", "Dapper Client\Dapper Client.csproj", "{9350E971-34F1-41BD-9DBB-719B2E1689D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +56,22 @@ Global
 		{89A7414D-50C2-40B1-99BA-97A68F293672}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89A7414D-50C2-40B1-99BA-97A68F293672}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89A7414D-50C2-40B1-99BA-97A68F293672}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46BACCE5-0BAE-40BB-B746-9711BD6388E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46BACCE5-0BAE-40BB-B746-9711BD6388E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46BACCE5-0BAE-40BB-B746-9711BD6388E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46BACCE5-0BAE-40BB-B746-9711BD6388E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B8B6E5D-2B90-4B4A-AD05-522A6931CAB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B8B6E5D-2B90-4B4A-AD05-522A6931CAB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B8B6E5D-2B90-4B4A-AD05-522A6931CAB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B8B6E5D-2B90-4B4A-AD05-522A6931CAB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{306EA230-AD60-4E41-BB7A-36D900BFCC7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{306EA230-AD60-4E41-BB7A-36D900BFCC7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{306EA230-AD60-4E41-BB7A-36D900BFCC7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{306EA230-AD60-4E41-BB7A-36D900BFCC7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9350E971-34F1-41BD-9DBB-719B2E1689D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9350E971-34F1-41BD-9DBB-719B2E1689D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9350E971-34F1-41BD-9DBB-719B2E1689D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9350E971-34F1-41BD-9DBB-719B2E1689D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

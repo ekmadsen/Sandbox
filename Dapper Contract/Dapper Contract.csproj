@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>ErikTheCoder.Sandbox.Dapper.Contract</RootNamespace>
+    <AssemblyName>ErikTheCoder.Sandbox.Dapper.Contract</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="4.6.90" />
+  </ItemGroup>
+
+</Project>
