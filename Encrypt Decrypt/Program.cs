@@ -55,7 +55,7 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
         {
             // Parse cipher name.
             Func<BigInteger, CipherBase> createCipher;
-            string cipherName = (Arguments.Count > 0) ? Arguments[0] : null;
+            string cipherName = (Arguments.Count > 0) ? Arguments[0].ToLower() : null;
             switch (cipherName)
             {
                 case "xor":

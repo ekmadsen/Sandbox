@@ -4,3 +4,5 @@ inner join Customers c on sc.CustomerId = c.Id
 inner join Technicians t on sc.TechnicianId = t.Id
 where sc.[Open] = 1
 order by sc.Id asc
+
+select count(*) from ServiceCalls

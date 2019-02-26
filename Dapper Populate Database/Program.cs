@@ -12,9 +12,10 @@ namespace ErikTheCoder.Sandbox.Dapper
         private const int _technicianCount = 500;
         private const int _customerCount = 10_000;
         private const int _dayCount = 365;
-        private const int _serviceCallsPerTechPerDayMin = 3;
+        private const int _serviceCallsPerTechPerDayMin = 4;
         private const int _serviceCallsPerTechPerDayMax = 8;
         private const int _maxCustomersPerTechPerDay = 8;
+        private const int _percentPriorDayCallsOpen = 15;
         private const int _nameLength = 10;
         private static readonly char[] _alphabet = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
         private static readonly char[] _digits = "0123456789".ToCharArray();
@@ -79,7 +80,7 @@ namespace ErikTheCoder.Sandbox.Dapper
             for (int day = 0; day < _dayCount; day++)
             {
                 DateTime scheduled = DateTime.Now - TimeSpan.FromDays(day);
-                bool open = (day == 0);
+                bool open = (day == 0) || ((day == 1) && (_random.Next(1, 101) <= _percentPriorDayCallsOpen));
                 foreach (int technicianId in TechnicianIds)
                 {
                     int customerCount = _random.Next(1, _maxCustomersPerTechPerDay + 1);
