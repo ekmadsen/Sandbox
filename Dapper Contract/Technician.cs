@@ -1,11 +1,14 @@
-﻿namespace ErikTheCoder.Sandbox.Dapper.Contract
+﻿using JetBrains.Annotations;
+
+
+namespace ErikTheCoder.Sandbox.Dapper.Contract
 {
     public class Technician
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public Customers Customers { get; set; }
-        public ServiceCalls ServiceCalls { get; set; }
+        public int Id { get; [UsedImplicitly] set; }
+        [UsedImplicitly] public string Name { get; set; }
+        public Customers Customers { get; [UsedImplicitly] set; }
+        public ServiceCalls ServiceCalls { get; [UsedImplicitly] set; }
 
 
 

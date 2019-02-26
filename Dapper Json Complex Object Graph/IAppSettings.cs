@@ -1,7 +1,10 @@
-﻿namespace ErikTheCoder.Sandbox.Dapper.Service
+﻿using JetBrains.Annotations;
+
+
+namespace ErikTheCoder.Sandbox.Dapper.Service
 {
     public interface IAppSettings
     {
-        string Database { get; set; }
+        string Database { get; [UsedImplicitly] set; }
     }
 }

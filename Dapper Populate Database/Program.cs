@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Globalization;
 using System.Text;
 
 
@@ -75,7 +74,7 @@ namespace ErikTheCoder.Sandbox.Dapper
         }
 
 
-        private static void CreateServiceCalls(SqlConnection Connection, List<int> TechnicianIds, List<int> CustomerIds)
+        private static void CreateServiceCalls(SqlConnection Connection, IReadOnlyCollection<int> TechnicianIds, IReadOnlyList<int> CustomerIds)
         {
             for (int day = 0; day < _dayCount; day++)
             {
@@ -100,7 +99,7 @@ namespace ErikTheCoder.Sandbox.Dapper
         }
 
 
-        private static List<int> GetRandomCustomerIds(List<int> CustomerIds, int Count)
+        private static List<int> GetRandomCustomerIds(IReadOnlyList<int> CustomerIds, int Count)
         {
             List<int> customerIds = new List<int>();
             do

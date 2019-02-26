@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using JetBrains.Annotations;
+
 
 namespace ErikTheCoder.Sandbox.Dapper.Contract
 {
     public class Customer
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string ZipCode { get; set; }
-        public Technicians Technicians { get; set; }
-        public ServiceCalls ServiceCalls { get; set; }
+        public int Id { get; [UsedImplicitly] set; }
+        [UsedImplicitly] public string Name { get; set; }
+        [UsedImplicitly] public string Address { get; set; }
+        [UsedImplicitly] public string City { get; set; }
+        [UsedImplicitly] public string State { get; set; }
+        [UsedImplicitly] public string ZipCode { get; set; }
+        public Technicians Technicians { get; [UsedImplicitly] set; }
+        public ServiceCalls ServiceCalls { get; [UsedImplicitly] set; }
 
 
         public Customer()
