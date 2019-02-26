@@ -10,4 +10,8 @@
     <PackageReference Include="Refit" Version="4.6.90" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
 </Project>

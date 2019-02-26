@@ -39,6 +39,7 @@ namespace ErikTheCoder.Sandbox.Dapper.Service.Controllers
                 await connection.QueryAsync<ServiceCall, Customer, Technician, ServiceCall>(sql, (ServiceCall, Customer, Technician) =>
                 {
                     // This lambda method runs once per row in SQL result.
+                    response.ServiceCalls.Add(ServiceCall);
                     // Reference existing customers and technicians or add to collection if first time encountered.
                     if (!response.Customers.TryGetValue(Customer.Id, out Customer customer))
                     {
@@ -53,7 +54,8 @@ namespace ErikTheCoder.Sandbox.Dapper.Service.Controllers
                         response.Technicians.Add(technician);
                     }
                     // Configure relationships among objects.
-                    response.ServiceCalls.Add(ServiceCall);
+                    ServiceCall.Customer = customer;
+                    ServiceCall.Technician = technician;
                     customer.ServiceCalls.Add(ServiceCall);
                     if (!customer.Technicians.Contains(technician.Id))
                     {
