@@ -21,12 +21,7 @@ namespace ErikTheCoder.Sandbox.Dapper.Service.Controllers
         [HttpGet("/mapping/getopenservicecalls")]
         public async Task<GetOpenServiceCallsResponse> GetOpenServiceCallsAsync()
         {
-            GetOpenServiceCallsResponse response = new GetOpenServiceCallsResponse
-            {
-                ServiceCalls = new ServiceCalls(),
-                Customers = new Customers(),
-                Technicians = new Technicians()
-            };
+            GetOpenServiceCallsResponse response = new GetOpenServiceCallsResponse();
             // Each row in SQL result represents a unique service call but may contain duplicate customers and technicians.
             const string sql = @"select sc.Id, sc.Scheduled, sc.[Open], c.Id, c.Name, c.Address, c.City, c.State, c.ZipCode, t.Id, t.Name
                 from ServiceCalls sc

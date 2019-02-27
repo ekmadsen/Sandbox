@@ -1,9 +1,20 @@
-﻿namespace ErikTheCoder.Sandbox.Dapper.Contract
+﻿using JetBrains.Annotations;
+
+
+namespace ErikTheCoder.Sandbox.Dapper.Contract
 {
     public class GetOpenServiceCallsResponse
     {
-        public ServiceCalls ServiceCalls { get; set; }
-        public Customers Customers { get; set; }
-        public Technicians Technicians { get; set; }
+        public ServiceCalls ServiceCalls { get; [UsedImplicitly] set; }
+        public Customers Customers { get; [UsedImplicitly] set; }
+        public Technicians Technicians { get; [UsedImplicitly] set; }
+
+
+        public GetOpenServiceCallsResponse()
+        {
+            ServiceCalls = new ServiceCalls();
+            Customers = new Customers();
+            Technicians = new Technicians();
+        }
     }
 }

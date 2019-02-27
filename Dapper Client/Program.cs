@@ -15,6 +15,7 @@ namespace ErikTheCoder.Sandbox.Dapper.Client
     public static class Program
     {
         private const string _mappingServiceUrlBase = "http://localhost:55015";
+        private const string _mappingServiceUrl = _mappingServiceUrlBase + "/mapping/getopenservicecalls";
         private static HttpClient _httpClient;
         private static JsonSerializer _jsonSerializer;
         private static IMappingService _mappingService;
@@ -40,9 +41,9 @@ namespace ErikTheCoder.Sandbox.Dapper.Client
         private static async Task Run(IReadOnlyList<string> Arguments)
         {
             // Configure JSON.NET and Refit.
-            _httpClient = new HttpClient();
+            _httpClient = new HttpClient(new CacheBustingMessageHandler()) { BaseAddress = new Uri(_mappingServiceUrlBase) };
             _jsonSerializer = new JsonSerializer();
-            _mappingService = RestService.For<IMappingService>(_mappingServiceUrlBase);
+            _mappingService = RestService.For<IMappingService>(_httpClient);
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 // Preserve case of property names.
@@ -85,7 +86,7 @@ namespace ErikTheCoder.Sandbox.Dapper.Client
 
         private static async Task<GetOpenServiceCallsResponse> GetOpenServiceCallsViaJsonNet()
         {
-            using (HttpResponseMessage responseMessage = await _httpClient.GetAsync(new Uri(GetCacheBustingUrl())))
+            using (HttpResponseMessage responseMessage = await _httpClient.GetAsync(new Uri(_mappingServiceUrl)))
             {
                 using (Stream responseStream = await responseMessage.Content.ReadAsStreamAsync())
                 {
@@ -113,8 +114,5 @@ namespace ErikTheCoder.Sandbox.Dapper.Client
             Customer customer = technician.Customers[customerId];
             Trace.Assert(ReferenceEquals(technician, customer.Technicians[technicianId]));
         }
-
-
-        private static string GetCacheBustingUrl() => $"{_mappingServiceUrlBase}/mapping/getopenservicecalls?cacheBust={Guid.NewGuid()}";
     }
 }

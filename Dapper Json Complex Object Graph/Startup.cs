@@ -16,7 +16,7 @@ namespace ErikTheCoder.Sandbox.Dapper.Service
                 {
                     // Preserve case of property names.
                     Options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
-                    // Preserve cyclical object references 
+                    // Preserve cyclical object references. 
                     Options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.All; 
                 }
             );
