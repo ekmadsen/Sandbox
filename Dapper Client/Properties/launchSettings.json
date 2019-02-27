@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Dapper Client": {
+      "commandName": "Project",
+      "commandLineArgs": "refit"
+    }
+  }
+}

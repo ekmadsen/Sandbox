@@ -107,12 +107,18 @@ namespace ErikTheCoder.Sandbox.Dapper.Client
 
         private static void VerifyObjectReferencesPreserved(GetOpenServiceCallsResponse Response)
         {
-            return;
-            const int technicianId = 1488;
-            const int customerId = 42135;
-            Technician technician = Response.Technicians[technicianId];
-            Customer customer = technician.Customers[customerId];
-            Trace.Assert(ReferenceEquals(technician, customer.Technicians[technicianId]));
+            const int technicianId = 3276;
+            const int customerId = 75904;
+            const int serviceCallId = 8949862;
+            //Technician technician = Response.Technicians[technicianId];
+            //Customer customer = Response.Customers[customerId];
+            //ServiceCall serviceCall = Response.ServiceCalls[serviceCallId];
+            //Trace.Assert(ReferenceEquals(technician, customer.Technicians[technicianId]));
+            //Trace.Assert(ReferenceEquals(technician, serviceCall.Technician));
+            //Trace.Assert(ReferenceEquals(customer, technician.Customers[customerId]));
+            //Trace.Assert(ReferenceEquals(customer, serviceCall.Customer));
+            //Trace.Assert(ReferenceEquals(serviceCall, technician.ServiceCalls[serviceCallId]));
+            //Trace.Assert(ReferenceEquals(serviceCall, customer.ServiceCalls[serviceCallId]));
         }
     }
 }
