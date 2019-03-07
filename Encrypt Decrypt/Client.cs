@@ -28,8 +28,8 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
                 _createCipher = null;
             }
             // Dispose unmanaged objects.
-            _disposed = true;
             base.Dispose(Disposing);
+            _disposed = true;
         }
 
 

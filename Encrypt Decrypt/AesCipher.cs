@@ -31,8 +31,8 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
             // Dispose unmanaged objects.
             _cipher.Dispose();
             _cipher = null;
-            _disposed = true;
             base.Dispose(Disposing);
+            _disposed = true;
         }
 
 
