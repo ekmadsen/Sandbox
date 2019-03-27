@@ -28,7 +28,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper Populate Database", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper Contract", "Dapper Contract\Dapper Contract.csproj", "{306EA230-AD60-4E41-BB7A-36D900BFCC7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dapper Client", "Dapper Client\Dapper Client.csproj", "{9350E971-34F1-41BD-9DBB-719B2E1689D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper Client", "Dapper Client\Dapper Client.csproj", "{9350E971-34F1-41BD-9DBB-719B2E1689D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Async Concurrent", "Async Concurrent\Async Concurrent.csproj", "{A2CBB860-A462-4115-8F87-52006B531C8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,6 +74,10 @@ Global
 		{9350E971-34F1-41BD-9DBB-719B2E1689D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9350E971-34F1-41BD-9DBB-719B2E1689D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9350E971-34F1-41BD-9DBB-719B2E1689D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2CBB860-A462-4115-8F87-52006B531C8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2CBB860-A462-4115-8F87-52006B531C8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2CBB860-A462-4115-8F87-52006B531C8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2CBB860-A462-4115-8F87-52006B531C8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

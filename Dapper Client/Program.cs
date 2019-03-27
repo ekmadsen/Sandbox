@@ -110,15 +110,15 @@ namespace ErikTheCoder.Sandbox.Dapper.Client
             const int technicianId = 3276;
             const int customerId = 75904;
             const int serviceCallId = 8949862;
-            //Technician technician = Response.Technicians[technicianId];
-            //Customer customer = Response.Customers[customerId];
-            //ServiceCall serviceCall = Response.ServiceCalls[serviceCallId];
-            //Trace.Assert(ReferenceEquals(technician, customer.Technicians[technicianId]));
-            //Trace.Assert(ReferenceEquals(technician, serviceCall.Technician));
-            //Trace.Assert(ReferenceEquals(customer, technician.Customers[customerId]));
-            //Trace.Assert(ReferenceEquals(customer, serviceCall.Customer));
-            //Trace.Assert(ReferenceEquals(serviceCall, technician.ServiceCalls[serviceCallId]));
-            //Trace.Assert(ReferenceEquals(serviceCall, customer.ServiceCalls[serviceCallId]));
+            Technician technician = Response.Technicians[technicianId];
+            Customer customer = Response.Customers[customerId];
+            ServiceCall serviceCall = Response.ServiceCalls[serviceCallId];
+            Trace.Assert(ReferenceEquals(technician, customer.Technicians[technicianId]));
+            Trace.Assert(ReferenceEquals(technician, serviceCall.Technician));
+            Trace.Assert(ReferenceEquals(customer, technician.Customers[customerId]));
+            Trace.Assert(ReferenceEquals(customer, serviceCall.Customer));
+            Trace.Assert(ReferenceEquals(serviceCall, technician.ServiceCalls[serviceCallId]));
+            Trace.Assert(ReferenceEquals(serviceCall, customer.ServiceCalls[serviceCallId]));
         }
     }
 }
