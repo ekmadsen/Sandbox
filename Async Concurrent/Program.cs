@@ -10,11 +10,10 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
 {
     public static class Program
     {
-        private static int _getUserMsec = 50;
+        private static int _getUserMsec = 75;
         private static int _getFileLogsMsecPerDay = 150;
-        private static int _getEventLogsMsecPerDay = 75;
+        private static int _getEventLogsMsecPerDay = 50;
         private static int _getDatabaseLogsMsecPerDay = 100;
-        private static int _getInternetLogsMsecPerDay = 200;
         private static readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
 
@@ -48,13 +47,25 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
             await AddUser(pcReport);
             await AddFileLogs(pcReport);
             await AddEventLogs(pcReport);
+            await AddDatabaseLogs(pcReport);
             return pcReport;
         }
 
 
         private static async Task<PcReport> CreateReportConcurrentlyRaceCondition(string ComputerName, int Days)
         {
-            return await Task.FromResult(new PcReport());
+            PcReport pcReport = new PcReport
+            {
+                ComputerName = ComputerName,
+                Days = Days
+            };
+            Task addUser = AddUser(pcReport);
+            Task addFileLogs = AddFileLogs(pcReport);
+            Task addEventLogs = AddEventLogs(pcReport);
+            Task addDatabaseLogs = AddDatabaseLogs(pcReport);
+            List<Task> tasks = new List<Task>() { addUser, addFileLogs, addEventLogs, addDatabaseLogs };
+            await Task.WhenAll(tasks);
+            return pcReport;
         }
 
 
@@ -63,7 +74,8 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
             Task<User> getUser = GetUser(ComputerName, Days);
             Task<List<string>> getFileLogs = GetFileLogs(ComputerName, Days);
             Task<List<string>> getEventLogs = GetEventLogs(ComputerName, Days);
-            List<Task> tasks = new List<Task>() {getUser, getFileLogs, getEventLogs};
+            Task<List<string>> getDatabaseLogs = GetDatabaseLogs(ComputerName, Days);
+            List<Task> tasks = new List<Task>() {getUser, getFileLogs, getEventLogs, getDatabaseLogs};
             await Task.WhenAll(tasks);
             return new PcReport
             {
@@ -78,46 +90,37 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         // Add Methods
         private static async Task AddUser(PcReport PcReport)
         {
-            ConsoleWriter.WriteLine(_stopwatch, "Adding user.", ConsoleColor.Cyan);
+            ConsoleWriter.WriteLine(_stopwatch, $"Adding primary user of {PcReport.ComputerName}.", ConsoleColor.Cyan);
             await Task.Delay(TimeSpan.FromMilliseconds(_getUserMsec));
             PcReport.PrimaryUser = new User { Username = $"{PcReport.ComputerName} User" };
-            ConsoleWriter.WriteLine(_stopwatch, "Added user.", ConsoleColor.Cyan);
+            ConsoleWriter.WriteLine(_stopwatch, $"The primary user is {PcReport.PrimaryUser.Username}.", ConsoleColor.Cyan);
         }
 
 
         private static async Task AddFileLogs(PcReport PcReport)
         {
-            ConsoleWriter.WriteLine(_stopwatch, "Adding file logs.", ConsoleColor.Green);
-            if (PcReport.PrimaryUser != null)
-            {
-                await Task.Delay(TimeSpan.FromMilliseconds(_getFileLogsMsecPerDay * PcReport.Days));
-                PcReport.FileLogs = new List<string> {"File Log 1", "File Log 2", "File Log 3"};
-            }
-            ConsoleWriter.WriteLine(_stopwatch, "Added file logs.", ConsoleColor.Green);
+            ConsoleWriter.WriteLine(_stopwatch, $"Adding file logs for {PcReport.ComputerName}.", ConsoleColor.Green);
+            await Task.Delay(TimeSpan.FromMilliseconds(_getFileLogsMsecPerDay * PcReport.Days));
+            if (PcReport.PrimaryUser != null) PcReport.FileLogs = new List<string> {"File Log 1", "File Log 2", "File Log 3"};
+            ConsoleWriter.WriteLine(_stopwatch, $"File logs = {string.Join(", ", PcReport.FileLogs ?? new List<string>())}.", ConsoleColor.Green);
         }
 
 
         private static async Task AddEventLogs(PcReport PcReport)
         {
-            ConsoleWriter.WriteLine(_stopwatch, "Adding event logs.", ConsoleColor.Magenta);
-            if (PcReport.PrimaryUser != null)
-            {
-                await Task.Delay(TimeSpan.FromMilliseconds(_getEventLogsMsecPerDay * PcReport.Days));
-                PcReport.EventLogs = new List<string> { "Event Log 1", "Event Log 2", "Event Log 3" };
-            }
-            ConsoleWriter.WriteLine(_stopwatch, "Added event logs.", ConsoleColor.Magenta);
+            ConsoleWriter.WriteLine(_stopwatch, $"Adding event logs for {PcReport.ComputerName}.", ConsoleColor.Magenta);
+            await Task.Delay(TimeSpan.FromMilliseconds(_getEventLogsMsecPerDay * PcReport.Days));
+            if (PcReport.PrimaryUser != null) PcReport.EventLogs = new List<string> { "Event Log 1", "Event Log 2", "Event Log 3" };
+            ConsoleWriter.WriteLine(_stopwatch, $"Event logs = {string.Join(", ", PcReport.EventLogs ?? new List<string>())}.", ConsoleColor.Magenta);
         }
 
 
         private static async Task AddDatabaseLogs(PcReport PcReport)
         {
-            ConsoleWriter.WriteLine(_stopwatch, "Adding database logs.", ConsoleColor.Yellow);
-            if (PcReport.PrimaryUser != null)
-            {
-                await Task.Delay(TimeSpan.FromMilliseconds(_getDatabaseLogsMsecPerDay * PcReport.Days));
-                PcReport.EventLogs = new List<string> { "Event Log 1", "Event Log 2", "Event Log 3" };
-            }
-            ConsoleWriter.WriteLine(_stopwatch, "Added database logs.", ConsoleColor.Yellow);
+            ConsoleWriter.WriteLine(_stopwatch, $"Adding database logs for {PcReport.ComputerName}.", ConsoleColor.Yellow);
+            await Task.Delay(TimeSpan.FromMilliseconds(_getDatabaseLogsMsecPerDay * PcReport.Days));
+            if (PcReport.PrimaryUser != null) PcReport.DatabaseLogs = new List<string> { "Database Log 1", "Database Log 2", "Database Log 3" };
+            ConsoleWriter.WriteLine(_stopwatch, $"Database logs = {string.Join(", ", PcReport.DatabaseLogs ?? new List<string>())}.", ConsoleColor.Yellow);
         }
 
 
@@ -126,8 +129,9 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding primary user of {ComputerName}.", ConsoleColor.Cyan);
             await Task.Delay(TimeSpan.FromMilliseconds(_getUserMsec * Days));
-            ConsoleWriter.WriteLine(_stopwatch, $"Added primary user of {ComputerName}.", ConsoleColor.Cyan);
-            return new User { Username = $"{ComputerName} User" };
+            User user = new User { Username = $"{ComputerName} User" };
+            ConsoleWriter.WriteLine(_stopwatch, $"The primary user is {user.Username}.", ConsoleColor.Cyan);
+            return user;
         }
 
 
@@ -135,8 +139,9 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding file logs for {ComputerName}.", ConsoleColor.Green);
             await Task.Delay(TimeSpan.FromMilliseconds(_getFileLogsMsecPerDay * Days));
-            ConsoleWriter.WriteLine(_stopwatch, $"Added file logs for {ComputerName}.", ConsoleColor.Green);
-            return new List<string> { "File Log 1", "File Log 2", "File Log 3" };
+            List<string> fileLogs = new List<string> { "File Log 1", "File Log 2", "File Log 3" };
+            ConsoleWriter.WriteLine(_stopwatch, $"File logs = {string.Join(", ", fileLogs)}.", ConsoleColor.Green);
+            return fileLogs;
         }
 
 
@@ -144,8 +149,9 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding event logs for {ComputerName}.", ConsoleColor.Magenta);
             await Task.Delay(TimeSpan.FromMilliseconds(_getEventLogsMsecPerDay * Days));
-            ConsoleWriter.WriteLine(_stopwatch, $"Added event logs for {ComputerName}.", ConsoleColor.Magenta);
-            return new List<string> { "Event Log 1", "Event Log 2", "Event Log 3" };
+            List<string> eventLogs = new List<string> { "Event Log 1", "Event Log 2", "Event Log 3" };
+            ConsoleWriter.WriteLine(_stopwatch, $"Event logs = {string.Join(", ", eventLogs)}.", ConsoleColor.Magenta);
+            return eventLogs;
         }
 
 
@@ -153,14 +159,15 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding database logs for {ComputerName}.", ConsoleColor.Yellow);
             await Task.Delay(TimeSpan.FromMilliseconds(_getDatabaseLogsMsecPerDay * Days));
-            ConsoleWriter.WriteLine(_stopwatch, $"Added database logs for {ComputerName}.", ConsoleColor.Yellow);
-            return new List<string> { "File Log 1", "File Log 2", "File Log 3" };
+            List<string> databaseLogs = new List<string> { "Database Log 1", "Database Log 2", "Database Log 3" };
+            ConsoleWriter.WriteLine(_stopwatch, $"Database logs = {string.Join(", ", databaseLogs)}.", ConsoleColor.Yellow);
+            return databaseLogs;
         }
 
         
         private static (string ComputerName, int Days, Func<string, int, Task<PcReport>> Technique) ParseCommandLine(IReadOnlyList<string> Arguments)
         {
-            string computerName = (Arguments.Count > 0) ? Arguments[0].ToLower() : null;
+            string computerName = (Arguments.Count > 0) ? Arguments[0] : null;
             int days = (Arguments.Count > 1) ? int.Parse(Arguments[1]) : 0;
             if (days == 0) throw new ArgumentException("Specify days.");
             if (string.IsNullOrEmpty(computerName)) throw new ArgumentException("Specify a computer name.");
