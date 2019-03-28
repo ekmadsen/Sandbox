@@ -100,8 +100,11 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         private static async Task AddFileLogs(PcReport PcReport)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding file logs for {PcReport.ComputerName}.", ConsoleColor.Green);
-            await Task.Delay(TimeSpan.FromMilliseconds(_getFileLogsMsecPerDay * PcReport.Days));
-            if (PcReport.PrimaryUser != null) PcReport.FileLogs = new List<string> {"File Log 1", "File Log 2", "File Log 3"};
+            if (PcReport.PrimaryUser != null)
+            {
+                await Task.Delay(TimeSpan.FromMilliseconds(_getFileLogsMsecPerDay * PcReport.Days));
+                PcReport.FileLogs = new List<string> {"File Log 1", "File Log 2", "File Log 3"};
+            }
             ConsoleWriter.WriteLine(_stopwatch, $"File logs = {string.Join(", ", PcReport.FileLogs ?? new List<string>())}.", ConsoleColor.Green);
         }
 
@@ -109,8 +112,11 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         private static async Task AddEventLogs(PcReport PcReport)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding event logs for {PcReport.ComputerName}.", ConsoleColor.Magenta);
-            await Task.Delay(TimeSpan.FromMilliseconds(_getEventLogsMsecPerDay * PcReport.Days));
-            if (PcReport.PrimaryUser != null) PcReport.EventLogs = new List<string> { "Event Log 1", "Event Log 2", "Event Log 3" };
+            if (PcReport.PrimaryUser != null)
+            {
+                await Task.Delay(TimeSpan.FromMilliseconds(_getEventLogsMsecPerDay * PcReport.Days));
+                PcReport.EventLogs = new List<string> { "Event Log 1", "Event Log 2", "Event Log 3" };
+            }
             ConsoleWriter.WriteLine(_stopwatch, $"Event logs = {string.Join(", ", PcReport.EventLogs ?? new List<string>())}.", ConsoleColor.Magenta);
         }
 
@@ -118,8 +124,11 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         private static async Task AddDatabaseLogs(PcReport PcReport)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding database logs for {PcReport.ComputerName}.", ConsoleColor.Yellow);
-            await Task.Delay(TimeSpan.FromMilliseconds(_getDatabaseLogsMsecPerDay * PcReport.Days));
-            if (PcReport.PrimaryUser != null) PcReport.DatabaseLogs = new List<string> { "Database Log 1", "Database Log 2", "Database Log 3" };
+            if (PcReport.PrimaryUser != null)
+            {
+                await Task.Delay(TimeSpan.FromMilliseconds(_getDatabaseLogsMsecPerDay * PcReport.Days));
+                PcReport.DatabaseLogs = new List<string> { "Database Log 1", "Database Log 2", "Database Log 3" };
+            }
             ConsoleWriter.WriteLine(_stopwatch, $"Database logs = {string.Join(", ", PcReport.DatabaseLogs ?? new List<string>())}.", ConsoleColor.Yellow);
         }
 
