@@ -21,7 +21,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         {
             try
             {
-                await Run(Arguments);
+                await RunAsync(Arguments);
             }
             catch (Exception exception)
             {
@@ -30,51 +30,51 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         }
 
 
-        private static async Task Run(IReadOnlyList<string> Arguments)
+        private static async Task RunAsync(IReadOnlyList<string> Arguments)
         {
             (string pcName, int days, Func<string, int, Task<PcReport>> createReport) = ParseCommandLine(Arguments);
             PcReport pcReport = await createReport(pcName, days);
         }
 
 
-        private static async Task<PcReport> CreateReportSequentially(string ComputerName, int Days)
+        private static async Task<PcReport> CreateReportSequentiallyAsync(string ComputerName, int Days)
         {
             PcReport pcReport = new PcReport
             {
                 ComputerName = ComputerName,
                 Days = Days
             };
-            await AddUser(pcReport);
-            await AddFileLogs(pcReport);
-            await AddEventLogs(pcReport);
-            await AddDatabaseLogs(pcReport);
+            await AddUserAsync(pcReport);
+            await AddFileLogsAsync(pcReport);
+            await AddEventLogsAsync(pcReport);
+            await AddDatabaseLogsAsync(pcReport);
             return pcReport;
         }
 
 
-        private static async Task<PcReport> CreateReportConcurrentlyRaceCondition(string ComputerName, int Days)
+        private static async Task<PcReport> CreateReportConcurrentlyRaceConditionAsync(string ComputerName, int Days)
         {
             PcReport pcReport = new PcReport
             {
                 ComputerName = ComputerName,
                 Days = Days
             };
-            Task addUser = AddUser(pcReport);
-            Task addFileLogs = AddFileLogs(pcReport);
-            Task addEventLogs = AddEventLogs(pcReport);
-            Task addDatabaseLogs = AddDatabaseLogs(pcReport);
+            Task addUser = AddUserAsync(pcReport);
+            Task addFileLogs = AddFileLogsAsync(pcReport);
+            Task addEventLogs = AddEventLogsAsync(pcReport);
+            Task addDatabaseLogs = AddDatabaseLogsAsync(pcReport);
             List<Task> tasks = new List<Task>() { addUser, addFileLogs, addEventLogs, addDatabaseLogs };
             await Task.WhenAll(tasks);
             return pcReport;
         }
 
 
-        private static async Task<PcReport> CreateReportConcurrently(string ComputerName, int Days)
+        private static async Task<PcReport> CreateReportConcurrentlyAsync(string ComputerName, int Days)
         {
-            Task<User> getUser = GetUser(ComputerName, Days);
-            Task<List<string>> getFileLogs = GetFileLogs(ComputerName, Days);
-            Task<List<string>> getEventLogs = GetEventLogs(ComputerName, Days);
-            Task<List<string>> getDatabaseLogs = GetDatabaseLogs(ComputerName, Days);
+            Task<User> getUser = GetUserAsync(ComputerName, Days);
+            Task<List<string>> getFileLogs = GetFileLogsAsync(ComputerName, Days);
+            Task<List<string>> getEventLogs = GetEventLogsAsync(ComputerName, Days);
+            Task<List<string>> getDatabaseLogs = GetDatabaseLogsAsync(ComputerName, Days);
             List<Task> tasks = new List<Task>() {getUser, getFileLogs, getEventLogs, getDatabaseLogs};
             await Task.WhenAll(tasks);
             return new PcReport
@@ -88,7 +88,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
 
 
         // Add Methods
-        private static async Task AddUser(PcReport PcReport)
+        private static async Task AddUserAsync(PcReport PcReport)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding primary user of {PcReport.ComputerName}.", ConsoleColor.Cyan);
             await Task.Delay(TimeSpan.FromMilliseconds(_getUserMsec));
@@ -97,7 +97,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         }
 
 
-        private static async Task AddFileLogs(PcReport PcReport)
+        private static async Task AddFileLogsAsync(PcReport PcReport)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding file logs for {PcReport.ComputerName}.", ConsoleColor.Green);
             await Task.Delay(TimeSpan.FromMilliseconds(_getFileLogsMsecPerDay * PcReport.Days));
@@ -106,7 +106,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         }
 
 
-        private static async Task AddEventLogs(PcReport PcReport)
+        private static async Task AddEventLogsAsync(PcReport PcReport)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding event logs for {PcReport.ComputerName}.", ConsoleColor.Magenta);
             await Task.Delay(TimeSpan.FromMilliseconds(_getEventLogsMsecPerDay * PcReport.Days));
@@ -115,7 +115,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         }
 
 
-        private static async Task AddDatabaseLogs(PcReport PcReport)
+        private static async Task AddDatabaseLogsAsync(PcReport PcReport)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding database logs for {PcReport.ComputerName}.", ConsoleColor.Yellow);
             await Task.Delay(TimeSpan.FromMilliseconds(_getDatabaseLogsMsecPerDay * PcReport.Days));
@@ -125,7 +125,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
 
 
         // Get Methods
-        private static async Task<User> GetUser(string ComputerName, int Days)
+        private static async Task<User> GetUserAsync(string ComputerName, int Days)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding primary user of {ComputerName}.", ConsoleColor.Cyan);
             await Task.Delay(TimeSpan.FromMilliseconds(_getUserMsec * Days));
@@ -135,7 +135,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         }
 
 
-        private static async Task<List<string>> GetFileLogs(string ComputerName, int Days)
+        private static async Task<List<string>> GetFileLogsAsync(string ComputerName, int Days)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding file logs for {ComputerName}.", ConsoleColor.Green);
             await Task.Delay(TimeSpan.FromMilliseconds(_getFileLogsMsecPerDay * Days));
@@ -145,7 +145,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         }
 
 
-        private static async Task<List<string>> GetEventLogs(string ComputerName, int Days)
+        private static async Task<List<string>> GetEventLogsAsync(string ComputerName, int Days)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding event logs for {ComputerName}.", ConsoleColor.Magenta);
             await Task.Delay(TimeSpan.FromMilliseconds(_getEventLogsMsecPerDay * Days));
@@ -155,7 +155,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         }
 
 
-        private static async Task<List<string>> GetDatabaseLogs(string ComputerName, int Days)
+        private static async Task<List<string>> GetDatabaseLogsAsync(string ComputerName, int Days)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding database logs for {ComputerName}.", ConsoleColor.Yellow);
             await Task.Delay(TimeSpan.FromMilliseconds(_getDatabaseLogsMsecPerDay * Days));
@@ -175,11 +175,11 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
             switch (technique)
             {
                 case ("sequential"):
-                    return (computerName, days, CreateReportSequentially);
+                    return (computerName, days, CreateReportSequentially: CreateReportSequentiallyAsync);
                 case ("concurrent-race"):
-                    return (computerName, days, CreateReportConcurrentlyRaceCondition);
+                    return (computerName, days, CreateReportConcurrentlyRaceCondition: CreateReportConcurrentlyRaceConditionAsync);
                 case ("concurrent"):
-                    return (computerName, days, CreateReportConcurrently);
+                    return (computerName, days, CreateReportConcurrently: CreateReportConcurrentlyAsync);
                 default:
                     throw new ArgumentException(technique is null ? "Specify a technique." : $"{technique} not supported.");
             }
