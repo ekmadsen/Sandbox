@@ -10,6 +10,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         private static readonly object _lock = new object();
 
 
+        // ReSharper disable once UnusedMember.Global
         public static void WriteLine()
         {
             lock (_lock)

@@ -10,10 +10,10 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
 {
     public static class Program
     {
-        private static int _getUserMsec = 75;
-        private static int _getFileLogsMsecPerDay = 150;
-        private static int _getEventLogsMsecPerDay = 50;
-        private static int _getDatabaseLogsMsecPerDay = 100;
+        private const int _getUserMsec = 75;
+        private const int _getFileLogsMsecPerDay = 150;
+        private const int _getEventLogsMsecPerDay = 50;
+        private const int _getDatabaseLogsMsecPerDay = 100;
         private static readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
 
@@ -33,6 +33,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         private static async Task RunAsync(IReadOnlyList<string> Arguments)
         {
             (string pcName, int days, Func<string, int, Task<PcReport>> createReport) = ParseCommandLine(Arguments);
+            // ReSharper disable once UnusedVariable
             PcReport pcReport = await createReport(pcName, days);
         }
 
@@ -63,7 +64,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
             Task addFileLogs = AddFileLogsAsync(pcReport);
             Task addEventLogs = AddEventLogsAsync(pcReport);
             Task addDatabaseLogs = AddDatabaseLogsAsync(pcReport);
-            List<Task> tasks = new List<Task>() { addUser, addFileLogs, addEventLogs, addDatabaseLogs };
+            List<Task> tasks = new List<Task> { addUser, addFileLogs, addEventLogs, addDatabaseLogs };
             await Task.WhenAll(tasks);
             return pcReport;
         }
@@ -75,7 +76,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
             Task<List<string>> getFileLogs = GetFileLogsAsync(ComputerName, Days);
             Task<List<string>> getEventLogs = GetEventLogsAsync(ComputerName, Days);
             Task<List<string>> getDatabaseLogs = GetDatabaseLogsAsync(ComputerName, Days);
-            List<Task> tasks = new List<Task>() {getUser, getFileLogs, getEventLogs, getDatabaseLogs};
+            List<Task> tasks = new List<Task> {getUser, getFileLogs, getEventLogs, getDatabaseLogs};
             await Task.WhenAll(tasks);
             return new PcReport
             {
@@ -85,9 +86,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
             };
         }
 
-
-
-        // Add Methods
+        
         private static async Task AddUserAsync(PcReport PcReport)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding primary user of {PcReport.ComputerName}.", ConsoleColor.Cyan);
@@ -123,8 +122,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
             ConsoleWriter.WriteLine(_stopwatch, $"Database logs = {string.Join(", ", PcReport.DatabaseLogs ?? new List<string>())}.", ConsoleColor.Yellow);
         }
 
-
-        // Get Methods
+        
         private static async Task<User> GetUserAsync(string ComputerName, int Days)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding primary user of {ComputerName}.", ConsoleColor.Cyan);
@@ -175,11 +173,11 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
             switch (technique)
             {
                 case ("sequential"):
-                    return (computerName, days, CreateReportSequentially: CreateReportSequentiallyAsync);
+                    return (computerName, days, CreateReportSequentiallyAsync);
                 case ("concurrent-race"):
-                    return (computerName, days, CreateReportConcurrentlyRaceCondition: CreateReportConcurrentlyRaceConditionAsync);
+                    return (computerName, days, CreateReportConcurrentlyRaceConditionAsync);
                 case ("concurrent"):
-                    return (computerName, days, CreateReportConcurrently: CreateReportConcurrentlyAsync);
+                    return (computerName, days, CreateReportConcurrentlyAsync);
                 default:
                     throw new ArgumentException(technique is null ? "Specify a technique." : $"{technique} not supported.");
             }
