@@ -32,9 +32,9 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
 
         private static async Task RunAsync(IReadOnlyList<string> Arguments)
         {
-            (string pcName, int days, Func<string, int, Task<PcReport>> createReport) = ParseCommandLine(Arguments);
+            (string pcName, int days, Func<string, int, Task<PcReport>> createReportAsync) = ParseCommandLine(Arguments);
             // ReSharper disable once UnusedVariable
-            PcReport pcReport = await createReport(pcName, days);
+            PcReport pcReport = await createReportAsync(pcName, days);
         }
 
 
