@@ -82,7 +82,8 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
             {
                 PrimaryUser = getUser.Result,
                 FileLogs = getFileLogs.Result,
-                EventLogs = getEventLogs.Result
+                EventLogs = getEventLogs.Result,
+                DatabaseLogs = getDatabaseLogs.Result
             };
         }
 
