@@ -167,9 +167,9 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         private static (string ComputerName, int Days, Func<string, int, Task<PcReport>> Technique) ParseCommandLine(IReadOnlyList<string> Arguments)
         {
             string computerName = (Arguments.Count > 0) ? Arguments[0] : null;
+            if (string.IsNullOrEmpty(computerName)) throw new ArgumentException("Specify a computer name.");
             int days = (Arguments.Count > 1) ? int.Parse(Arguments[1]) : 0;
             if (days == 0) throw new ArgumentException("Specify days.");
-            if (string.IsNullOrEmpty(computerName)) throw new ArgumentException("Specify a computer name.");
             string technique = (Arguments.Count > 2) ? Arguments[2].ToLower() : null;
             switch (technique)
             {
