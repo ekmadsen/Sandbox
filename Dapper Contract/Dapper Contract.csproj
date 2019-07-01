@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ErikTheCoder.Logging" Version="1.0.3" />
-    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" />
-    <PackageReference Include="Refit" Version="4.6.90" />
+    <PackageReference Include="ErikTheCoder.Logging" Version="1.0.6" />
+    <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" />
+    <PackageReference Include="Refit" Version="4.7.9" />
   </ItemGroup>
 
   <ItemGroup>
