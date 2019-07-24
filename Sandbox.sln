@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Asymmetric Cryptography", "Asymmetric Cryptography\Asymmetric Cryptography.csproj", "{7684549E-3094-4416-BFA1-5B44E0F84B26}"
 EndProject
@@ -30,7 +30,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper Contract", "Dapper C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper Client", "Dapper Client\Dapper Client.csproj", "{9350E971-34F1-41BD-9DBB-719B2E1689D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Async Concurrent", "Async Concurrent\Async Concurrent.csproj", "{A2CBB860-A462-4115-8F87-52006B531C8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Async Concurrent", "Async Concurrent\Async Concurrent.csproj", "{A2CBB860-A462-4115-8F87-52006B531C8C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xml Parser", "Xml Parser\Xml Parser.csproj", "{DA3A9E23-537E-4C88-A4A5-B99D0A12DE85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,6 +80,10 @@ Global
 		{A2CBB860-A462-4115-8F87-52006B531C8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2CBB860-A462-4115-8F87-52006B531C8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2CBB860-A462-4115-8F87-52006B531C8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA3A9E23-537E-4C88-A4A5-B99D0A12DE85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA3A9E23-537E-4C88-A4A5-B99D0A12DE85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA3A9E23-537E-4C88-A4A5-B99D0A12DE85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA3A9E23-537E-4C88-A4A5-B99D0A12DE85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

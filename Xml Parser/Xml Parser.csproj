@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>ErikTheCoder.Sandbox.XmlParser</RootNamespace>
+    <AssemblyName>ErikTheCoder.Sandbox.XmlParser</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ErikTheCoder.Utilities" Version="1.0.4" />
+  </ItemGroup>
+
+</Project>
