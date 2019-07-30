@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>ErikTheCoder.Sandbox.XmlParser</RootNamespace>
     <AssemblyName>ErikTheCoder.Sandbox.XmlParser</AssemblyName>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
