@@ -5,6 +5,6 @@
         XmlDocument,
         XPathDocument,
         XmlReader,
-        SpanReader
+        Span
     }
 }

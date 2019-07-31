@@ -7,10 +7,10 @@ namespace ErikTheCoder.Sandbox.XmlParser
 {
     public class XmlGenerator
     {
-        private const int _xmlElementNameMinLength = 4;
-        private const int _xmlElementNameMaxLength = 12;
-        private const int _xmlElementValueMinWords = 1;
-        private const int _xmlElementValueMaxWords = 8;
+        private const int _elementNameMinLength = 4;
+        private const int _elementNameMaxLength = 12;
+        private const int _elementValueMinWords = 1;
+        private const int _elementValueMaxWords = 8;
         private const int _wordMinLength = 1;
         private const int _wordMaxLength = 12;
         private const int _indentSpaces = 4;
@@ -58,12 +58,12 @@ namespace ErikTheCoder.Sandbox.XmlParser
         private void WriteElement(TextWriter StreamWriter, ref int FileSizeBytes)
         {
             StreamWriter.WriteLine();
-            string elementName = GetRandomText(_xmlElementNameMinLength, _xmlElementNameMaxLength);
+            string elementName = GetRandomText(_elementNameMinLength, _elementNameMaxLength);
             int indent = _elementNames.Count * _indentSpaces;
             string xml = $"{new string(' ', indent)}<{elementName}>";
             StreamWriter.Write(xml);
             FileSizeBytes += xml.Length;
-            int words = _random.Next(_xmlElementValueMinWords, _xmlElementValueMaxWords);
+            int words = _random.Next(_elementValueMinWords, _elementValueMaxWords);
             while (words > 0)
             {
                 string space = words == 1 ? "" : " ";
@@ -81,7 +81,7 @@ namespace ErikTheCoder.Sandbox.XmlParser
         private void OpenElement(TextWriter StreamWriter, ref int FileSizeBytes, bool NewLine = true)
         {
             if (NewLine) StreamWriter.WriteLine();
-            string elementName = GetRandomText(_xmlElementNameMinLength, _xmlElementNameMaxLength);
+            string elementName = GetRandomText(_elementNameMinLength, _elementNameMaxLength);
             int indent = _elementNames.Count * _indentSpaces;
             _elementNames.Push(elementName);
             string xml = $"{new string(' ', indent)}<{elementName}>";
