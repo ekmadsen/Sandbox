@@ -2,7 +2,7 @@
   "profiles": {
     "Xml Parser": {
       "commandName": "Project",
-      "commandLineArgs": "-i \"C:\\Users\\Erik\\Documents\\Temp\\LargeDoc.xml\" -x \"/iinyepcqv/foo/bar/baz\" -p span"
+      "commandLineArgs": "-i \"C:\\Users\\Erik\\Documents\\Temp\\SmallDoc.xml\" -x \"/iinyepcqv/foo/bar/baz\" -p char"
     }
   }
 }

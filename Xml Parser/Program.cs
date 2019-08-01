@@ -113,8 +113,8 @@ namespace ErikTheCoder.Sandbox.XmlParser
                     return new XPathDocumentParser();
                 case ParsingTechnique.XmlReader:
                     return new XmlReaderParser();
-                case ParsingTechnique.Span:
-                    return new SpanParser();
+                case ParsingTechnique.Char:
+                    return new CharParser();
                 default:
                     throw new NotImplementedException($"{ParsingTechnique} parsing technique not supported.");
             }

@@ -44,11 +44,11 @@ namespace ErikTheCoder.Sandbox.XmlParser
 
 
         // ReSharper disable SuggestBaseTypeForParameter
-        private static bool PathsMatch(string[] ElementNames, int Depth, string[] XPathNames)
+        private static bool PathsMatch(string[] ElementNames, int Depth, string[] XPathNames)            
         {
-            // ReSharper restore SuggestBaseTypeForParameter
             for (int index = 0; index <= Depth; index++) if (ElementNames[index] != XPathNames[index]) return false;
             return true;
         }
+        // ReSharper restore SuggestBaseTypeForParameter
     }
 }
