@@ -5,37 +5,46 @@ namespace ErikTheCoder.Sandbox.XmlParser
 {
     public class SpanParser : IParser
     {
-        private const int _elementNameMaxLength = 16;
+		private const int _elementNameMaxLength = 16;
+		private const int _maxDepth = 16;
+		private readonly char[] _buffer;
 
 
-        public int CountNodes(string Filename, string XPath)
+		public SpanParser()
+		{
+			_buffer = new char[_elementNameMaxLength];
+		}
+
+
+		public int CountNodes(string Filename, string XPath)
         {
-            int count = 0;
-            string[] xPathNames = XPath.StartsWith('/')
-                ? XPath.Substring(1).Split('/')
-                : XPath.Split('/');
-            int depth = -1;
-            int xPathDepth = xPathNames.Length - 1;
-            int matchingElementNames = 0;
-            char[] buffer = new char[_elementNameMaxLength];
-            using (FileStream fileStream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+			int count = 0;
+			string[] xPathNames = XPath.StartsWith('/')
+				? XPath.Substring(1).Split('/')
+				: XPath.Split('/');
+			int depth = 0;
+			int xPathDepth = xPathNames.Length - 1;
+			string[] elementNames = new string[_maxDepth];
+			using (FileStream fileStream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 using (StreamReader streamReader = new StreamReader(fileStream))
                 {
                     do
                     {
-                        ReadOnlySpan<char> elementName = GetNextElementName(streamReader, buffer);
+                        Span<char> elementName = GetNextElementName(streamReader);
                         if (elementName == ReadOnlySpan<char>.Empty) break;
-                        if (elementName[0] == '/')
-                        {
-                            // End element
-                            depth--;
-                            matchingElementNames = Math.Max(--matchingElementNames, 0);
-                            continue;
-                        }
-                        else depth++;
-                        if ((depth <= xPathDepth) && ElementNamesMatch(elementName, xPathNames[depth])) matchingElementNames++;
-                        if ((matchingElementNames == xPathNames.Length) && (depth == xPathDepth)) count++;
+						if (elementName[0] == '/')
+						{
+							// End Element
+							depth--;
+							continue;
+						}
+						else
+						{
+							elementNames[depth] = new string(elementName);
+							if ((depth == xPathDepth) && PathsMatch(elementNames, depth, xPathNames)) count++;
+							depth++;
+						}
                     } while (true);
                 }
             }
@@ -43,9 +52,9 @@ namespace ErikTheCoder.Sandbox.XmlParser
         }
 
 
-        private ReadOnlySpan<char> GetNextElementName(StreamReader StreamReader, char[] Buffer)
+        private Span<char> GetNextElementName(StreamReader StreamReader)
         {
-            ReadOnlySpan<char> buffer = Buffer;
+            Span<char> buffer = _buffer;
             bool inElementName = false;
             int index = 0;
             while (!StreamReader.EndOfStream)
@@ -59,19 +68,18 @@ namespace ErikTheCoder.Sandbox.XmlParser
                 if (inElementName)
                 {
                     if (character == '>') return buffer.Slice(0, index);
-                    Buffer[index] = character;
+                    buffer[index] = character;
                     index++;
                 }
             }
-            return ReadOnlySpan<char>.Empty;
+            return Span<char>.Empty;
         }
 
 
-        private static bool ElementNamesMatch(ReadOnlySpan<char> ElementName, string XPathName)
-        {
-            int maxLength = Math.Min(ElementName.Length, XPathName.Length);
-            for (int index = 0; index < maxLength; index++) if (ElementName[index] != XPathName[index]) return false;
-            return true;
-        }
-    }
+		private static bool PathsMatch(string[] ElementNames, int Depth, string[] XPathNames) {
+			// ReSharper restore SuggestBaseTypeForParameter
+			for (int index = 0; index <= Depth; index++) if (ElementNames[index] != XPathNames[index]) return false;
+			return true;
+		}
+	}
 }
