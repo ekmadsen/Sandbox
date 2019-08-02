@@ -28,7 +28,7 @@ namespace ErikTheCoder.Sandbox.XmlParser
         {
             _random = Random;
             _elementNames = new Stack<string>();
-            _actionPercentages = new[] {80, 90}; // Close element, open element.
+            _actionPercentages = new[] {60, 80}; // Close, open, write element.
         }
 
 
@@ -65,6 +65,7 @@ namespace ErikTheCoder.Sandbox.XmlParser
         private void WriteElement(TextWriter StreamWriter, ref int FileSizeBytes)
         {
             StreamWriter.WriteLine();
+            FileSizeBytes += 2;  // Carriage Return + Line Feed
             string elementName = GetRandomText(_elementNameMinLength, _elementNameMaxLength);
             int indent = _elementNames.Count * _indentSpaces;
             string xml = $"{new string(' ', indent)}<{elementName}>";
@@ -87,7 +88,11 @@ namespace ErikTheCoder.Sandbox.XmlParser
 
         private void OpenElement(TextWriter StreamWriter, ref int FileSizeBytes, bool NewLine = true)
         {
-            if (NewLine) StreamWriter.WriteLine();
+            if (NewLine)
+            {
+                StreamWriter.WriteLine();
+                FileSizeBytes += 2; // Carriage Return + Line Feed
+            }
             string elementName = GetRandomText(_elementNameMinLength, _elementNameMaxLength);
             int indent = _elementNames.Count * _indentSpaces;
             _elementNames.Push(elementName);
@@ -102,6 +107,7 @@ namespace ErikTheCoder.Sandbox.XmlParser
         private void CloseElement(TextWriter StreamWriter, ref int FileSizeBytes)
         {
             StreamWriter.WriteLine();
+            FileSizeBytes += 2; // Carriage Return + Line Feed
             string elementName = _elementNames.Pop();
             int indent = _elementNames.Count * _indentSpaces;
             string xml = $"{new string(' ', indent)}</{elementName}>";

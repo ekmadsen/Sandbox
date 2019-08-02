@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 
+
 namespace ErikTheCoder.Sandbox.XmlParser
 {
     public class CharParser : IParser

@@ -24,7 +24,7 @@ namespace ErikTheCoder.Sandbox.XmlParser
 
         private static void Run(IReadOnlyList<string> Arguments)
         {
-            (string inputFilename, ParsingTechnique? parsingTechnique, string xPath, string outputFilename, int? fileSizeMb) = ParseCommandLine(Arguments);
+            (string inputFilename, string xPath, ParsingTechnique ? parsingTechnique, string outputFilename, int? fileSizeMb) = ParseCommandLine(Arguments);
             IThreadsafeRandom random = new ThreadsafeRandom();
             Stopwatch stopwatch = Stopwatch.StartNew();
             if (inputFilename != null)
@@ -44,7 +44,7 @@ namespace ErikTheCoder.Sandbox.XmlParser
         }
 
 
-        private static (string InputFilename, ParsingTechnique? ParsingTechnique, string XPath, string OutputFilename, int? FileSizeMb) ParseCommandLine(IReadOnlyList<string> Arguments)
+        private static (string InputFilename, string XPath, ParsingTechnique? ParsingTechnique, string OutputFilename, int? FileSizeMb) ParseCommandLine(IReadOnlyList<string> Arguments)
         {
             // Retrieve arguments.
             string inputFilename = null;
@@ -66,17 +66,17 @@ namespace ErikTheCoder.Sandbox.XmlParser
                     case "/input":
                         inputFilename = argumentValue;
                         break;
-                    case "-p":
-                    case "/p":
-                    case "-parser":
-                    case "/parser":
-                        parsingTechnique = Enum.Parse<ParsingTechnique>(argumentValue, true);
-                        break;
                     case "-x":
                     case "/x":
                     case "-xpath":
                     case "/xpath":
                         xPath = argumentValue;
+                        break;
+                    case "-p":
+                    case "/p":
+                    case "-parser":
+                    case "/parser":
+                        parsingTechnique = Enum.Parse<ParsingTechnique>(argumentValue, true);
                         break;
                     case "-o":
                     case "/o":
@@ -96,10 +96,10 @@ namespace ErikTheCoder.Sandbox.XmlParser
             }
             // Validate arguments.
             if ((inputFilename is null) && (outputFilename is null)) throw new ArgumentException("Specify an input filename or output filename.");
-            if ((inputFilename != null) && !parsingTechnique.HasValue) throw new ArgumentException("When specifying an input filename also specify a parser via -p argument.");
             if ((inputFilename != null) && (xPath is null)) throw new ArgumentException("When specifying an input filename also specify XPath via -x argument.");
+            if ((inputFilename != null) && !parsingTechnique.HasValue) throw new ArgumentException("When specifying an input filename also specify a parser via -p argument.");
             if ((outputFilename != null) && !fileSizeMb.HasValue) throw new ArgumentException("When specifying an output filename also specify a file size in MB via -s argument.");
-            return (inputFilename, parsingTechnique, xPath, outputFilename, fileSizeMb);
+            return (inputFilename, xPath, parsingTechnique, outputFilename, fileSizeMb);
         }
 
 
