@@ -5,14 +5,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RootNamespace>ErikTheCoder.Sandbox.XmlParser</RootNamespace>
-    <AssemblyName>ErikTheCoder.Sandbox.XmlParser</AssemblyName>
-    <LangVersion>default</LangVersion>
+    <RootNamespace>ErikTheCoder.Sandbox.XmlParserCoreRt</RootNamespace>
+    <AssemblyName>ErikTheCoder.Sandbox.XmlParserCoreRt</AssemblyName>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="ErikTheCoder.Utilities" Version="1.0.4" />
-  </ItemGroup>
 
   <Import Project="$(MSBuildSDKsPath)\Microsoft.NET.Sdk\Sdk\Sdk.targets" />
   <Import Project="$(IlcPath)\build\Microsoft.NETCore.Native.targets" />

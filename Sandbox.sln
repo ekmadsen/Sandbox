@@ -32,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dapper Client", "Dapper Cli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Async Concurrent", "Async Concurrent\Async Concurrent.csproj", "{A2CBB860-A462-4115-8F87-52006B531C8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xml Parser", "Xml Parser\Xml Parser.csproj", "{DA3A9E23-537E-4C88-A4A5-B99D0A12DE85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xml Parser", "Xml Parser\Xml Parser.csproj", "{DA3A9E23-537E-4C88-A4A5-B99D0A12DE85}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

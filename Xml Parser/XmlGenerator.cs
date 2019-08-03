@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using ErikTheCoder.Utilities;
 
@@ -35,7 +34,6 @@ namespace ErikTheCoder.Sandbox.XmlParser
         public void CreateFile(string Filename, int FileSizeMb)
         {
 			Console.Write("Creating file... ");
-			Stopwatch stopwatch = Stopwatch.StartNew();
 			int targetFileSizeBytes = FileSizeMb * 1024 * 1024;
             using (FileStream fileStream = File.Open(Filename, FileMode.Create, FileAccess.Write, FileShare.Read))
             {
@@ -56,9 +54,6 @@ namespace ErikTheCoder.Sandbox.XmlParser
                     CloseAllElements(streamWriter, ref fileSizeBytes);
                 }
             }
-			stopwatch.Stop();
-			Console.WriteLine("done.");
-			Console.WriteLine($"Creation of {FileSizeMb} MB file took {stopwatch.Elapsed.TotalSeconds:0.000} seconds.");
 		}
 
 

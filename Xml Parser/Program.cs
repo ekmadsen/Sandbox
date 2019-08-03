@@ -31,15 +31,17 @@ namespace ErikTheCoder.Sandbox.XmlParser
             {
                 IParser parser = GetParser(parsingTechnique.Value);
                 int nodes = parser.CountNodes(inputFilename, xPath);
+                stopwatch.Stop();
                 fileSizeMb = (int?)((new FileInfo(inputFilename)).Length / (1024d * 1024d));
                 Console.WriteLine($"Found {nodes} nodes.");
-                stopwatch.Stop();
                 Console.WriteLine($"Parsing of {fileSizeMb.Value} MB file took {stopwatch.Elapsed.TotalSeconds:0.000} seconds.");
             }
             if (outputFilename != null)
             {
                 XmlGenerator xmlGenerator = new XmlGenerator(random);
                 xmlGenerator.CreateFile(outputFilename, fileSizeMb.Value);
+                stopwatch.Stop();
+                Console.WriteLine($"Creation of {fileSizeMb.Value} MB file took {stopwatch.Elapsed.TotalSeconds:0.000} seconds.");
             }
         }
 
