@@ -43,7 +43,7 @@ namespace ErikTheCoder.Sandbox.XmlParser
                             continue;
                         }
                         _elementNameLengths[depth] = elementNameLength;
-                        if ((depth == xPathDepth) && PathsMatch(xPathNames, depth)) count++;
+                        if ((depth == xPathDepth) && PathsMatch(xPathNames)) count++;
                         depth++;
                     } while (true);
                 }
@@ -75,9 +75,9 @@ namespace ErikTheCoder.Sandbox.XmlParser
 
 
         // ReSharper disable SuggestBaseTypeForParameter
-        private bool PathsMatch(string[] XPathNames, int Depth)
+        private bool PathsMatch(string[] XPathNames)
         {
-            for (int depth = 0; depth <= Depth; depth++)
+            for (int depth = 0; depth < XPathNames.Length; depth++)
             {
                 int length = Math.Min(_elementNameLengths[depth], XPathNames[depth].Length);
                 for (int index = 0; index < length; index++) if (_buffer[depth][index] != XPathNames[depth][index]) return false;

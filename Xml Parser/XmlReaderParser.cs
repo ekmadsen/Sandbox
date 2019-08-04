@@ -30,7 +30,7 @@ namespace ErikTheCoder.Sandbox.XmlParser
                         {
                             case XmlNodeType.Element:
                                 elementNames[depth] = xmlReader.LocalName;
-                                if ((depth == xPathDepth) && PathsMatch(elementNames, depth, xPathNames)) count++;
+                                if ((depth == xPathDepth) && PathsMatch(elementNames, xPathNames)) count++;
                                 depth++;
                                 break;
                             case XmlNodeType.EndElement:
@@ -45,10 +45,10 @@ namespace ErikTheCoder.Sandbox.XmlParser
 
 
         // ReSharper disable SuggestBaseTypeForParameter
-        private static bool PathsMatch(string[] ElementNames, int Depth, string[] XPathNames)
+        private static bool PathsMatch(string[] ElementNames, string[] XPathNames)
         {
-            int length = Math.Min(Math.Min(ElementNames.Length, XPathNames.Length), Depth);
-            for (int index = 0; index <= length; index++) if (ElementNames[index] != XPathNames[index]) return false;
+            int length = Math.Min(ElementNames.Length, XPathNames.Length);
+            for (int index = 0; index < length; index++) if (ElementNames[index] != XPathNames[index]) return false;
             return true;
         }
         // ReSharper restore SuggestBaseTypeForParameter
