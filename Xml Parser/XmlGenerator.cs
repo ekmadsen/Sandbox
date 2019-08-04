@@ -20,8 +20,6 @@ namespace ErikTheCoder.Sandbox.XmlParser
         private readonly int[] _actionPercentages;
         private readonly char[] _lowercaseChars = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
         
-        
-
 
         public XmlGenerator(IThreadsafeRandom Random)
         {

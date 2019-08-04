@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml;
 
 
@@ -44,9 +45,10 @@ namespace ErikTheCoder.Sandbox.XmlParser
 
 
         // ReSharper disable SuggestBaseTypeForParameter
-        private static bool PathsMatch(string[] ElementNames, int Depth, string[] XPathNames)            
+        private static bool PathsMatch(string[] ElementNames, int Depth, string[] XPathNames)
         {
-            for (int index = 0; index <= Depth; index++) if (ElementNames[index] != XPathNames[index]) return false;
+            int length = Math.Min(Math.Min(ElementNames.Length, XPathNames.Length), Depth);
+            for (int index = 0; index <= length; index++) if (ElementNames[index] != XPathNames[index]) return false;
             return true;
         }
         // ReSharper restore SuggestBaseTypeForParameter

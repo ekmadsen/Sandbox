@@ -1,6 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="$(MSBuildSDKsPath)\Microsoft.NET.Sdk\Sdk\Sdk.props" />
+  <!--<Import Project="$(MSBuildSDKsPath)\Microsoft.NET.Sdk\Sdk\Sdk.props" />-->
+
+  <!--<PropertyGroup>
+    <IlcInvariantGlobalization>true</IlcInvariantGlobalization>
+    <RootAllApplicationAssemblies>false</RootAllApplicationAssemblies>
+    <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+    <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+    <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
+    <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+  </PropertyGroup>-->
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -14,7 +23,7 @@
     <PackageReference Include="ErikTheCoder.Utilities" Version="1.0.4" />
   </ItemGroup>
 
-  <Import Project="$(MSBuildSDKsPath)\Microsoft.NET.Sdk\Sdk\Sdk.targets" />
-  <Import Project="$(IlcPath)\build\Microsoft.NETCore.Native.targets" />
+  <!--<Import Project="$(MSBuildSDKsPath)\Microsoft.NET.Sdk\Sdk\Sdk.targets" />
+  <Import Project="$(IlcPath)\build\Microsoft.NETCore.Native.targets" />-->
 
 </Project>
