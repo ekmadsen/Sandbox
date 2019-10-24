@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Dapper Extensions": {
+      "commandName": "Project",
+      "commandLineArgs": "regular 9346400 9346700"
+    }
+  }
+}

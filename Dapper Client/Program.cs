@@ -4,9 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using ErikTheCoder.Logging;
 using Refit;
 using ErikTheCoder.Sandbox.Dapper.Contract;
+using ErikTheCoder.Utilities;
 using Newtonsoft.Json;
 
 

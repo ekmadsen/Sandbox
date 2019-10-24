@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <RootNamespace>ErikTheCoder.Sandbox.Dapper.Contract</RootNamespace>
+    <AssemblyName>ErikTheCoder.Sandbox.Dapper.Contract</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ErikTheCoder.Data" Version="1.0.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
+  </ItemGroup>
+
+</Project>

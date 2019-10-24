@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using ErikTheCoder.Logging;
 using ErikTheCoder.ServiceContract;
+using ErikTheCoder.Utilities;
 
 
 namespace ErikTheCoder.Sandbox.AsyncConcurrent

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using ErikTheCoder.Logging;
+using ErikTheCoder.Utilities;
 
 
 namespace ErikTheCoder.Sandbox.EncryptDecrypt
