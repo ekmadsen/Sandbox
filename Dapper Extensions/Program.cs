@@ -26,11 +26,11 @@ namespace ErikTheCoder.Sandbox.Dapper.Contract
         public static async Task Main(string[] Arguments)
         {
             (GetCallData getCallData, int minServiceCallId, int maxServiceCallId) = ParseCommandLine(Arguments);
-            (Dictionary<int, int> serviceCallToTechnician, Dictionary<int, HashSet<int>> technicianToServiceCalls) = await getCallData(minServiceCallId, maxServiceCallId);
             Stopwatch stopWatch = Stopwatch.StartNew();
+            (Dictionary<int, int> serviceCallToTechnician, Dictionary<int, HashSet<int>> technicianToServiceCalls) = await getCallData(minServiceCallId, maxServiceCallId);
+            stopWatch.Stop();
             Console.WriteLine($"Loaded {serviceCallToTechnician.Count} calls in {nameof(serviceCallToTechnician)} dictionary.");
             Console.WriteLine($"Loaded {technicianToServiceCalls.Count} service technicians in {nameof(technicianToServiceCalls)} dictionary.");
-            stopWatch.Stop();
             Console.WriteLine($"Call data retrieved in {stopWatch.Elapsed.TotalSeconds:0.000} seconds.");
         }
 
