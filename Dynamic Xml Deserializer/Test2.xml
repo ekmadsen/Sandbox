@@ -1,7 +1,7 @@
 <Response>
   <Foo>Hello</Foo>
   <Bar>World</Bar>
-  <Data>
+  <Data Bork="Z">
     <Widget>
       <Id>101</Id>
 	  <Cost>101.99</Cost>

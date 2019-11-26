@@ -1,7 +1,7 @@
 <Response>
   <Foo>Hello</Foo>
   <Bar>World</Bar>
-  <Data>
+  <Data Frob="A">
     <Baz>
       <Id>101</Id>
 	  <Name>Baz 101</Name>

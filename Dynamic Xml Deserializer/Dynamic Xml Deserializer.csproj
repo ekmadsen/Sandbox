@@ -44,10 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Baz.cs" />
+    <Compile Include="BazData.cs" />
+    <Compile Include="BazHeader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Response.cs" />
     <Compile Include="Widget.cs" />
+    <Compile Include="WidgetData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
