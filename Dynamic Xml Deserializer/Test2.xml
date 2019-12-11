@@ -1,0 +1,18 @@
+<Response>
+  <Foo>Hello</Foo>
+  <Bar>World</Bar>
+  <Data Bork="Z">
+    <Widget>
+      <Id>101</Id>
+	  <Cost>101.99</Cost>
+    </Widget>
+	<Widget>
+      <Id>102</Id>
+	  <Cost>102.99</Cost>
+    </Widget>
+	<Widget>
+      <Id>103</Id>
+	  <Cost>103.99</Cost>
+    </Widget>
+  </Data>
+</Response>

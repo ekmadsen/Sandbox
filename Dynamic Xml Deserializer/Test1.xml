@@ -1,0 +1,18 @@
+<Response>
+  <Foo>Hello</Foo>
+  <Bar>World</Bar>
+  <Data Frob="A">
+    <Baz>
+      <Id>101</Id>
+	  <Name>Baz 101</Name>
+    </Baz>
+	<Baz>
+      <Id>102</Id>
+	  <Name>Baz 102</Name>
+    </Baz>
+	<Baz>
+      <Id>103</Id>
+	  <Name>Baz 103</Name>
+    </Baz>
+  </Data>
+</Response>
