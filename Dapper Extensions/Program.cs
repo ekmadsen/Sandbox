@@ -50,6 +50,7 @@ namespace ErikTheCoder.Sandbox.Dapper.Contract
                     return default;
                 };
                 var param = new {MinServiceCallId, MaxServiceCallId};
+                // ReSharper disable once UnusedVariable
                 IEnumerable<int> unusedReturnValues = await connection.QueryAsync(_sql, map, param, splitOn: "TechnicianId");
                 return (serviceCallToTechnician, technicianToServiceCalls);
             }

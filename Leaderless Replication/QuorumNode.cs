@@ -10,24 +10,29 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
         private readonly int _requiredVotes;
 
 
-        public QuorumNode(IThreadsafeRandom Random, int Id, string Name, string RegionName, List<NodeBase> ConnectedNodes, int RequiredVotes) :
-            base(Random, Id, Name, RegionName, ConnectedNodes)
+        public bool ReadRepair { get; set; }
+
+
+        public QuorumNode(IThreadsafeRandom Random, int Id, string Name, string RegionName, int RequiredVotes) :
+            base(Random, Id, Name, RegionName)
         {
             _requiredVotes = RequiredVotes;
         }
 
 
-        public override async Task<string> ReadValueAsync(int Key)
+        public override async Task<string> ReadValueAsync(string Key)
         {
-            // Read value from connected nodes in same region.
-            Dictionary<string, int> allVotes = new Dictionary<string, int>();
-            List<Task<string>> regionTasks = new List<Task<string>>();
-            foreach (Connection connection in Connections[RegionName]) regionTasks.Add(connection.ReadValueAsync(Key));
-            int remainingTasks = regionTasks.Count;
-            while (remainingTasks > 0)
+            // Track which nodes voted for which values.  Initialize with this node's value.
+            Dictionary<string, HashSet<int>> allVotes = new Dictionary<string, HashSet<int>> {[Values[Key]] = new HashSet<int> {Id}};
+            // Get value from connected nodes in same region.
+            // Calling connection.ReadValueAsync would create an infinite loop of reads from all regional nodes to all regional nodes.
+            HashSet<Task<string>> regionTasks = new HashSet<Task<string>>();
+            foreach (Connection connection in Connections[RegionName]) regionTasks.Add(connection.GetValueAsync(Key));
+            while (regionTasks.Count > 0)
             {
-                var task = await Task.WhenAny(regionTasks);
-                remainingTasks--;
+                // Tally votes as they arrive.
+                Task<string> task = await Task.WhenAny(regionTasks);
+                regionTasks.Remove(task);
                 string value;
                 try
                 {
@@ -35,30 +40,34 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
                 }
                 catch (NetworkException)
                 {
-                    // Ignore offline nodes.
+                    // Ignore offline node.
                     continue;
                 }
-                // Tally votes for each read value and return when quorum is reached.
-                if (!allVotes.TryGetValue(value, out int votes)) votes = 0;
-                allVotes[value] = ++votes;
+                // Return when quorum is reached.
+                string votesKey = value ?? "null";
+                if (!allVotes.TryGetValue(votesKey, out HashSet<int> nodes)) nodes = new HashSet<int>();
+                nodes.Add()
+                votes++;
+                allVotes[votesKey] = votes;
                 if (votes >= _requiredVotes) return value;
             }
-            throw new Exception("Quorum not reached.");
+            throw new QuorumNotReachedException();
         }
 
 
-        public override async Task WriteValueAsync(int Key, string Value)
+        public override async Task WriteValueAsync(string Key, string Value)
         {
-            // Write value to local collection.
+            // Put value to local collection.
+            // Calling connection.WriteValueAsync would create an infinite loop of writes from all global nodes to all global nodes.
             Values[Key] = Value;
-            // Write value to all connected nodes in same region.
+            // Put value to all connected nodes in same region.
             List<Task> regionTasks = new List<Task>();
-            foreach (Connection connection in Connections[RegionName]) regionTasks.Add(connection.WriteValueAsync(Key, Value));
-            // Write value to all other connected nodes.
+            foreach (Connection connection in Connections[RegionName]) regionTasks.Add(connection.PutValueAsync(Key, Value));
+            // Put value to all other connected nodes.
             foreach ((string regionName, List<Connection> connections) in Connections)
             {
-                if (regionName == RegionName) continue; // Already have written value to nodes in same region.
-                foreach (Connection connection in connections) _ = connection.WriteValueAsync(Key, Value);
+                if (regionName == RegionName) continue; // Already have put value to nodes in same region.
+                foreach (Connection connection in connections) _ = connection.PutValueAsync(Key, Value);
             }
             // Wait for nodes in same region to respond.
             try

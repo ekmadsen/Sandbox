@@ -13,9 +13,9 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
 
         public NodeBase FromNode { get; }
         public NodeBase ToNode { get; }
-        public bool Online { get; set; }
+        public string Name => $"{FromNode?.Name} to {ToNode?.Name}";
 
-
+        
         public Connection(IThreadsafeRandom Random, NodeBase FromNode, NodeBase ToNode, TimeSpan MinLatency, TimeSpan MaxLatency)
         {
             _random = Random;
@@ -23,24 +23,38 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             this.ToNode = ToNode;
             _minLatency = MinLatency;
             _maxLatency = MaxLatency;
-            Online = true;
         }
 
 
-        public async Task<string> ReadValueAsync(int Key)
+        public async Task<string> ReadValueAsync(string Key)
         {
             await Delay();
-            if (!Online) throw new NetworkException();
+            if (!ToNode.Online) throw new NetworkException();
             return await ToNode.ReadValueAsync(Key);
         }
 
 
-        public async Task WriteValueAsync(int Key, string Value)
+        public async Task<string> GetValueAsync(string Key)
         {
             await Delay();
-            if (!Online) throw new NetworkException();
-            // Calling ToNode.WriteValueAsync would create an infinite loop of writes between all nodes.
-            ToNode.ReceiveValue(Key, Value);
+            if (!ToNode.Online) throw new NetworkException();
+            return ToNode.GetValue(Key);
+        }
+
+
+        public async Task WriteValueAsync(string Key, string Value)
+        {
+            await Delay();
+            if (!ToNode.Online) throw new NetworkException();
+            await ToNode.WriteValueAsync(Key, Value);
+        }
+
+
+        public async Task PutValueAsync(string Key, string Value)
+        {
+            await Delay();
+            if (!ToNode.Online) throw new NetworkException();
+            ToNode.PutValue(Key, Value);
         }
 
 

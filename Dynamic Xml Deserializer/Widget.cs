@@ -2,7 +2,7 @@
 
 
 namespace ErikTheCoder.Sandbox.Xml {
-	[Serializable()]
+	[Serializable]
 	public class Widget {
 		public int Id { get; set; }
 		public double Cost { get; set; }

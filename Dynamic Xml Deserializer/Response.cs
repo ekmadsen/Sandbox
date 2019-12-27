@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 
 namespace ErikTheCoder.Sandbox.Xml {
-	[Serializable()]
+	[Serializable]
 	[XmlRoot("Response")]
 	public class Response<T> where T : class, new() {
 		public string Foo { get; set; }

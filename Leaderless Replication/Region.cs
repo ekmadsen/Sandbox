@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
 
 namespace ErikTheCoder.Sandbox.LeaderlessReplication
 {
@@ -13,12 +13,6 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
         {
             this.Name = Name;
             this.Nodes = Nodes;
-        }
-
-
-        public void BeginOutage(int Nodes, TimeSpan Duration)
-        {
-
         }
     }
 }
