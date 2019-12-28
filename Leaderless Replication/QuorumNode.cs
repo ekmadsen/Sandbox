@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using ErikTheCoder.Utilities;
 
@@ -10,15 +9,14 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
     {
         private const string _nullValue = "!!null!!";
         private readonly int _requiredVotes;
+        private readonly bool _readRepair;
 
 
-        public bool ReadRepair { get; set; } = true;
-
-
-        public QuorumNode(IThreadsafeRandom Random, int Id, string Name, string RegionName, int RequiredVotes) :
+        public QuorumNode(IThreadsafeRandom Random, int Id, string Name, string RegionName, int RequiredVotes, bool ReadRepair) :
             base(Random, Id, Name, RegionName)
         {
             _requiredVotes = RequiredVotes;
+            _readRepair = ReadRepair;
         }
 
 
@@ -55,7 +53,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
                 if (!votes.TryGetValue(voteKey, out HashSet<int> nodes)) nodes = new HashSet<int>();
                 nodes.Add(toNodeId);
                 votes[voteKey] = nodes;
-                if (ReadRepair)
+                if (_readRepair)
                 {
                     // Return when all votes are tallied.
                     if (regionTasks.Count == 0) return ReadValueAndRepairNodes(Key, votes);

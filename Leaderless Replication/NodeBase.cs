@@ -13,6 +13,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
         protected ConcurrentDictionary<string, string> Values { get; }
         public int Id { get; }
         public string Name { get; }
+        // ReSharper disable once MemberCanBeProtected.Global
         public string RegionName { get; }
         public Dictionary<string, List<Connection>> Connections { get; private set; }
         public bool Online { get; set; }

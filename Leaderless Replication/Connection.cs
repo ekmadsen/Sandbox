@@ -11,8 +11,10 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
         private readonly TimeSpan _maxLatency;
 
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public NodeBase FromNode { get; }
         public NodeBase ToNode { get; }
+        // ReSharper disable once UnusedMember.Global
         public string Name => $"{FromNode?.Name} to {ToNode?.Name}";
 
         

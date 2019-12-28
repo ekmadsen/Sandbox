@@ -50,9 +50,11 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             foreach (NodeBase node in globalNodes) node.Connect(globalNodes);
             // Create regions.
             Region naRegion = new Region(RegionName.NorthAmerica, naNodes);
+            // ReSharper disable UnusedVariable
             Region saRegion = new Region(RegionName.SouthAmerica, saNodes);
             Region euRegion = new Region(RegionName.Europe, euNodes);
             Region asRegion = new Region(RegionName.Asia, asNodes);
+            // ReSharper restore UnusedVariable
             // Create clients and connect them to their regional nodes.
             Client naClient = new Client(_random, ++id, "NA-Client", RegionName.NorthAmerica);
             Client saClient = new Client(_random, ++id, "SA-Client", RegionName.SouthAmerica);
@@ -68,7 +70,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             switch (testName?.ToLower())
             {
                 case "testreadperformance":
-                    await TestReadPerformance(naClient, naRegion, asRegion);
+                    await TestReadPerformance(naClient, asRegion);
                     break;
                 case "testfaulttolerance":
                     await TestFaultTolerance(naClient, naRegion);
@@ -88,7 +90,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             const int requiredVotes = 3;
             while (RegionalNodes.Count < nodesPerRegion)
             {
-                QuorumNode node = new QuorumNode(_random, ++Id, $"{RegionName}-{RegionalNodes.Count + 1}", RegionName, requiredVotes);
+                QuorumNode node = new QuorumNode(_random, ++Id, $"{RegionName}-{RegionalNodes.Count + 1}", RegionName, requiredVotes, true);
                 GlobalNodes.Add(node);
                 RegionalNodes.Add(node);
             }
@@ -96,7 +98,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
 
 
         // ReSharper disable once SuggestBaseTypeForParameter
-        private static async Task TestReadPerformance(Client NaClient, Region NaRegion, Region AsRegion)
+        private static async Task TestReadPerformance(Client NaClient, Region AsRegion)
         {
             // Test client performance.
             Console.WriteLine("Testing performance of North American client.");
