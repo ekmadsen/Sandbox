@@ -2,9 +2,9 @@
 {
     public static class RegionName
     {
-        public const string NorthAmerica = "North America";
-        public const string SouthAmerica = "South America";
-        public const string Europe = "Europe";
-        public const string Asia = "Asia";
+        public const string NorthAmerica = "NA";
+        public const string SouthAmerica = "SA";
+        public const string Europe = "EU";
+        public const string Asia = "AS";
     }
 }

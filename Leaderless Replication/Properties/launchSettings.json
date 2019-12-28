@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Leaderless Replication": {
+      "commandName": "Project",
+      "commandLineArgs": "testfaulttolerance"
+    }
+  }
+}

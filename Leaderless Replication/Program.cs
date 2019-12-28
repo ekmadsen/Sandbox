@@ -19,7 +19,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
         {
             try
             {
-                ThreadsafeConsole.WriteLine();
+                Console.WriteLine();
                 if (Arguments?.Length != 1) throw new ArgumentException("Test name not specified.");
                 await Run(Arguments);
             }
@@ -29,7 +29,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             }
             finally
             {
-                ThreadsafeConsole.WriteLine();
+                Console.WriteLine();
             }
         }
 
@@ -38,7 +38,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
         {
             // Create nodes in all regions and connect them.
             List<NodeBase> globalNodes = new List<NodeBase>();
-            int id = 0;
+            int id = -1;
             List<NodeBase> naNodes = new List<NodeBase>();
             CreateNodes(globalNodes, naNodes, RegionName.NorthAmerica, ref id);
             List<NodeBase> saNodes = new List<NodeBase>();
@@ -54,13 +54,10 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             Region euRegion = new Region(RegionName.Europe, euNodes);
             Region asRegion = new Region(RegionName.Asia, asNodes);
             // Create clients and connect them to their regional nodes.
-            Client naClient = new Client(_random, id, "NA-Client", RegionName.NorthAmerica);
-            id++;
-            Client saClient = new Client(_random, id, "SA-Client", RegionName.SouthAmerica);
-            id++;
-            Client euClient = new Client(_random, id, "EU-Client", RegionName.Europe);
-            id++;
-            Client asClient = new Client(_random, id, "AS-Client", RegionName.Asia);
+            Client naClient = new Client(_random, ++id, "NA-Client", RegionName.NorthAmerica);
+            Client saClient = new Client(_random, ++id, "SA-Client", RegionName.SouthAmerica);
+            Client euClient = new Client(_random, ++id, "EU-Client", RegionName.Europe);
+            Client asClient = new Client(_random, ++id, "AS-Client", RegionName.Asia);
             (TimeSpan MinLatency, TimeSpan MaxLatency) regionalLatency = (TimeSpan.FromMilliseconds(Latency.Min), TimeSpan.FromMilliseconds(Latency.Max));
             naClient.Connect(naNodes, regionalLatency);
             saClient.Connect(saNodes, regionalLatency);
@@ -76,6 +73,9 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
                 case "testfaulttolerance":
                     await TestFaultTolerance(naClient, naRegion);
                     break;
+                case "testeventualconsistency":
+                    await TestEventualConsistency(naClient, naRegion);
+                    break;
                 default:
                     throw new ArgumentException($"{testName} test not supported.");
             }
@@ -88,10 +88,9 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             const int requiredVotes = 3;
             while (RegionalNodes.Count < nodesPerRegion)
             {
-                QuorumNode node = new QuorumNode(_random, Id, $"NA-{RegionalNodes.Count + 1}", RegionName, requiredVotes);
+                QuorumNode node = new QuorumNode(_random, ++Id, $"{RegionName}-{RegionalNodes.Count + 1}", RegionName, requiredVotes);
                 GlobalNodes.Add(node);
                 RegionalNodes.Add(node);
-                Id++;
             }
         }
 
@@ -100,38 +99,38 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
         private static async Task TestReadPerformance(Client NaClient, Region NaRegion, Region AsRegion)
         {
             // Test client performance.
-            ThreadsafeConsole.WriteLine("Testing performance of North American client.");
-            ThreadsafeConsole.WriteLine();
-            ThreadsafeConsole.Write("Writing sentinel value... ");
+            Console.WriteLine("Testing performance of North American client.");
+            Console.WriteLine();
+            Console.Write("Writing sentinel value... ");
             TimeSpan begin = _stopwatch.Elapsed;
             await NaClient.WriteValueAsync(_sentinelKey, "Yada, yada, yada");
             TimeSpan end = _stopwatch.Elapsed;
             TimeSpan clientWriteDuration = end - begin;
-            ThreadsafeConsole.WriteLine("done.");
-            ThreadsafeConsole.WriteLine($"Wrote sentinel value in {clientWriteDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
-            ThreadsafeConsole.WriteLine();
-            ThreadsafeConsole.Write("Reading sentinel value... ");
+            Console.WriteLine("done.");
+            Console.WriteLine($"Wrote sentinel value in {clientWriteDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
+            Console.WriteLine();
+            Console.Write("Reading sentinel value... ");
             begin = _stopwatch.Elapsed;
             string sentinelValue = await NaClient.ReadValueAsync(_sentinelKey);
             end = _stopwatch.Elapsed;
             TimeSpan clientReadDuration = end - begin;
-            ThreadsafeConsole.WriteLine("done.");
-            ThreadsafeConsole.WriteLine($"Sentinel value = {sentinelValue}.");
-            ThreadsafeConsole.WriteLine($"Read sentinel value in {clientReadDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
-            ThreadsafeConsole.WriteLine();
+            Console.WriteLine("done.");
+            Console.WriteLine($"Sentinel value = {sentinelValue}.");
+            Console.WriteLine($"Read sentinel value in {clientReadDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
+            Console.WriteLine();
             // Compare client read performance to reading from a high-latency connection.
-            ThreadsafeConsole.WriteLine("Testing performance of connection between Asian node and North American node.");
-            ThreadsafeConsole.Write("Reading sentinel value... ");
+            Console.WriteLine("Testing performance of connection between Asian node and North American node.");
+            Console.Write("Reading sentinel value... ");
             begin = _stopwatch.Elapsed;
             Connection asToNaConnection = AsRegion.Nodes[0].Connections[RegionName.NorthAmerica][0];
             sentinelValue = await asToNaConnection.GetValueAsync(_sentinelKey);
             end = _stopwatch.Elapsed;
             TimeSpan highLatencyDuration = end - begin;
-            ThreadsafeConsole.WriteLine("done.");
-            ThreadsafeConsole.WriteLine($"Sentinel value = {sentinelValue}.");
-            ThreadsafeConsole.WriteLine($"Read sentinel value in {highLatencyDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
-            ThreadsafeConsole.WriteLine();
-            ThreadsafeConsole.Write("Test result: ");
+            Console.WriteLine("done.");
+            Console.WriteLine($"Sentinel value = {sentinelValue}.");
+            Console.WriteLine($"Read sentinel value in {highLatencyDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
+            Console.WriteLine();
+            Console.Write("Test result: ");
             if (clientReadDuration < highLatencyDuration) ThreadsafeConsole.WriteLine("success.", ConsoleColor.Green);
             else ThreadsafeConsole.WriteLine("failure.", ConsoleColor.Red);
         }
@@ -140,35 +139,44 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
         // ReSharper disable once SuggestBaseTypeForParameter
         private static async Task TestFaultTolerance(Client NaClient, Region NaRegion)
         {
-            ThreadsafeConsole.WriteLine("Testing fault tolerance of North American nodes.");
-            ThreadsafeConsole.WriteLine();
-            ThreadsafeConsole.Write("Writing sentinel value... ");
+            Console.WriteLine("Testing fault tolerance of North American nodes.");
+            Console.WriteLine();
+            Console.Write("Writing sentinel value... ");
             TimeSpan begin = _stopwatch.Elapsed;
             await NaClient.WriteValueAsync(_sentinelKey, "Yada, yada, yada");
             TimeSpan end = _stopwatch.Elapsed;
             TimeSpan clientWriteDuration = end - begin;
-            ThreadsafeConsole.WriteLine("done.");
-            ThreadsafeConsole.WriteLine($"Wrote sentinel value in {clientWriteDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
-            ThreadsafeConsole.WriteLine();
-            // Take two nodes offline.  Expect no service interruption.
-            ThreadsafeConsole.Write("Taking two (of five) nodes offline... ");
-            NaRegion.Nodes[1].Online = false;
-            NaRegion.Nodes[2].Online = false;
-            ThreadsafeConsole.WriteLine("done.");
-            ThreadsafeConsole.Write("Reading sentinel value... ");
+            Console.WriteLine("done.");
+            Console.WriteLine($"Wrote sentinel value in {clientWriteDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
+            Console.WriteLine();
+            Console.Write("Reading sentinel value... ");
             begin = _stopwatch.Elapsed;
             string sentinelValue = await NaClient.ReadValueAsync(_sentinelKey);
             end = _stopwatch.Elapsed;
             TimeSpan clientReadDuration = end - begin;
-            ThreadsafeConsole.WriteLine("done.");
-            ThreadsafeConsole.WriteLine($"Sentinel value = {sentinelValue}.");
-            ThreadsafeConsole.WriteLine($"Read sentinel value in {clientReadDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
-            ThreadsafeConsole.WriteLine();
+            Console.WriteLine("done.");
+            Console.WriteLine($"Sentinel value = {sentinelValue}.");
+            Console.WriteLine($"Read sentinel value in {clientReadDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
+            Console.WriteLine();
+            // Take two nodes offline.  Expect no service interruption.
+            Console.Write("Taking two (of five) nodes offline... ");
+            NaRegion.Nodes[1].Online = false;
+            NaRegion.Nodes[2].Online = false;
+            Console.WriteLine("done.");
+            Console.Write("Reading sentinel value... ");
+            begin = _stopwatch.Elapsed;
+            sentinelValue = await NaClient.ReadValueAsync(_sentinelKey);
+            end = _stopwatch.Elapsed;
+            clientReadDuration = end - begin;
+            Console.WriteLine("done.");
+            Console.WriteLine($"Sentinel value = {sentinelValue}.");
+            Console.WriteLine($"Read sentinel value in {clientReadDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
+            Console.WriteLine();
             // Take a third node offline.  Expect service interruption.
-            ThreadsafeConsole.Write("Taking a third (of five) node offline... ");
+            Console.Write("Taking a third (of five) node offline... ");
             NaRegion.Nodes[4].Online = false;
-            ThreadsafeConsole.WriteLine("done.");
-            ThreadsafeConsole.Write("Reading sentinel value... ");
+            Console.WriteLine("done.");
+            Console.Write("Reading sentinel value... ");
             bool success = false;
             try
             {
@@ -176,33 +184,112 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
                 sentinelValue = await NaClient.ReadValueAsync(_sentinelKey);
                 end = _stopwatch.Elapsed;
                 clientReadDuration = end - begin;
-                ThreadsafeConsole.WriteLine("done.");
-                ThreadsafeConsole.WriteLine($"Sentinel value = {sentinelValue}.");
-                ThreadsafeConsole.WriteLine($"Read sentinel value in {clientReadDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
-                ThreadsafeConsole.WriteLine();
+                Console.WriteLine("done.");
+                Console.WriteLine($"Sentinel value = {sentinelValue}.");
+                Console.WriteLine($"Read sentinel value in {clientReadDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
+                Console.WriteLine();
             }
             catch (QuorumNotReachedException exception)
             {
                 // Expect a QuorumNotReachedException because only two of five nodes are online.
                 success = true;
-                ThreadsafeConsole.WriteLine();
+                Console.WriteLine();
                 ThreadsafeConsole.WriteLine(exception.GetSummary(true, true), ConsoleColor.Red);
             }
             catch (Exception exception)
             {
                 ThreadsafeConsole.WriteLine(exception.GetSummary(true, true), ConsoleColor.Red);
             }
-
-            ThreadsafeConsole.Write("Test result: ");
+            Console.Write("Test result: ");
             if (success) ThreadsafeConsole.WriteLine("success.", ConsoleColor.Green);
             else ThreadsafeConsole.WriteLine("failure.", ConsoleColor.Red);
         }
 
 
-        private static async Task TestEventualConsistency()
+        // ReSharper disable once SuggestBaseTypeForParameter
+        private static async Task TestEventualConsistency(Client NaClient, Region NaRegion)
         {
-            // Demonstrate read repair.
-            await Task.Delay(0);
+            Console.WriteLine("Testing eventual consistency of North American nodes.");
+            Console.WriteLine();
+            Console.Write("Writing sentinel value... ");
+            TimeSpan begin = _stopwatch.Elapsed;
+            await NaClient.WriteValueAsync(_sentinelKey, "Before");
+            TimeSpan end = _stopwatch.Elapsed;
+            TimeSpan clientWriteDuration = end - begin;
+            Console.WriteLine("done.");
+            Console.WriteLine($"Wrote sentinel value in {clientWriteDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
+            Console.WriteLine();
+            Console.Write("Reading sentinel value... ");
+            begin = _stopwatch.Elapsed;
+            string sentinelValue = await NaClient.ReadValueAsync(_sentinelKey);
+            end = _stopwatch.Elapsed;
+            TimeSpan clientReadDuration = end - begin;
+            Console.WriteLine("done.");
+            Console.WriteLine($"Sentinel value = {sentinelValue}.");
+            Console.WriteLine($"Read sentinel value in {clientReadDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
+            Console.WriteLine();
+            // Take two nodes offline.
+            Console.Write("Taking two (of five) nodes offline... ");
+            NaRegion.Nodes[1].Online = false;
+            NaRegion.Nodes[2].Online = false;
+            Console.WriteLine("done.");
+            Console.WriteLine();
+            Console.Write("Updating sentinel value... ");
+            begin = _stopwatch.Elapsed;
+            await NaClient.WriteValueAsync(_sentinelKey, "After");
+            end = _stopwatch.Elapsed;
+            clientWriteDuration = end - begin;
+            Console.WriteLine("done.");
+            Console.WriteLine($"Wrote sentinel value in {clientWriteDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
+            Console.WriteLine();
+            // Examine value of sentinel key in regional nodes while two nodes are offline.
+            foreach (NodeBase node in NaRegion.Nodes)
+            {
+                Console.WriteLine($"{node.Name} node's {_sentinelKey} = {node.GetValue(_sentinelKey)}.");
+            }
+            Console.WriteLine();
+            // Bring two offline nodes back online.
+            NaRegion.Nodes[1].Online = true;
+            NaRegion.Nodes[2].Online = true;
+            Console.Write("Triggering read repairs by reading sentinel value again... ");
+            begin = _stopwatch.Elapsed;
+            sentinelValue = await NaClient.ReadValueAsync(_sentinelKey);
+            end = _stopwatch.Elapsed;
+            clientReadDuration = end - begin;
+            Console.WriteLine("done.");
+            Console.WriteLine("Read is done.  However, read repairs are in progress.");
+            Console.WriteLine($"Sentinel value = {sentinelValue}.");
+            Console.WriteLine($"Read sentinel value in {clientReadDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
+            Console.WriteLine();
+            // Examine value of sentinel key in regional nodes.  All nodes are back online and read repairs are in progress.
+            HashSet<string> nodeValues = new HashSet<string>();
+            foreach (NodeBase node in NaRegion.Nodes)
+            {
+                string value = node.GetValue(_sentinelKey);
+                if (!nodeValues.Contains(value)) nodeValues.Add(value);
+                Console.WriteLine($"{node.Name} node's {_sentinelKey} = {value}.");
+            }
+            Console.WriteLine();
+            bool consistentDuringReadRepairs = nodeValues.Count == 1;
+            // Wait for read repairs to complete.
+            Console.Write("Waiting for read repairs to complete... ");
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            Console.WriteLine("done.");
+            Console.WriteLine();
+            // Examine value of sentinel key in regional nodes.  All nodes are back online and read repairs are complete.
+            nodeValues.Clear();
+            foreach (NodeBase node in NaRegion.Nodes)
+            {
+                string value = node.GetValue(_sentinelKey);
+                if (!nodeValues.Contains(value)) nodeValues.Add(value);
+                Console.WriteLine($"{node.Name} node's {_sentinelKey} = {value}.");
+            }
+            Console.WriteLine();
+            bool consistentAfterReadRepairs = nodeValues.Count == 1;
+            bool success = !consistentDuringReadRepairs && consistentAfterReadRepairs;
+            Console.Write("Test result: ");
+            if (success) ThreadsafeConsole.WriteLine("success.", ConsoleColor.Green);
+            else ThreadsafeConsole.WriteLine("failure.", ConsoleColor.Red);
         }
     }
 }
