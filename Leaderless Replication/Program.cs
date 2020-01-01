@@ -10,7 +10,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
     public static class Program
     {
         private const string _sentinelKey = "Sentinel Key";
-        private const string _timeSpanFormat = "00.000";
+        private const string _timeSpanFormat = "0.000";
         private static readonly IThreadsafeRandom _random = new ThreadsafeRandom();
         private static readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
@@ -76,7 +76,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
                     await TestFaultTolerance(naClient, naRegion);
                     break;
                 case "testeventualconsistency":
-                    await TestEventualConsistency(naClient, naRegion);
+                    await TestEventualConsistency(naClient, naRegion, globalNodes);
                     break;
                 default:
                     throw new ArgumentException($"{testName} test not supported.");
@@ -84,13 +84,13 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
         }
 
 
-        private static void CreateNodes(ICollection<NodeBase> GlobalNodes, ICollection<NodeBase> RegionalNodes,  string RegionName, ref int Id)
+        private static void CreateNodes(ICollection<NodeBase> GlobalNodes, ICollection<NodeBase> RegionalNodes, string RegionName, ref int Id)
         {
             const int nodesPerRegion = 5;
             const int requiredVotes = 3;
             while (RegionalNodes.Count < nodesPerRegion)
             {
-                QuorumNode node = new QuorumNode(_random, ++Id, $"{RegionName}-{RegionalNodes.Count + 1}", RegionName, requiredVotes, true);
+                QuorumNode node = new QuorumNode(_random, ++Id, $"{RegionName}-{RegionalNodes.Count + 1}", RegionName, requiredVotes, false);
                 GlobalNodes.Add(node);
                 RegionalNodes.Add(node);
             }
@@ -162,8 +162,8 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             Console.WriteLine();
             // Take two nodes offline.  Expect no service interruption.
             Console.Write("Taking two (of five) nodes offline... ");
-            NaRegion.Nodes[1].Online = false;
             NaRegion.Nodes[2].Online = false;
+            NaRegion.Nodes[3].Online = false;
             Console.WriteLine("done.");
             Console.Write("Reading sentinel value... ");
             begin = _stopwatch.Elapsed;
@@ -195,7 +195,6 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             {
                 // Expect a QuorumNotReachedException because only two of five nodes are online.
                 success = true;
-                Console.WriteLine();
                 ThreadsafeConsole.WriteLine(exception.GetSummary(true, true), ConsoleColor.Red);
             }
             catch (Exception exception)
@@ -209,9 +208,9 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
 
 
         // ReSharper disable once SuggestBaseTypeForParameter
-        private static async Task TestEventualConsistency(Client NaClient, Region NaRegion)
+        private static async Task TestEventualConsistency(Client NaClient, Region NaRegion, List<NodeBase> GlobalNodes)
         {
-            Console.WriteLine("Testing eventual consistency of North American nodes.");
+            Console.WriteLine("Testing eventual consistency of global nodes.");
             Console.WriteLine();
             Console.Write("Writing sentinel value... ");
             TimeSpan begin = _stopwatch.Elapsed;
@@ -220,6 +219,11 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             TimeSpan clientWriteDuration = end - begin;
             Console.WriteLine("done.");
             Console.WriteLine($"Wrote sentinel value in {clientWriteDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
+            Console.WriteLine();
+            // Wait for writes to complete globally.
+            Console.Write("Waiting for write to complete globally... ");
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            Console.WriteLine("done.");
             Console.WriteLine();
             Console.Write("Reading sentinel value... ");
             begin = _stopwatch.Elapsed;
@@ -230,10 +234,10 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             Console.WriteLine($"Sentinel value = {sentinelValue}.");
             Console.WriteLine($"Read sentinel value in {clientReadDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
             Console.WriteLine();
-            // Take two nodes offline.
+            // Take two regional nodes offline.
             Console.Write("Taking two (of five) nodes offline... ");
-            NaRegion.Nodes[1].Online = false;
             NaRegion.Nodes[2].Online = false;
+            NaRegion.Nodes[3].Online = false;
             Console.WriteLine("done.");
             Console.WriteLine();
             Console.Write("Updating sentinel value... ");
@@ -244,15 +248,20 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             Console.WriteLine("done.");
             Console.WriteLine($"Wrote sentinel value in {clientWriteDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
             Console.WriteLine();
-            // Examine value of sentinel key in regional nodes while two nodes are offline.
-            foreach (NodeBase node in NaRegion.Nodes)
+            // Wait for writes to complete globally.
+            Console.Write("Waiting for write to complete globally... ");
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            Console.WriteLine("done.");
+            Console.WriteLine();
+            // Examine value of sentinel key in global nodes while two regional nodes are offline.
+            foreach (NodeBase node in GlobalNodes)
             {
                 Console.WriteLine($"{node.Name} node's {_sentinelKey} = {node.GetValue(_sentinelKey)}.");
             }
             Console.WriteLine();
             // Bring two offline nodes back online.
-            NaRegion.Nodes[1].Online = true;
             NaRegion.Nodes[2].Online = true;
+            NaRegion.Nodes[3].Online = true;
             Console.Write("Triggering read repairs by reading sentinel value again... ");
             begin = _stopwatch.Elapsed;
             sentinelValue = await NaClient.ReadValueAsync(_sentinelKey);
@@ -263,9 +272,9 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             Console.WriteLine($"Sentinel value = {sentinelValue}.");
             Console.WriteLine($"Read sentinel value in {clientReadDuration.TotalSeconds.ToString(_timeSpanFormat)} seconds.");
             Console.WriteLine();
-            // Examine value of sentinel key in regional nodes.  All nodes are back online and read repairs are in progress.
+            // Examine value of sentinel key in global nodes.  All nodes are back online and read repairs are in progress.
             HashSet<string> nodeValues = new HashSet<string>();
-            foreach (NodeBase node in NaRegion.Nodes)
+            foreach (NodeBase node in GlobalNodes)
             {
                 string value = node.GetValue(_sentinelKey);
                 if (!nodeValues.Contains(value)) nodeValues.Add(value);
@@ -278,9 +287,9 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             await Task.Delay(TimeSpan.FromSeconds(1));
             Console.WriteLine("done.");
             Console.WriteLine();
-            // Examine value of sentinel key in regional nodes.  All nodes are back online and read repairs are complete.
+            // Examine value of sentinel key in global nodes.  All nodes are back online and read repairs are complete.
             nodeValues.Clear();
-            foreach (NodeBase node in NaRegion.Nodes)
+            foreach (NodeBase node in GlobalNodes)
             {
                 string value = node.GetValue(_sentinelKey);
                 if (!nodeValues.Contains(value)) nodeValues.Add(value);

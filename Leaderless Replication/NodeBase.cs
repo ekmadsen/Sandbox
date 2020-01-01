@@ -46,7 +46,15 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
 
 
         public abstract Task<string> ReadValueAsync(string Key);
-        public string GetValue(string Key) => Values[Key];
+
+
+        public string GetValue(string Key)
+        {
+            string returnValue = Values.TryGetValue(Key, out string value) ? value : null;
+            return returnValue;
+        }
+
+
         public abstract Task WriteValueAsync(string Key, string Value);
         public void PutValue(string Key, string Value) => Values[Key] = Value;
     }
