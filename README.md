@@ -3,7 +3,7 @@ A place to try ideas before integrating them into a project.
 
 ## Discussion
 
-Please refer to the following blog posts I've written that discuss code in this repository.
+Please refer to the following blog posts I've written that discuss code in this repository.  I published these posts on my blog, [https://www.erikthecoder.net/](https://www.erikthecoder.net/).
 
 - [Leaderless Replication](https://www.erikthecoder.net/2019/12/31/leaderless-replication/)
 - [Updated Comparison of C# and Go Performance](https://www.erikthecoder.net/2019/08/17/updated-comparison-of-csharp-and-go-performance/)
