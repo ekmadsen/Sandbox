@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Baseball App": {
+      "commandName": "Project",
+      "commandLineArgs": "testserialization"
+    }
+  }
+}

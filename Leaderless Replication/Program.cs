@@ -206,9 +206,9 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             else ThreadsafeConsole.WriteLine("failure.", ConsoleColor.Red);
         }
 
-
+        
         // ReSharper disable once SuggestBaseTypeForParameter
-        private static async Task TestEventualConsistency(Client NaClient, Region NaRegion, List<NodeBase> GlobalNodes)
+        private static async Task TestEventualConsistency(Client NaClient, Region NaRegion, IReadOnlyCollection<NodeBase> GlobalNodes)
         {
             Console.WriteLine("Testing eventual consistency of global nodes.");
             Console.WriteLine();
