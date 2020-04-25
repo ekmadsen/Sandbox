@@ -13,11 +13,18 @@ namespace ErikTheCoder.Sandbox.Baseball.Library
         public ICoach HeadCoach { get; set; }
         public List<ICoach> AssistantCoaches { get; set; }
         public List<IPlayer> Players { get; set; }
-        
+
+
+        protected TeamBase()
+        {
+            AssistantCoaches = new List<ICoach>();
+            Players = new List<IPlayer>();
+        }
+
 
         public IEnumerable<ITeamMember> GetAllTeamMembers()
         {
-            yield return HeadCoach;
+            if (HeadCoach != null) yield return HeadCoach;
             foreach (ICoach assistantCoach in AssistantCoaches) yield return assistantCoach;
             foreach (IPlayer player in Players) yield return player;
         }

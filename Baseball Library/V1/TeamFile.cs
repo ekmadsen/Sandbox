@@ -45,20 +45,9 @@ namespace ErikTheCoder.Sandbox.Baseball.Library.V1
             if (team == null) throw new FileLoadException(filename);
             Id = team.Id;
             Name = team.Name;
-            Players = team.Players.Where(Player => Player.JerseyNumber != 23).ToList();
+            Players = team.Players;
             HeadCoach = team.HeadCoach;
             AssistantCoaches = team.AssistantCoaches;
-            // TODO: Move this code to TeamSQL class: Manually add Sandberg to trigger player salary side effect.
-            IBaseballRepo repo = new BaseballRepo();
-            IPlayer player = repo.CreatePlayer();
-            Players.Add(player);
-            player.Name = "Ryne Sandberg";
-            player.Team = this;
-            player.Salary = 4_000_000m;
-            player.Position = EPosition.SecondBase;
-            player.JerseyNumber = 23;
-            player.Bats = EHanded.Right;
-            player.Throws = EHanded.Right;
         }
 
 

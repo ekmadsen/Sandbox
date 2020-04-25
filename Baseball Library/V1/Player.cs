@@ -1,6 +1,6 @@
 ﻿namespace ErikTheCoder.Sandbox.Baseball.Library.V1
 {
-    internal class Player : TeamMember, IPlayer
+    internal class Player : TeamMemberBase, IPlayer
     {
         public EPosition Position { get; set; }
         public int JerseyNumber { get; set; }

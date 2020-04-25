@@ -100,32 +100,40 @@ namespace ErikTheCoder.Sandbox.Baseball.App
 
         private static void TestSerialization()
         {
-            IBaseballRepo repo = new BaseballRepo();
-            ITeam cubs1984Team = repo.CreateTeam();
-            PopulateCubs1984Team(repo, cubs1984Team);
-            PrintSalaries(cubs1984Team);
-            ThreadsafeConsole.WriteLine();
-            ThreadsafeConsole.WriteLine();
-            // ReSharper disable once PossibleNullReferenceException
-            cubs1984Team.Players.Find(Player => Player.JerseyNumber == 23).Name += " (MVP)";
-            cubs1984Team.Save();
-            ThreadsafeConsole.WriteLine("Modified Sandberg's name.");
-            ThreadsafeConsole.WriteLine("Saving team to JSON text file.");
-            ThreadsafeConsole.WriteLine("Loading team from JSON text file.");
-            ThreadsafeConsole.WriteLine();
-            ThreadsafeConsole.WriteLine();
-            cubs1984Team = repo.GetTeam(1);
-            PrintSalaries(cubs1984Team);
-            ThreadsafeConsole.WriteLine();
-            ThreadsafeConsole.WriteLine();
-            ThreadsafeConsole.WriteLine("Saving team to JSON text file.");
             LeagueRegulations.TeamSalaryCap = 40_000_000m;
             ThreadsafeConsole.WriteLine($"Changing team salary cap to {LeagueRegulations.TeamSalaryCap:C0}.");
-            ThreadsafeConsole.WriteLine("Loading team from JSON text file.");
-            ThreadsafeConsole.WriteLine();
-            ThreadsafeConsole.WriteLine();
-            cubs1984Team = repo.GetTeam(1);
+            ThreadsafeConsole.WriteLine("Loading team from database.");
+            IBaseballRepo repo = new BaseballRepo();
+            ITeam cubs1984Team = repo.GetTeam(1);
             PrintSalaries(cubs1984Team);
+            
+
+            //IBaseballRepo repo = new BaseballRepo();
+            //ITeam cubs1984Team = repo.CreateTeam();
+            //PopulateCubs1984Team(repo, cubs1984Team);
+            //PrintSalaries(cubs1984Team);
+            //ThreadsafeConsole.WriteLine();
+            //ThreadsafeConsole.WriteLine();
+            //// ReSharper disable once PossibleNullReferenceException
+            //cubs1984Team.Players.Find(Player => Player.JerseyNumber == 23).Name += " (MVP)";
+            //cubs1984Team.Save();
+            //ThreadsafeConsole.WriteLine("Modified Sandberg's name.");
+            //ThreadsafeConsole.WriteLine("Saving team to JSON text file.");
+            //ThreadsafeConsole.WriteLine("Loading team from JSON text file.");
+            //ThreadsafeConsole.WriteLine();
+            //ThreadsafeConsole.WriteLine();
+            //cubs1984Team = repo.GetTeam(1);
+            //PrintSalaries(cubs1984Team);
+            //ThreadsafeConsole.WriteLine();
+            //ThreadsafeConsole.WriteLine();
+            //ThreadsafeConsole.WriteLine("Saving team to JSON text file.");
+            //LeagueRegulations.TeamSalaryCap = 40_000_000m;
+            //ThreadsafeConsole.WriteLine($"Changing team salary cap to {LeagueRegulations.TeamSalaryCap:C0}.");
+            //ThreadsafeConsole.WriteLine("Loading team from JSON text file.");
+            //ThreadsafeConsole.WriteLine();
+            //ThreadsafeConsole.WriteLine();
+            //cubs1984Team = repo.GetTeam(1);
+            //PrintSalaries(cubs1984Team);
         }
 
 

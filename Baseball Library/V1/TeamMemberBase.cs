@@ -3,7 +3,7 @@
 
 namespace ErikTheCoder.Sandbox.Baseball.Library.V1
 {
-    internal abstract class TeamMember : ITeamMember
+    internal abstract class TeamMemberBase : ITeamMember
     {
         private decimal _salary;
 
