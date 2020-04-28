@@ -2,7 +2,7 @@
   "profiles": {
     "Baseball App": {
       "commandName": "Project",
-      "commandLineArgs": "testserialization"
+      "commandLineArgs": "testfileserialization"
     }
   }
 }

@@ -3,22 +3,80 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace ErikTheCoder.Sandbox.Baseball.Library
+namespace ErikTheCoder.Sandbox.Baseball.Library.V2
 {
-    internal abstract class TeamBase : ITeam
+    internal abstract class TeamBase : ITeam, ITeamRecordPattern
     {
         private bool _adjustSalaries = true;
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public ICoach HeadCoach { get; set; }
-        public List<ICoach> AssistantCoaches { get; set; }
-        public List<IPlayer> Players { get; set; }
+        private ICoach _headCoach;
+        private ICoaches _assistantCoaches;
+        private IPlayers _players;
 
 
-        protected TeamBase()
+        public TeamRecord Record { get; set; }
+
+
+        public int Id
         {
-            AssistantCoaches = new List<ICoach>();
-            Players = new List<IPlayer>();
+            get => Record.Id;
+            set => Record.Id = value;
+        }
+
+
+        public string Name
+        {
+            get => Record.Name;
+            set => Record.Name = value;
+        }
+
+
+        public ICoach HeadCoach
+        {
+            get => _headCoach;
+            set
+            {
+                _headCoach = value;
+                if (value is ICoachRecordPattern pattern) Record.HeadCoach = pattern.Record;
+            }
+        }
+
+
+        public ICoaches AssistantCoaches
+        {
+            get => _assistantCoaches;
+            set
+            {
+                _assistantCoaches = value;
+                Record.AssistantCoaches.Clear();
+                foreach (ICoach coach in value) if (coach is ICoachRecordPattern pattern) Record.AssistantCoaches.Add(pattern.Record);
+            }
+        }
+
+
+        public IPlayers Players
+        {
+            get => _players;
+            set
+            {
+                _players = value;
+                Record.Players.Clear();
+                foreach (IPlayer player in value) if (player is IPlayerRecordPattern pattern) Record.Players.Add(pattern.Record);
+            }
+        }
+
+
+        protected TeamBase(TeamRecord Record)
+        {
+            this.Record = Record;
+            Initialize();
+        }
+
+
+        protected void Initialize()
+        {
+            if (Record.HeadCoach != null) HeadCoach = new Coach(Record.HeadCoach);
+            AssistantCoaches = new Coaches(Record.AssistantCoaches);
+            Players = new Players(Record.Players);
         }
 
 
@@ -82,5 +140,11 @@ namespace ErikTheCoder.Sandbox.Baseball.Library
             foreach (ITeamMember teamMember in TeamMembers) if (teamMember.Salary > 0) return teamMember;
             throw new Exception("No team member earns a salary.");
         }
+    }
+
+
+    internal interface ITeamRecordPattern
+    {
+        TeamRecord Record { get; set; }
     }
 }

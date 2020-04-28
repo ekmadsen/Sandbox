@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ErikTheCoder.Sandbox.Baseball.Library;
-using ErikTheCoder.Sandbox.Baseball.Library.V1;
+using ErikTheCoder.Sandbox.Baseball.Library.V2;
 using ErikTheCoder.Utilities;
 
 
@@ -39,18 +39,33 @@ namespace ErikTheCoder.Sandbox.Baseball.App
             string testName = Arguments[0];
             switch (testName?.ToLower())
             {
+                case "testsalaries":
+                    TestSalaries();
+                    break;
                 case "testsalaryupdate_23_7":
                     TestSalaryUpdate_23_7();
                     break;
                 case "testsalaryupdate_7_23":
                     TestSalaryUpdate_7_23();
                     break;
-                case "testserialization":
-                    TestSerialization();
+                case "testfileserialization":
+                    TestFileSerialization();
+                    break;
+                case "testsqlserialization":
+                    TestSqlSerialization();
                     break;
                 default:
                     throw new ArgumentException($"{testName} test not supported.");
             }
+        }
+
+
+        private static void TestSalaries()
+        {
+            IBaseballRepo repo = new BaseballRepo();
+            ITeam cubs1984Team = repo.CreateTeam();
+            PopulateCubs1984Team(repo, cubs1984Team);
+            PrintSalaries(cubs1984Team);
         }
 
 
@@ -65,8 +80,8 @@ namespace ErikTheCoder.Sandbox.Baseball.App
             const decimal sandbergIncrease = 7_000_000m;
             const decimal davisIncrease = 2_000_000m;
             // ReSharper disable PossibleNullReferenceException
-            cubs1984Team.Players.Find(Player => Player.JerseyNumber == 23).Salary += sandbergIncrease;
-            cubs1984Team.Players.Find(Player => Player.JerseyNumber == 07).Salary += davisIncrease;
+            cubs1984Team.Players.First(Player => Player.JerseyNumber == 23).Salary += sandbergIncrease;
+            cubs1984Team.Players.First(Player => Player.JerseyNumber == 07).Salary += davisIncrease;
             ThreadsafeConsole.WriteLine($"Increase Sandberg's salary by {sandbergIncrease:C0}");
             ThreadsafeConsole.WriteLine($"Increase Davis'     salary by {davisIncrease:C0}");
             ThreadsafeConsole.WriteLine();
@@ -87,8 +102,8 @@ namespace ErikTheCoder.Sandbox.Baseball.App
             const decimal sandbergIncrease = 7_000_000m;
             const decimal davisIncrease = 2_000_000m;
             // ReSharper disable PossibleNullReferenceException
-            cubs1984Team.Players.Find(Player => Player.JerseyNumber == 07).Salary += davisIncrease;
-            cubs1984Team.Players.Find(Player => Player.JerseyNumber == 23).Salary += sandbergIncrease;
+            cubs1984Team.Players.First(Player => Player.JerseyNumber == 07).Salary += davisIncrease;
+            cubs1984Team.Players.First(Player => Player.JerseyNumber == 23).Salary += sandbergIncrease;
             ThreadsafeConsole.WriteLine($"Increase Davis'     salary by {davisIncrease:C0}");
             ThreadsafeConsole.WriteLine($"Increase Sandberg's salary by {sandbergIncrease:C0}");
             ThreadsafeConsole.WriteLine();
@@ -98,42 +113,44 @@ namespace ErikTheCoder.Sandbox.Baseball.App
         }
 
 
-        private static void TestSerialization()
+        private static void TestFileSerialization()
         {
+            BaseballRepo.UseFile = true;
+            IBaseballRepo repo = new BaseballRepo();
+            ITeam cubs1984Team = repo.CreateTeam();
+            PopulateCubs1984Team(repo, cubs1984Team);
+            PrintSalaries(cubs1984Team);
+            ThreadsafeConsole.WriteLine();
+            ThreadsafeConsole.WriteLine();
+            cubs1984Team.Save();
+            ThreadsafeConsole.WriteLine("Saving team to JSON text file.");
+            ThreadsafeConsole.WriteLine("Loading team from JSON text file.");
+            ThreadsafeConsole.WriteLine();
+            ThreadsafeConsole.WriteLine();
+            cubs1984Team = repo.GetTeam(1);
+            PrintSalaries(cubs1984Team);
+            ThreadsafeConsole.WriteLine();
+            ThreadsafeConsole.WriteLine();
+            ThreadsafeConsole.WriteLine("Saving team to JSON text file.");
+            LeagueRegulations.TeamSalaryCap = 40_000_000m;
+            ThreadsafeConsole.WriteLine($"Changing team salary cap to {LeagueRegulations.TeamSalaryCap:C0}.");
+            ThreadsafeConsole.WriteLine("Loading team from JSON text file.");
+            ThreadsafeConsole.WriteLine();
+            ThreadsafeConsole.WriteLine();
+            cubs1984Team = repo.GetTeam(1);
+            PrintSalaries(cubs1984Team);
+        }
+
+
+        private static void TestSqlSerialization()
+        {
+            BaseballRepo.UseFile = false;
             LeagueRegulations.TeamSalaryCap = 40_000_000m;
             ThreadsafeConsole.WriteLine($"Changing team salary cap to {LeagueRegulations.TeamSalaryCap:C0}.");
             ThreadsafeConsole.WriteLine("Loading team from database.");
             IBaseballRepo repo = new BaseballRepo();
             ITeam cubs1984Team = repo.GetTeam(1);
             PrintSalaries(cubs1984Team);
-            
-
-            //IBaseballRepo repo = new BaseballRepo();
-            //ITeam cubs1984Team = repo.CreateTeam();
-            //PopulateCubs1984Team(repo, cubs1984Team);
-            //PrintSalaries(cubs1984Team);
-            //ThreadsafeConsole.WriteLine();
-            //ThreadsafeConsole.WriteLine();
-            //// ReSharper disable once PossibleNullReferenceException
-            //cubs1984Team.Players.Find(Player => Player.JerseyNumber == 23).Name += " (MVP)";
-            //cubs1984Team.Save();
-            //ThreadsafeConsole.WriteLine("Modified Sandberg's name.");
-            //ThreadsafeConsole.WriteLine("Saving team to JSON text file.");
-            //ThreadsafeConsole.WriteLine("Loading team from JSON text file.");
-            //ThreadsafeConsole.WriteLine();
-            //ThreadsafeConsole.WriteLine();
-            //cubs1984Team = repo.GetTeam(1);
-            //PrintSalaries(cubs1984Team);
-            //ThreadsafeConsole.WriteLine();
-            //ThreadsafeConsole.WriteLine();
-            //ThreadsafeConsole.WriteLine("Saving team to JSON text file.");
-            //LeagueRegulations.TeamSalaryCap = 40_000_000m;
-            //ThreadsafeConsole.WriteLine($"Changing team salary cap to {LeagueRegulations.TeamSalaryCap:C0}.");
-            //ThreadsafeConsole.WriteLine("Loading team from JSON text file.");
-            //ThreadsafeConsole.WriteLine();
-            //ThreadsafeConsole.WriteLine();
-            //cubs1984Team = repo.GetTeam(1);
-            //PrintSalaries(cubs1984Team);
         }
 
 
@@ -204,7 +221,7 @@ namespace ErikTheCoder.Sandbox.Baseball.App
             player.Name = "Ron Cey";
             player.Team = Team;
             player.Salary = 3_000_000m;
-            player.Position = EPosition.SecondBase;
+            player.Position = EPosition.ThirdBase;
             player.JerseyNumber = 11;
             player.Bats = EHanded.Right;
             player.Throws = EHanded.Right;
@@ -214,7 +231,7 @@ namespace ErikTheCoder.Sandbox.Baseball.App
             player.Name = "Larry Bowa";
             player.Team = Team;
             player.Salary = 4_000_000m;
-            player.Position = EPosition.SecondBase;
+            player.Position = EPosition.Shortstop;
             player.JerseyNumber = 1;
             player.Bats = EHanded.Switch;
             player.Throws = EHanded.Right;
@@ -266,8 +283,16 @@ namespace ErikTheCoder.Sandbox.Baseball.App
             coach.Salary = 2_000_000m;
             coach.Specialty = "Old School Badass";
             coach.Manager = headCoach;
-            coach.Players = Team.Players.Where(Player => Player.Position != EPosition.Pitcher).ToList();
-
+            coach.Players = Repo.CreatePlayers();
+            coach.Players.Add(Team.Players[1]);
+            coach.Players.Add(Team.Players[2]);
+            coach.Players.Add(Team.Players[3]);
+            coach.Players.Add(Team.Players[4]);
+            coach.Players.Add(Team.Players[5]);
+            coach.Players.Add(Team.Players[6]);
+            coach.Players.Add(Team.Players[7]);
+            coach.Players.Add(Team.Players[8]);
+            
             coach = Repo.CreateCoach();
             Team.AssistantCoaches.Add(coach);
             coach.Name = "Billy Connors";
@@ -275,7 +300,8 @@ namespace ErikTheCoder.Sandbox.Baseball.App
             coach.Salary = 2_000_000m;
             coach.Specialty = "Pitching Coach";
             coach.Manager = headCoach;
-            coach.Players = Team.Players.Where(Player => Player.Position == EPosition.Pitcher).ToList();
+            coach.Players = Repo.CreatePlayers();
+            coach.Players.Add(Team.Players[0]);
         }
     }
 }
