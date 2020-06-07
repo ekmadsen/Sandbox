@@ -1,4 +1,5 @@
-﻿namespace ErikTheCoder.Sandbox.Baseball.Library
+﻿// ReSharper disable UnusedMember.Global
+namespace ErikTheCoder.Sandbox.Baseball.Library
 {
     public interface ICoach : ITeamMember
     {

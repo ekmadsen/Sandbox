@@ -1,4 +1,5 @@
-﻿namespace ErikTheCoder.Sandbox.Baseball.Library.V2
+﻿// ReSharper disable UnusedMemberInSuper.Global
+namespace ErikTheCoder.Sandbox.Baseball.Library.V2
 {
     internal class Player : TeamMemberBase, IPlayer, IPlayerRecordPattern
     {

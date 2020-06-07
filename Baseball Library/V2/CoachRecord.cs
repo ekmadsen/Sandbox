@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// ReSharper disable FieldCanBeMadeReadOnly.Global
+// ReSharper disable NotAccessedField.Global
+using System.Collections.Generic;
 
 
 namespace ErikTheCoder.Sandbox.Baseball.Library.V2

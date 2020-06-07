@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedParameter.Local
+using System.Collections.Generic;
 using System.Data;
 using Moq;
 

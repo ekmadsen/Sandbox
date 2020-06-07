@@ -42,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Leaderless Replication", "L
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Baseball Library", "Baseball Library\Baseball Library.csproj", "{69732877-7EB6-4C48-ACE9-60DF959FE5E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Baseball App", "Baseball App\Baseball App.csproj", "{6CAE0D07-A64A-46C4-A8E8-95E0CFAFD432}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Baseball App", "Baseball App\Baseball App.csproj", "{6CAE0D07-A64A-46C4-A8E8-95E0CFAFD432}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -35,7 +35,7 @@ namespace ErikTheCoder.Sandbox.Dapper.Service
             string configurationFile = Path.Combine(directory, "appSettings.json");
             if (!File.Exists(configurationFile)) throw new Exception($"Configuration file not found at {configurationFile}.");
             JObject configuration = JObject.Parse(File.ReadAllText(configurationFile));
-            return configuration.GetValue(environment).ToObject<AppSettings>();
+            return configuration.GetValue(environment)?.ToObject<AppSettings>();
         }
     }
 }
