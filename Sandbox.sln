@@ -44,6 +44,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Baseball Library", "Basebal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Baseball App", "Baseball App\Baseball App.csproj", "{6CAE0D07-A64A-46C4-A8E8-95E0CFAFD432}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Json IList Covariance", "Json IList Covariance\Json IList Covariance.csproj", "{7CB7DE7D-EFCF-49E5-ACDE-BC29CF7668D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -246,6 +248,18 @@ Global
 		{6CAE0D07-A64A-46C4-A8E8-95E0CFAFD432}.Release|x64.Build.0 = Release|Any CPU
 		{6CAE0D07-A64A-46C4-A8E8-95E0CFAFD432}.Release|x86.ActiveCfg = Release|Any CPU
 		{6CAE0D07-A64A-46C4-A8E8-95E0CFAFD432}.Release|x86.Build.0 = Release|Any CPU
+		{7CB7DE7D-EFCF-49E5-ACDE-BC29CF7668D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CB7DE7D-EFCF-49E5-ACDE-BC29CF7668D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CB7DE7D-EFCF-49E5-ACDE-BC29CF7668D1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7CB7DE7D-EFCF-49E5-ACDE-BC29CF7668D1}.Debug|x64.Build.0 = Debug|Any CPU
+		{7CB7DE7D-EFCF-49E5-ACDE-BC29CF7668D1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7CB7DE7D-EFCF-49E5-ACDE-BC29CF7668D1}.Debug|x86.Build.0 = Debug|Any CPU
+		{7CB7DE7D-EFCF-49E5-ACDE-BC29CF7668D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CB7DE7D-EFCF-49E5-ACDE-BC29CF7668D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CB7DE7D-EFCF-49E5-ACDE-BC29CF7668D1}.Release|x64.ActiveCfg = Release|Any CPU
+		{7CB7DE7D-EFCF-49E5-ACDE-BC29CF7668D1}.Release|x64.Build.0 = Release|Any CPU
+		{7CB7DE7D-EFCF-49E5-ACDE-BC29CF7668D1}.Release|x86.ActiveCfg = Release|Any CPU
+		{7CB7DE7D-EFCF-49E5-ACDE-BC29CF7668D1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

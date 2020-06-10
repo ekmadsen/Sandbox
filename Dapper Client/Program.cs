@@ -40,7 +40,7 @@ namespace ErikTheCoder.Sandbox.Dapper.Client
 
         private static async Task Run(IReadOnlyList<string> Arguments)
         {
-            // Configure JSON.NET and Refit.
+            // Configure Json.NET and Refit.
             _httpClient = new HttpClient(new CacheBustingMessageHandler()) { BaseAddress = new Uri(_mappingServiceUrlBase) };
             _jsonSerializer = new JsonSerializer();
             _mappingService = RestService.For<IMappingService>(_httpClient);

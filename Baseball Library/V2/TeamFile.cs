@@ -72,7 +72,7 @@ namespace ErikTheCoder.Sandbox.Baseball.Library.V2
 
 
         // By default, Json.NET serializes public properties.
-        // This class instructs JSON.NET to serialize public fields instead.
+        // This class instructs Json.NET to serialize public fields instead.
         private class FieldContractResolver : DefaultContractResolver
         {
             protected override IList<JsonProperty> CreateProperties(Type Type, MemberSerialization MemberSerialization)
