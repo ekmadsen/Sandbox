@@ -7,6 +7,6 @@ namespace ErikTheCoder.Sandbox.Covariance
     {
         IList<ISprocketRecord> Sprockets { get; set; }
         IDictionary<Orientation, IWidgetRecord> Widgets { get; set; }
-        //IDictionary<Orientation, IList<IThingamajigRecord>> Thingamajigs { get; set; }
+        IDictionary<Orientation, IList<IThingamajigRecord>> Thingamajigs { get; set; }
     }
 }

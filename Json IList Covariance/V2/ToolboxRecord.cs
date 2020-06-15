@@ -7,14 +7,14 @@ namespace ErikTheCoder.Sandbox.Covariance.V2
     {
         public IList<ISprocketRecord> Sprockets { get; set; }
         public IDictionary<Orientation, IWidgetRecord> Widgets { get; set; }
-        //public IDictionary<Orientation, IList<IThingamajigRecord>> Thingamajigs { get; set; }
+        public IDictionary<Orientation, IList<IThingamajigRecord>> Thingamajigs { get; set; }
 
 
         public ToolboxRecord()
         {
             Sprockets = new List<ISprocketRecord>();
             Widgets = new Dictionary<Orientation, IWidgetRecord>();
-            //Thingamajigs = new Dictionary<Orientation, IList<IThingamajigRecord>>();
+            Thingamajigs = new Dictionary<Orientation, IList<IThingamajigRecord>>();
         }
     }
 }

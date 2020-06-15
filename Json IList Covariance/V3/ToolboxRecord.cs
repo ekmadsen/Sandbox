@@ -14,14 +14,15 @@ namespace ErikTheCoder.Sandbox.Covariance.V3
         public IDictionary<Orientation, IWidgetRecord> Widgets { get; set; }
 
 
-        //public IDictionary<Orientation, IList<IThingamajigRecord>> Thingamajigs { get; set; }
+        [JsonConverter(typeof(DictionaryConverter<Orientation, IList<IThingamajigRecord>, Orientation, IList<IThingamajigRecord>>))]
+        public IDictionary<Orientation, IList<IThingamajigRecord>> Thingamajigs { get; set; }
 
 
         public ToolboxRecord()
         {
             Sprockets = new List<ISprocketRecord>();
             Widgets = new Dictionary<Orientation, IWidgetRecord>();
-            //Thingamajigs = new Dictionary<Orientation, IList<IThingamajigRecord>>();
+            Thingamajigs = new Dictionary<Orientation, IList<IThingamajigRecord>>();
         }
     }
 }
