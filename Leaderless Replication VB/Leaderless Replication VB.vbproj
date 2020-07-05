@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ErikTheCoder.Sandbox.LeaderlessReplicationVB</RootNamespace>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>ErikTheCoder.Sandbox.LeaderlessReplicationVB</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Leaderless Replication\Leaderless Replication.csproj" />
+  </ItemGroup>
+
+</Project>

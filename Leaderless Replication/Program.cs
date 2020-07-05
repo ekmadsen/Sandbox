@@ -90,7 +90,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             const int requiredVotes = 3;
             while (RegionalNodes.Count < nodesPerRegion)
             {
-                QuorumNode node = new QuorumNode(_random, ++Id, $"{RegionName}-{RegionalNodes.Count + 1}", RegionName, requiredVotes, false);
+                QuorumNode node = new QuorumNode(_random, ++Id, $"{RegionName}-{RegionalNodes.Count + 1}", RegionName, requiredVotes, true);
                 GlobalNodes.Add(node);
                 RegionalNodes.Add(node);
             }

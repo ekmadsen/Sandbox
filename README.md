@@ -5,6 +5,7 @@ A place to try ideas before integrating them into a project.
 
 Please refer to the following blog posts I've written that discuss code in this repository.  I have published these posts on my blog, [https://www.erikthecoder.net/](https://www.erikthecoder.net/).
 
+* [An Async Lambda Compiler Error Where VB Outsmarts C#](https://www.erikthecoder.net/2020/07/04/an-async-lambda-compiler-error-where-vb-outsmarts-c/)
 * [JSON IList Covariance](https://www.erikthecoder.net/2020/06/14/json-ilist-covariance/)
 * [Complex Object Graphs, Side Effects, and the Record Pattern](https://www.erikthecoder.net/2020/04/27/complex-object-graphs-side-effects-and-the-record-pattern/)
 * [Leaderless Replication](https://www.erikthecoder.net/2019/12/31/leaderless-replication/)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ErikTheCoder.Utilities;
 
@@ -26,13 +27,65 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             Dictionary<string, HashSet<int>> votes = new Dictionary<string, HashSet<int>> {[Values[Key]] = new HashSet<int> {Id}};
             // Get value from connected nodes in same region.
             HashSet<Task<(string Value, int ToNodeId)>> regionTasks = new HashSet<Task<(string Value, int ToNodeId)>>();
-            Func<Connection, Task<(string, int)>> getValueAndToNodeIdAsync = async Connection =>
+
+
+            //HashSet<Task<(string Value, int ToNodeId)>> regionTasks = Connections[RegionName].Select(async Connection =>
+            //{
+            //    string value = await Connection.GetValueAsync(Key);
+            //    return (value, Connection.ToNode.Id);
+            //}).ToHashSet();
+
+
+            foreach (Connection connection in Connections[RegionName])
             {
-                // Calling connection.ReadValueAsync would create an infinite loop of reads from all regional nodes to all regional nodes.
-                string value = await Connection.GetValueAsync(Key);
-                return (value, Connection.ToNode.Id);
-            };
-            foreach (Connection connection in Connections[RegionName]) regionTasks.Add(getValueAndToNodeIdAsync(connection));
+                // Fails to compile in C# (but works in VB.NET).
+                //regionTasks.Add(async () =>
+                //{
+                //    // Calling connection.ReadValueAsync would create an infinite loop of reads from all regional nodes to all regional nodes.
+                //    string value = await connection.GetValueAsync(Key);
+                //    return (value, connection.ToNode.Id);
+                //}());
+
+
+                // Use a local function.
+                //async Task<(string Value, int ToNodeId)> GetValueAndToNodeIdAsync(Connection Connection)
+                //{
+                //    // Calling connection.ReadValueAsync would create an infinite loop of reads from all regional nodes to all regional nodes.
+                //    string value = await Connection.GetValueAsync(Key);
+                //    return (value, Connection.ToNode.Id);
+                //}
+                //regionTasks.Add(GetValueAndToNodeIdAsync(connection));
+
+
+                // Explicitly declare a Func and invoke it immediately.
+                //Func<Task<(string Value, int ToNodeId)>> getValueAndToNodeIdAsync = async () =>
+                //{
+                //    // Calling connection.ReadValueAsync would create an infinite loop of reads from all regional nodes to all regional nodes.
+                //    string value = await connection.GetValueAsync(Key);
+                //    return (value, connection.ToNode.Id);
+                //};
+                //regionTasks.Add(getValueAndToNodeIdAsync());
+
+
+                // Cast the lambda method.
+                //regionTasks.Add(((Func<Task<(string Values, int ToNodeId)>>)(async () =>
+                //{
+                //    // Calling connection.ReadValueAsync would create an infinite loop of reads from all regional nodes to all regional nodes.
+                //    string value = await connection.GetValueAsync(Key);
+                //    return (value, connection.ToNode.Id);
+                //}))());
+
+
+                // Use a helper method to make the lambda method's return value unambiguous.
+                regionTasks.Add(AsyncHelper.MaterializeTask(async () =>
+                {
+                    // Calling connection.ReadValueAsync would create an infinite loop of reads from all regional nodes to all regional nodes.
+                    string value = await connection.GetValueAsync(Key);
+                    return (value, connection.ToNode.Id);
+                }));
+            }
+
+
             while (regionTasks.Count > 0)
             {
                 // Tally votes as they arrive.
