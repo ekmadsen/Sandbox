@@ -9,9 +9,9 @@ namespace ErikTheCoder.Sandbox.Math.Service
         public static void Main(string[] Args)
         {
             // Build and run web host.
-            IWebHostBuilder webHostBuilder = WebHost.CreateDefaultBuilder(Args);
+            var webHostBuilder = WebHost.CreateDefaultBuilder(Args);
             webHostBuilder.UseStartup<Startup>();
-            IWebHost webHost = webHostBuilder.Build();
+            var webHost = webHostBuilder.Build();
             webHost.Run();
         }
     }

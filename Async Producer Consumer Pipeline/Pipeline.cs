@@ -10,6 +10,7 @@ namespace ErikTheCoder.Sandbox.AsyncPipeline
             return Version switch
             {
                 1 => new PipelineV1(),
+                2 => new PipelineV2(),
                 _ => throw new NotSupportedException($"Pipeline version {Version} not supported.")
             };
         }

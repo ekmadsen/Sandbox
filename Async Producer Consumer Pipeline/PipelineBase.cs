@@ -15,18 +15,18 @@ namespace ErikTheCoder.Sandbox.AsyncPipeline
         // ReSharper disable once ParameterTypeCanBeEnumerable.Global
         protected static void DisplayValues(int[] InputValues, int[] StepValues, int[][] OutputValues)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             stringBuilder.Append("Step Values: ");
-            foreach (int stepValue in StepValues) stringBuilder.Append($"{stepValue,2} ");
+            foreach (var stepValue in StepValues) stringBuilder.Append($"{stepValue,2} ");
             stringBuilder.AppendLine();
             stringBuilder.AppendLine();
             stringBuilder.AppendLine("InputValue  Step 1 (Factorial)      Step 2 (Add)  Step 3 (Multiply)    Step 4 (Modulo)");
-            for (int index = 0; index < OutputValues.Length; index++)
+            for (var index = 0; index < OutputValues.Length; index++)
             {
-                int inputValue = InputValues[index];
+                var inputValue = InputValues[index];
                 stringBuilder.Append($"{inputValue,10}");
-                int[] stepValues = OutputValues[index];
-                foreach (int stepValue in stepValues) stringBuilder.Append($"{stepValue,19:N0}");
+                var stepValues = OutputValues[index];
+                foreach (var stepValue in stepValues) stringBuilder.Append($"{stepValue,19:N0}");
                 stringBuilder.AppendLine();
             }
             stringBuilder.AppendLine();
