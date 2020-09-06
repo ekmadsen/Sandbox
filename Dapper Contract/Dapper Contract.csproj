@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="ErikTheCoder.Logging" Version="1.0.9" />
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
-    <PackageReference Include="Refit" Version="5.1.67" />
+    <PackageReference Include="Refit" Version="5.2.1" />
   </ItemGroup>
 
   <ItemGroup>

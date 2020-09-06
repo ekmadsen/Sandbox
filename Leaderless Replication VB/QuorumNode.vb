@@ -1,8 +1,10 @@
 ﻿Option Strict On
+
 Imports ErikTheCoder.Sandbox.LeaderlessReplication
 Imports ErikTheCoder.Utilities
 
 
+' ReSharper disable All
 Public Class QuorumNode
 	Inherits NodeBase
 
@@ -21,6 +23,7 @@ Public Class QuorumNode
 				Return (value, connection.ToNode.Id)
 			End Function())
 		Next
+		Await Task.Delay(TimeSpan.Zero)
 		Return "Testing"
 	End Function
 

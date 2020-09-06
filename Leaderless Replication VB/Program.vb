@@ -1,3 +1,4 @@
+' ReSharper disable All
 Module Program
 
 	Public Sub Main
@@ -10,8 +11,8 @@ Module Program
 		Dim regionTasks = New HashSet(Of Task(Of (Value As String, ToNodeId As Integer)))
 		For index As Integer = 0 To 9
 			regionTasks.Add(Async Function()
-				Dim localIndex = index ' Avoid capturing only the final value of index.  C# is immune from this problem.
-				Dim value = Await GetValue(localIndex)
+			Dim localIndex = index ' Avoid capturing only the final value of index.  C# is immune from this problem.
+			Dim value = Await GetValue(localIndex)
 				Return (value, localIndex)
 			End Function())
 		Next

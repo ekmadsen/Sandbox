@@ -12,6 +12,7 @@ namespace ErikTheCoder.Sandbox.XmlParser
             using (FileStream fileStream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 xmlDocument.Load(fileStream);
+                // ReSharper disable once PossibleNullReferenceException
                 return xmlDocument.SelectNodes(XPath).Count;
             }
         }

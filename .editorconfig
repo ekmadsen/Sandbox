@@ -1,0 +1,4 @@
+﻿[*.vb]
+
+# BC42324: Using the iteration variable in a lambda expression may have unexpected results
+dotnet_diagnostic.BC42324.severity = none

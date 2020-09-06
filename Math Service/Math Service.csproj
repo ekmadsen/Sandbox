@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>ErikTheCoder.Sandbox.Math.Service</RootNamespace>
+    <AssemblyName>ErikTheCoder.Sandbox.Math.Service</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Math Contract\Math Contract.csproj" />
+  </ItemGroup>
+
+</Project>

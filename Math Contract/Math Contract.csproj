@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>ErikTheCoder.Sandbox.Math.Contract</RootNamespace>
+    <AssemblyName>ErikTheCoder.Sandbox.Math.Contract</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="refit" Version="5.2.1" />
+  </ItemGroup>
+
+</Project>

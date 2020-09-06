@@ -13,6 +13,7 @@ namespace ErikTheCoder.Sandbox.XmlParser
             {
                 XPathDocument xPathDocument = new XPathDocument(fileStream);
                 XPathNavigator xPathNavigator = xPathDocument.CreateNavigator();
+                // ReSharper disable once PossibleNullReferenceException
                 XPathNodeIterator xPathNodeIterator = xPathNavigator.Select(XPath);
                 while (xPathNodeIterator.MoveNext()) count++;
                 return count;
