@@ -11,6 +11,7 @@ namespace ErikTheCoder.Sandbox.AsyncPipeline
             {
                 1 => new PipelineV1(),
                 2 => new PipelineV2(),
+                3 => new PipelineV3(),
                 _ => throw new NotSupportedException($"Pipeline version {Version} not supported.")
             };
         }

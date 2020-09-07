@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ErikTheCoder.Sandbox.Math.Contract;
-using ErikTheCoder.ServiceProxy;
 using ErikTheCoder.Utilities;
 
 
@@ -9,32 +8,33 @@ namespace ErikTheCoder.Sandbox.AsyncPipeline
 {
     public class PipelineV2 : PipelineBase
     {
-        public override async Task<int[][]> Run(Proxy<IMathService> MathService, int[] InputValues, int[] StepValues)
+        public override async Task<long[][]> Run(IMathService MathService, long[] InputValues, long[] StepValues)
         {
             // Create output array.
-            var outputValues = new int[InputValues.Length][];
+            var outputValues = new long[InputValues.Length][];
             for (var index = 0; index < outputValues.Length; index++)
             {
-                outputValues[index] = new int[StepValues.Length];
+                outputValues[index] = new long[StepValues.Length];
             }
-            // Step 1 : Factorial
+            // Step 1 : Power
             // Call service method asynchronously.
-            var step1Tasks = new HashSet<Task<(int Index, int OutputValue)>>();
+            var step1Tasks = new HashSet<Task<(int Index, long OutputValue)>>();
             for (var index = 0; index < InputValues.Length; index++)
             {
                 var localIndex = index; // Prevent lambda from capturing last index value of containing for loop.
                 var inputValue = InputValues[index];
+                var stepValue = StepValues[0];
                 // Capture task.  Don't block by awaiting.
                 step1Tasks.Add(AsyncHelper.MaterializeTask(async () =>
                 {
-                    var outputValue = await MathService.AsUser.Factorial(inputValue);
+                    var outputValue = await MathService.Power(inputValue, stepValue);
                     return (localIndex, outputValue);
                 }));
             }
 
             // Step 2 : Add
             // Process step 1 results as they arrive.  Use result of step 1 to call step 2 service method asynchronously.
-            var step2Tasks = new HashSet<Task<(int Index, int OutputValue)>>();
+            var step2Tasks = new HashSet<Task<(int Index, long OutputValue)>>();
             while (step1Tasks.Count > 0)
             {
                 if (step1Tasks.Count == 0) continue; // Avoid exception caused by awaiting empty collection in next line.
@@ -47,7 +47,7 @@ namespace ErikTheCoder.Sandbox.AsyncPipeline
                 // Capture task.  Don't block by awaiting.
                 step2Tasks.Add(AsyncHelper.MaterializeTask(async () =>
                 {
-                    outputValue = await MathService.AsUser.Add(inputValue, stepValue);
+                    outputValue = await MathService.Add(inputValue, stepValue);
                     return (index, outputValue);
                 }));
             }
@@ -55,7 +55,7 @@ namespace ErikTheCoder.Sandbox.AsyncPipeline
             
             // Step 3 : Multiply
             // Process step 2 results as they arrive.  Use result of step 2 to call step 3 service method asynchronously.
-            var step3Tasks = new HashSet<Task<(int Index, int OutputValue)>>();
+            var step3Tasks = new HashSet<Task<(int Index, long OutputValue)>>();
             while ((step1Tasks.Count + step2Tasks.Count) > 0)
             {
                 if (step2Tasks.Count == 0) continue; // Avoid exception caused by awaiting empty collection in next line.
@@ -68,7 +68,7 @@ namespace ErikTheCoder.Sandbox.AsyncPipeline
                 // Capture task.  Don't block by awaiting.
                 step3Tasks.Add(AsyncHelper.MaterializeTask(async () =>
                 {
-                    outputValue = await MathService.AsUser.Multiply(inputValue, stepValue);
+                    outputValue = await MathService.Multiply(inputValue, stepValue);
                     return (index, outputValue);
                 }));
             }
@@ -76,7 +76,7 @@ namespace ErikTheCoder.Sandbox.AsyncPipeline
 
             // Step 4 : Modulo
             // Process step 3 results as they arrive.  Use result of step 3 to call step 4 service method asynchronously.
-            var step4Tasks = new HashSet<Task<(int Index, int OutputValue)>>();
+            var step4Tasks = new HashSet<Task<(int Index, long OutputValue)>>();
             while ((step2Tasks.Count + step3Tasks.Count) > 0)
             {
                 if (step3Tasks.Count == 0) continue; // Avoid exception caused by awaiting empty collection in next line.
@@ -89,7 +89,7 @@ namespace ErikTheCoder.Sandbox.AsyncPipeline
                 // Capture task.  Don't block by awaiting.
                 step4Tasks.Add(AsyncHelper.MaterializeTask(async () =>
                 {
-                    outputValue = await MathService.AsUser.Modulo(inputValue, stepValue);
+                    outputValue = await MathService.Modulo(inputValue, stepValue);
                     return (index, outputValue);
                 }));
             }

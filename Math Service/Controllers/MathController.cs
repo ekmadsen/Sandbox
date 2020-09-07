@@ -9,34 +9,28 @@ namespace ErikTheCoder.Sandbox.Math.Service.Controllers
     // Each method delays to simulate latency of complex calculation or I/O.
     public class MathController : Controller, IMathService
     {
-        public async Task<int> Factorial(int InputValue)
+        public async Task<long> Power(long InputValue, long Value)
         {
             await Task.Delay(TimeSpan.FromMilliseconds(100));
-            var value = 1;
-            while (InputValue > 0)
-            {
-                value *= InputValue;
-                InputValue--;
-            }
-            return value;
+            return (long)System.Math.Pow(InputValue, Value);
         }
 
 
-        public async Task<int> Add(int InputValue, int Value)
+        public async Task<long> Add(long InputValue, long Value)
         {
             await Task.Delay(TimeSpan.FromMilliseconds(200));
             return InputValue + Value;
         }
 
 
-        public async Task<int> Multiply(int InputValue, int Value)
+        public async Task<long> Multiply(long InputValue, long Value)
         {
             await Task.Delay(TimeSpan.FromMilliseconds(300));
             return InputValue * Value;
         }
 
 
-        public async Task<int> Modulo(int InputValue, int Value)
+        public async Task<long> Modulo(long InputValue, long Value)
         {
             await Task.Delay(TimeSpan.FromMilliseconds(400));
             return InputValue % Value;

@@ -6,19 +6,19 @@ namespace ErikTheCoder.Sandbox.Math.Contract
 {
     public interface IMathService
     {
-        [Get("/math/factorial")]
-        Task<int> Factorial(int InputValue);
+        [Get("/math/power")]
+        Task<long> Power(long InputValue, long Value);
 
 
         [Get("/math/add")]
-        Task<int> Add(int InputValue, int Value);
+        Task<long> Add(long InputValue, long Value);
 
 
         [Get("/math/multiply")]
-        Task<int> Multiply(int InputValue, int Value);        
+        Task<long> Multiply(long InputValue, long Value);        
 
 
         [Get("/math/modulo")]
-        Task<int> Modulo(int InputValue, int Value);
+        Task<long> Modulo(long InputValue, long Value);
     }
 }
