@@ -62,7 +62,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
 
         private async Task Delay()
         {
-            TimeSpan latency = TimeSpan.FromMilliseconds(_random.NextDouble(_minLatency.TotalMilliseconds, _maxLatency.TotalMilliseconds));
+            var latency = TimeSpan.FromMilliseconds(_random.NextDouble(_minLatency.TotalMilliseconds, _maxLatency.TotalMilliseconds));
             await Task.Delay(latency);
         }
     }

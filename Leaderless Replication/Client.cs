@@ -18,7 +18,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             // Load-balance read requests.
             // Connect to nodes in same region only.
             ShuffleConnections();
-            foreach (Connection connection in Connections[RegionName])
+            foreach (var connection in Connections[RegionName])
             {
                 try
                 {
@@ -39,7 +39,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             // Connect to nodes in same region only.
             // Rely on randomly selected regional node to push writes to all global nodes.
             ShuffleConnections();
-            foreach (Connection connection in Connections[RegionName])
+            foreach (var connection in Connections[RegionName])
             {
                 try
                 {

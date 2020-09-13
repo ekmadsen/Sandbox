@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>ErikTheCoder.Sandbox.EncryptDecrypt</RootNamespace>
     <AssemblyName>ErikTheCoder.Sandbox.EncryptDecrypt</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ErikTheCoder.Logging" Version="1.0.9" />
+    <PackageReference Include="ErikTheCoder.Logging" Version="1.0.11" />
     <PackageReference Include="System.Security.Cryptography.Cng" Version="4.7.0" />
   </ItemGroup>
 

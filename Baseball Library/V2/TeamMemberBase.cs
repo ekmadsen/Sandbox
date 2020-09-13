@@ -34,7 +34,7 @@ namespace ErikTheCoder.Sandbox.Baseball.Library.V2
             set
             {
                 if ((value < 0) || (value > LeagueRegulations.TeamSalaryCap)) throw new ArgumentOutOfRangeException();
-                bool salaryIncrease = value > _record.Salary;
+                var salaryIncrease = value > _record.Salary;
                 _record.Salary = value;
                 if (salaryIncrease) Team.AdjustSalaries(LeagueRegulations.TeamSalaryCap); // Enforce league's salary cap.
             }

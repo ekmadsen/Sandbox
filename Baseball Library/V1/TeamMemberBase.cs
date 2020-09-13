@@ -18,7 +18,7 @@
 //            set
 //            {
 //                if ((value < 0) || (value > LeagueRegulations.TeamSalaryCap)) throw new ArgumentOutOfRangeException();
-//                bool salaryIncrease = value > _salary;
+//                var salaryIncrease = value > _salary;
 //                _salary = value;
 //                if (salaryIncrease) Team.AdjustSalaries(LeagueRegulations.TeamSalaryCap); // Enforce league's salary cap.
 //            }

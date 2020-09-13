@@ -11,16 +11,16 @@ namespace ErikTheCoder.Sandbox.PasswordHash
             // Create random salt.
             // Storing a salt value with a hashed password prevents identical passwords from hashing to the same stored value.
             // See https://security.stackexchange.com/questions/17421/how-to-store-salt
-            byte[] saltBytes = new byte[SaltLength];
-            using (RNGCryptoServiceProvider random = new RNGCryptoServiceProvider())
+            var saltBytes = new byte[SaltLength];
+            using (var random = new RNGCryptoServiceProvider())
             {
                 random.GetBytes(saltBytes, 0, SaltLength);
-                string salt = Convert.ToBase64String(saltBytes);
+                var salt = Convert.ToBase64String(saltBytes);
                 // Get derived bytes from the combined salt and password, using the specified number of iterations.
-                using (Rfc2898DeriveBytes derivedBytes = new Rfc2898DeriveBytes(Password, saltBytes, Iterations))
+                using (var derivedBytes = new Rfc2898DeriveBytes(Password, saltBytes, Iterations))
                 {
-                    byte[] hashBytes = derivedBytes.GetBytes(HashLength);
-                    string hash = Convert.ToBase64String(hashBytes);
+                    var hashBytes = derivedBytes.GetBytes(HashLength);
+                    var hash = Convert.ToBase64String(hashBytes);
                     return (salt, hash);
                 }
             }
@@ -29,12 +29,12 @@ namespace ErikTheCoder.Sandbox.PasswordHash
 
         public static bool Validate(string Password, string Salt, string Hash, int Iterations)
         {
-            byte[] saltBytes = Convert.FromBase64String(Salt);
-            int hashLength = Convert.FromBase64String(Hash).Length;
-            using (Rfc2898DeriveBytes derivedBytes = new Rfc2898DeriveBytes(Password, saltBytes, Iterations))
+            var saltBytes = Convert.FromBase64String(Salt);
+            var hashLength = Convert.FromBase64String(Hash).Length;
+            using (var derivedBytes = new Rfc2898DeriveBytes(Password, saltBytes, Iterations))
             {
-                byte[] hashBytes = derivedBytes.GetBytes(hashLength);
-                string hash = Convert.ToBase64String(hashBytes);
+                var hashBytes = derivedBytes.GetBytes(hashLength);
+                var hash = Convert.ToBase64String(hashBytes);
                 return hash == Hash;
             }
         }

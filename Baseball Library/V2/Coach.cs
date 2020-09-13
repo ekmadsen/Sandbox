@@ -35,7 +35,7 @@ namespace ErikTheCoder.Sandbox.Baseball.Library.V2
             {
                 _players = value;
                 Record.Players.Clear();
-                foreach (IPlayer player in value) if (player is IPlayerRecordPattern pattern) Record.Players.Add(pattern.Record);
+                foreach (var player in value) if (player is IPlayerRecordPattern pattern) Record.Players.Add(pattern.Record);
             }
         }
 

@@ -16,25 +16,25 @@ namespace ErikTheCoder.Sandbox.XmlParser
 		{
             _buffer = new char[_maxDepth][];
             _elementNameLengths = new int[_maxDepth];
-            for (int depth = 0; depth < _maxDepth; depth++) _buffer[depth] = new char[_elementNameMaxLength];
+            for (var depth = 0; depth < _maxDepth; depth++) _buffer[depth] = new char[_elementNameMaxLength];
 		}
 
 
 		public int CountNodes(string Filename, string XPath)
         {
-			int count = 0;
-			string[] xPathNames = XPath.StartsWith('/')
+            var count = 0;
+            var xPathNames = XPath.StartsWith('/')
 				? XPath.Substring(1).Split('/')
 				: XPath.Split('/');
-			int depth = 0;
-			int xPathDepth = xPathNames.Length - 1;
-			using (FileStream fileStream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+            var depth = 0;
+            var xPathDepth = xPathNames.Length - 1;
+			using (var fileStream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                using (StreamReader streamReader = new StreamReader(fileStream))
+                using (var streamReader = new StreamReader(fileStream))
                 {
                     do
                     {
-                        int elementNameLength = GetNextElementName(streamReader, depth);
+                        var elementNameLength = GetNextElementName(streamReader, depth);
                         if (elementNameLength < 0) return count; // End of stream.
                         if (_buffer[depth][0] == '/')
                         {
@@ -53,11 +53,11 @@ namespace ErikTheCoder.Sandbox.XmlParser
 
         private int GetNextElementName(StreamReader StreamReader, int Depth)
         {
-            bool inElementName = false;
-            int index = 0;
+            var inElementName = false;
+            var index = 0;
             while (!StreamReader.EndOfStream)
             {
-                char character = (char) StreamReader.Read();
+                var character = (char) StreamReader.Read();
                 if (!inElementName && (character == '<'))
                 {
                     inElementName = true;
@@ -77,10 +77,10 @@ namespace ErikTheCoder.Sandbox.XmlParser
         // ReSharper disable SuggestBaseTypeForParameter
         private bool PathsMatch(string[] XPathNames)
         {
-            for (int depth = 0; depth < XPathNames.Length; depth++)
+            for (var depth = 0; depth < XPathNames.Length; depth++)
             {
-                int length = Math.Min(_elementNameLengths[depth], XPathNames[depth].Length);
-                for (int index = 0; index < length; index++) if (_buffer[depth][index] != XPathNames[depth][index]) return false;
+                var length = Math.Min(_elementNameLengths[depth], XPathNames[depth].Length);
+                for (var index = 0; index < length; index++) if (_buffer[depth][index] != XPathNames[depth][index]) return false;
             }
             return true;
         }

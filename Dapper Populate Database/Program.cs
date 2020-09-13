@@ -24,11 +24,11 @@ namespace ErikTheCoder.Sandbox.Dapper
 
         public static void Main()
         {
-            using (SqlConnection connection = new SqlConnection(_database))
+            using (var connection = new SqlConnection(_database))
             {
                 connection.Open();
-                List<int> technicianIds = CreateTechnicians(connection);
-                List<int> customerIds = CreateCustomers(connection);
+                var technicianIds = CreateTechnicians(connection);
+                var customerIds = CreateCustomers(connection);
                 CreateServiceCalls(connection, technicianIds, customerIds);
             }
         }
@@ -36,18 +36,18 @@ namespace ErikTheCoder.Sandbox.Dapper
         
         private static List<int> CreateTechnicians(SqlConnection Connection)
         {
-            List<int> technicianIds = new List<int>();
+            var technicianIds = new List<int>();
             string sql;
             SqlCommand command;
-            for (int index = 0; index < _technicianCount; index++)
+            for (var index = 0; index < _technicianCount; index++)
             {
-                string name = GetRandomName(_nameLength);
+                var name = GetRandomName(_nameLength);
                 sql = $"insert into technicians (name) values ('{name}')";
                 using (command = new SqlCommand(sql, Connection)) { command.ExecuteNonQuery(); }
             }
             sql = "select id from technicians";
             command = new SqlCommand(sql, Connection);
-            using (SqlDataReader reader = command.ExecuteReader()) { while (reader.Read()) { technicianIds.Add(reader.GetInt32(0)); } }
+            using (var reader = command.ExecuteReader()) { while (reader.Read()) { technicianIds.Add(reader.GetInt32(0)); } }
             return technicianIds;
         }
 
@@ -55,43 +55,43 @@ namespace ErikTheCoder.Sandbox.Dapper
 
         private static List<int> CreateCustomers(SqlConnection Connection)
         {
-            List<int> customerIds = new List<int>();
+            var customerIds = new List<int>();
             string sql;
             SqlCommand command;
-            for (int index = 0; index < _customerCount; index++)
+            for (var index = 0; index < _customerCount; index++)
             {
-                string name = GetRandomName(_nameLength);
-                string address = $"{GetRandomDigits(4)} {GetRandomName(_nameLength)}";
-                string city = GetRandomName(_nameLength);
-                string state = GetRandomName(2);
-                string zipCode = GetRandomDigits(5);
+                var name = GetRandomName(_nameLength);
+                var address = $"{GetRandomDigits(4)} {GetRandomName(_nameLength)}";
+                var city = GetRandomName(_nameLength);
+                var state = GetRandomName(2);
+                var zipCode = GetRandomDigits(5);
                 sql = $"insert into customers (name, address, city, state, zipcode) values ('{name}', '{address}', '{city}', '{state.ToUpper()}', '{zipCode}')";
                 using (command = new SqlCommand(sql, Connection)) { command.ExecuteNonQuery(); }
             }
             sql = "select id from customers";
             command = new SqlCommand(sql, Connection);
-            using (SqlDataReader reader = command.ExecuteReader()) { while (reader.Read()) { customerIds.Add(reader.GetInt32(0)); } }
+            using (var reader = command.ExecuteReader()) { while (reader.Read()) { customerIds.Add(reader.GetInt32(0)); } }
             return customerIds;
         }
 
 
         private static void CreateServiceCalls(SqlConnection Connection, IReadOnlyCollection<int> TechnicianIds, IReadOnlyList<int> CustomerIds)
         {
-            for (int day = 0; day < _dayCount; day++)
+            for (var day = 0; day < _dayCount; day++)
             {
-                DateTime scheduled = DateTime.Now - TimeSpan.FromDays(day);
-                bool open = (day == 0) || ((day == 1) && (_random.Next(1, 101) <= _percentPriorDayCallsOpen));
-                foreach (int technicianId in TechnicianIds)
+                var scheduled = DateTime.Now - TimeSpan.FromDays(day);
+                var open = (day == 0) || ((day == 1) && (_random.Next(1, 101) <= _percentPriorDayCallsOpen));
+                foreach (var technicianId in TechnicianIds)
                 {
-                    int customerCount = _random.Next(1, _maxCustomersPerTechPerDay + 1);
-                    List<int> customerIds = GetRandomCustomerIds(CustomerIds, customerCount);
-                    int serviceCallCount = _random.Next(_serviceCallsPerTechPerDayMin, _serviceCallsPerTechPerDayMax + 1);
-                    int customerIndex = 0;
-                    for (int serviceCallIndex = 0; serviceCallIndex < serviceCallCount; serviceCallIndex++)
+                    var customerCount = _random.Next(1, _maxCustomersPerTechPerDay + 1);
+                    var customerIds = GetRandomCustomerIds(CustomerIds, customerCount);
+                    var serviceCallCount = _random.Next(_serviceCallsPerTechPerDayMin, _serviceCallsPerTechPerDayMax + 1);
+                    var customerIndex = 0;
+                    for (var serviceCallIndex = 0; serviceCallIndex < serviceCallCount; serviceCallIndex++)
                     {
-                        int customerId = customerIds[customerIndex];
-                        string sql = $"insert into servicecalls (customerid, technicianid, scheduled, [open]) values ({customerId}, {technicianId}, '{scheduled}', {(open ? 1 : 0)})";
-                        using (SqlCommand command = new SqlCommand(sql, Connection)) { command.ExecuteNonQuery(); }
+                        var customerId = customerIds[customerIndex];
+                        var sql = $"insert into servicecalls (customerid, technicianid, scheduled, [open]) values ({customerId}, {technicianId}, '{scheduled}', {(open ? 1 : 0)})";
+                        using (var command = new SqlCommand(sql, Connection)) { command.ExecuteNonQuery(); }
                         customerIndex++;
                         if (customerIndex == customerCount) customerIndex = 0;
                     }
@@ -102,10 +102,10 @@ namespace ErikTheCoder.Sandbox.Dapper
 
         private static List<int> GetRandomCustomerIds(IReadOnlyList<int> CustomerIds, int Count)
         {
-            List<int> customerIds = new List<int>();
+            var customerIds = new List<int>();
             do
             {
-                int customerId = CustomerIds[_random.Next(0, CustomerIds.Count)];
+                var customerId = CustomerIds[_random.Next(0, CustomerIds.Count)];
                 // Don't add the same customer more than once.
                 if (!customerIds.Contains(customerId)) customerIds.Add(customerId);
             } while (customerIds.Count < Count);
@@ -115,7 +115,7 @@ namespace ErikTheCoder.Sandbox.Dapper
 
         private static string GetRandomName(int Length)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             stringBuilder.Append(char.ToUpper(_alphabet[_random.Next(0, _alphabet.Length)]));
             while (stringBuilder.Length < Length) stringBuilder.Append(_alphabet[_random.Next(0, _alphabet.Length)]);
             return stringBuilder.ToString();
@@ -124,7 +124,7 @@ namespace ErikTheCoder.Sandbox.Dapper
 
         private static string GetRandomDigits(int Length)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             while (stringBuilder.Length < Length) stringBuilder.Append(_digits[_random.Next(0, _digits.Length)]);
             return stringBuilder.ToString();
         }

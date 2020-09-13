@@ -32,15 +32,15 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
 
         private static async Task RunAsync(IReadOnlyList<string> Arguments)
         {
-            (string computerName, int days, Func<string, int, Task<PcReport>> createReportAsync) = ParseCommandLine(Arguments);
+            var (computerName, days, createReportAsync) = ParseCommandLine(Arguments);
             // ReSharper disable once UnusedVariable
-            PcReport pcReport = await createReportAsync(computerName, days);
+            var pcReport = await createReportAsync(computerName, days);
         }
 
 
         private static async Task<PcReport> CreateReportSequentiallyAsync(string ComputerName, int Days)
         {
-            PcReport pcReport = new PcReport
+            var pcReport = new PcReport
             {
                 ComputerName = ComputerName,
                 Days = Days
@@ -55,16 +55,16 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
 
         private static async Task<PcReport> CreateReportConcurrentlyRaceConditionAsync(string ComputerName, int Days)
         {
-            PcReport pcReport = new PcReport
+            var pcReport = new PcReport
             {
                 ComputerName = ComputerName,
                 Days = Days
             };
-            Task addUser = AddUserAsync(pcReport);
-            Task addFileLogs = AddFileLogsAsync(pcReport);
-            Task addEventLogs = AddEventLogsAsync(pcReport);
-            Task addDatabaseLogs = AddDatabaseLogsAsync(pcReport);
-            List<Task> tasks = new List<Task> { addUser, addFileLogs, addEventLogs, addDatabaseLogs };
+            var addUser = AddUserAsync(pcReport);
+            var addFileLogs = AddFileLogsAsync(pcReport);
+            var addEventLogs = AddEventLogsAsync(pcReport);
+            var addDatabaseLogs = AddDatabaseLogsAsync(pcReport);
+            var tasks = new List<Task> { addUser, addFileLogs, addEventLogs, addDatabaseLogs };
             await Task.WhenAll(tasks);
             return pcReport;
         }
@@ -72,11 +72,11 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
 
         private static async Task<PcReport> CreateReportConcurrentlyAsync(string ComputerName, int Days)
         {
-            Task<User> getUser = GetUserAsync(ComputerName, Days);
-            Task<List<string>> getFileLogs = GetFileLogsAsync(ComputerName, Days);
-            Task<List<string>> getEventLogs = GetEventLogsAsync(ComputerName, Days);
-            Task<List<string>> getDatabaseLogs = GetDatabaseLogsAsync(ComputerName, Days);
-            List<Task> tasks = new List<Task> {getUser, getFileLogs, getEventLogs, getDatabaseLogs};
+            var getUser = GetUserAsync(ComputerName, Days);
+            var getFileLogs = GetFileLogsAsync(ComputerName, Days);
+            var getEventLogs = GetEventLogsAsync(ComputerName, Days);
+            var getDatabaseLogs = GetDatabaseLogsAsync(ComputerName, Days);
+            var tasks = new List<Task> {getUser, getFileLogs, getEventLogs, getDatabaseLogs};
             await Task.WhenAll(tasks);
             return new PcReport
             {
@@ -128,7 +128,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding primary user of {ComputerName}.", ConsoleColor.Cyan);
             await Task.Delay(TimeSpan.FromMilliseconds(_getUserMsec * Days));
-            User user = new User { Username = $"{ComputerName} User" };
+            var user = new User { Username = $"{ComputerName} User" };
             ConsoleWriter.WriteLine(_stopwatch, $"The primary user is {user.Username}.", ConsoleColor.Cyan);
             return user;
         }
@@ -138,7 +138,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding file logs for {ComputerName}.", ConsoleColor.Green);
             await Task.Delay(TimeSpan.FromMilliseconds(_getFileLogsMsecPerDay * Days));
-            List<string> fileLogs = new List<string> { "File Log 1", "File Log 2", "File Log 3" };
+            var fileLogs = new List<string> { "File Log 1", "File Log 2", "File Log 3" };
             ConsoleWriter.WriteLine(_stopwatch, $"File logs = {string.Join(", ", fileLogs)}.", ConsoleColor.Green);
             return fileLogs;
         }
@@ -148,7 +148,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding event logs for {ComputerName}.", ConsoleColor.Magenta);
             await Task.Delay(TimeSpan.FromMilliseconds(_getEventLogsMsecPerDay * Days));
-            List<string> eventLogs = new List<string> { "Event Log 1", "Event Log 2", "Event Log 3" };
+            var eventLogs = new List<string> { "Event Log 1", "Event Log 2", "Event Log 3" };
             ConsoleWriter.WriteLine(_stopwatch, $"Event logs = {string.Join(", ", eventLogs)}.", ConsoleColor.Magenta);
             return eventLogs;
         }
@@ -158,7 +158,7 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Adding database logs for {ComputerName}.", ConsoleColor.Yellow);
             await Task.Delay(TimeSpan.FromMilliseconds(_getDatabaseLogsMsecPerDay * Days));
-            List<string> databaseLogs = new List<string> { "Database Log 1", "Database Log 2", "Database Log 3" };
+            var databaseLogs = new List<string> { "Database Log 1", "Database Log 2", "Database Log 3" };
             ConsoleWriter.WriteLine(_stopwatch, $"Database logs = {string.Join(", ", databaseLogs)}.", ConsoleColor.Yellow);
             return databaseLogs;
         }
@@ -166,22 +166,20 @@ namespace ErikTheCoder.Sandbox.AsyncConcurrent
         
         private static (string ComputerName, int Days, Func<string, int, Task<PcReport>> Technique) ParseCommandLine(IReadOnlyList<string> Arguments)
         {
-            string computerName = (Arguments.Count > 0) ? Arguments[0] : null;
-            if (string.IsNullOrEmpty(computerName)) throw new ArgumentException("Specify a computer name.");
-            int days = (Arguments.Count > 1) ? int.Parse(Arguments[1]) : 0;
+            var computerName = (Arguments.Count > 0) ? Arguments[0] : null;
+            if (computerName.IsNullOrEmpty()) throw new ArgumentException("Specify a computer name.");
+            var days = (Arguments.Count > 1) ? int.Parse(Arguments[1]) : 0;
             if (days == 0) throw new ArgumentException("Specify days.");
-            string technique = (Arguments.Count > 2) ? Arguments[2].ToLower() : null;
-            switch (technique)
+            var technique = (Arguments.Count > 2) ? Arguments[2].ToLower() : null;
+            return technique switch
             {
-                case ("sequential"):
-                    return (computerName, days, CreateReportSequentiallyAsync);
-                case ("concurrent-race"):
-                    return (computerName, days, CreateReportConcurrentlyRaceConditionAsync);
-                case ("concurrent"):
-                    return (computerName, days, CreateReportConcurrentlyAsync);
-                default:
-                    throw new ArgumentException(technique is null ? "Specify a technique." : $"{technique} not supported.");
-            }
+                ("sequential") => (computerName, days, CreateReportSequentiallyAsync),
+                ("concurrent-race") => (computerName, days, CreateReportConcurrentlyRaceConditionAsync),
+                ("concurrent") => (computerName, days, CreateReportConcurrentlyAsync),
+                _ => throw new ArgumentException(technique is null
+                    ? "Specify a technique."
+                    : $"{technique} not supported.")
+            };
         }
     }
 }

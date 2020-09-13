@@ -8,8 +8,8 @@ namespace ErikTheCoder.Sandbox.XmlParser
     {
         public int CountNodes(string Filename, string XPath)
         {
-            XmlDocument xmlDocument = new XmlDocument();
-            using (FileStream fileStream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+            var xmlDocument = new XmlDocument();
+            using (var fileStream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 xmlDocument.Load(fileStream);
                 // ReSharper disable once PossibleNullReferenceException

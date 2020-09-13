@@ -24,7 +24,7 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
         public int Frob3(int Input)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Frob {Name}: Started.", ConsoleColor.Yellow);
-            int delayMSec = Input * _complexity;
+            var delayMSec = Input * _complexity;
             Thread.Sleep(TimeSpan.FromMilliseconds(delayMSec));
             ConsoleWriter.WriteLine(_stopwatch, $"Frob {Name}: Finished.", ConsoleColor.Yellow);
             return delayMSec;
@@ -34,7 +34,7 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
         public async Task<int> Frob4(int Input)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Frob {Name}: Started.", ConsoleColor.Yellow);
-            int delayMSec = Input * _complexity;
+            var delayMSec = Input * _complexity;
             await Task.Delay(TimeSpan.FromMilliseconds(delayMSec));
             ConsoleWriter.WriteLine(_stopwatch, $"Frob {Name}: Finished.", ConsoleColor.Yellow);
             return delayMSec;
@@ -44,7 +44,7 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
         public async Task<(string WidgetName, int FrobValue)> Frob5(int Input)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Frob {Name}: Started.", ConsoleColor.Yellow);
-            int delayMSec = Input * _complexity;
+            var delayMSec = Input * _complexity;
             await Task.Delay(TimeSpan.FromMilliseconds(delayMSec));
             ConsoleWriter.WriteLine(_stopwatch, $"Frob {Name}: Finished.", ConsoleColor.Yellow);
             return (Name, delayMSec);
@@ -54,7 +54,7 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
         public int Bork3(int Input)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Bork {Name}: Started.", ConsoleColor.Cyan);
-            int delayMSec = Input * _complexity;
+            var delayMSec = Input * _complexity;
             Thread.Sleep(TimeSpan.FromMilliseconds(delayMSec));
             ConsoleWriter.WriteLine(_stopwatch, $"Bork {Name}: Finished.", ConsoleColor.Cyan);
             return delayMSec;
@@ -64,7 +64,7 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
         public async Task<int> Bork4(int Input)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Bork {Name}: Started.", ConsoleColor.Cyan);
-            int delayMSec = Input * _complexity;
+            var delayMSec = Input * _complexity;
             await Task.Delay(TimeSpan.FromMilliseconds(delayMSec));
             ConsoleWriter.WriteLine(_stopwatch, $"Bork {Name}: Finished.", ConsoleColor.Cyan);
             return delayMSec;
@@ -74,7 +74,7 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
         public async Task<(string WidgetName, int BorkValue)> Bork5(int Input)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Bork {Name}: Started.", ConsoleColor.Cyan);
-            int delayMSec = Input * _complexity;
+            var delayMSec = Input * _complexity;
             await Task.Delay(TimeSpan.FromMilliseconds(delayMSec));
             ConsoleWriter.WriteLine(_stopwatch, $"Bork {Name}: Finished.", ConsoleColor.Cyan);
             return (Name, delayMSec);
@@ -84,7 +84,7 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
         public void Zap3(int Input)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Zap {Name}: Started.", ConsoleColor.Green);
-            int delayMSec = Input * _complexity;
+            var delayMSec = Input * _complexity;
             Thread.Sleep(TimeSpan.FromMilliseconds(delayMSec));
             ConsoleWriter.WriteLine(_stopwatch, $"Zap {Name}: Finished.", ConsoleColor.Green);
         }
@@ -93,7 +93,7 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
         public async Task<int> Zap4(int Input)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Zap {Name}: Started.", ConsoleColor.Green);
-            int delayMSec = Input * _complexity;
+            var delayMSec = Input * _complexity;
             await Task.Delay(TimeSpan.FromMilliseconds(delayMSec));
             ConsoleWriter.WriteLine(_stopwatch, $"Zap {Name}: Finished.", ConsoleColor.Green);
             return delayMSec;
@@ -103,7 +103,7 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
         public async Task<(string WidgetName, int ZapValue)> Zap5(int Input)
         {
             ConsoleWriter.WriteLine(_stopwatch, $"Zap {Name}: Started.", ConsoleColor.Green);
-            int delayMSec = Input * _complexity;
+            var delayMSec = Input * _complexity;
             await Task.Delay(TimeSpan.FromMilliseconds(delayMSec));
             ConsoleWriter.WriteLine(_stopwatch, $"Zap {Name}: Finished.", ConsoleColor.Green);
             return (Name, delayMSec);

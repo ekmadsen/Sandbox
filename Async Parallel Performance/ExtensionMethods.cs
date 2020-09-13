@@ -8,8 +8,8 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
     {
         public static string GetSummary(this Exception Exception)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-            Exception exception = Exception;
+            var stringBuilder = new StringBuilder();
+            var exception = Exception;
             while (exception != null)
             {
                 stringBuilder.AppendLine();

@@ -12,14 +12,13 @@ namespace ErikTheCoder.Sandbox.Dapper.Service
         public void ConfigureServices(IServiceCollection Services)
         {
             // Add MVC, filters, policies, and configure routing.
-            Services.AddMvc().AddJsonOptions(Options =>
-                {
-                    // Preserve case of property names.
-                    Options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
-                    // Preserve cyclical object references. 
-                    Options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.All; 
-                }
-            );
+            Services.AddControllers().AddNewtonsoftJson(Options =>
+            {
+                // Preserve case of property names.
+                Options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
+                // Preserve cyclical object references. 
+                Options.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.All;
+            });
             Services.AddRouting(Options => Options.LowercaseUrls = true);
             // Configure dependency injection.
             Services.AddSingleton(typeof(IAppSettings), Program.AppSettings);
@@ -29,7 +28,11 @@ namespace ErikTheCoder.Sandbox.Dapper.Service
         [UsedImplicitly]
         public void Configure(IApplicationBuilder ApplicationBuilder)
         {
-            ApplicationBuilder.UseMvc();
+            ApplicationBuilder.UseRouting();
+            ApplicationBuilder.UseEndpoints(RouteBuilder =>
+            {
+                RouteBuilder.MapControllerRoute("default", "{controller}/{action}");
+            });
         }
     }
 }

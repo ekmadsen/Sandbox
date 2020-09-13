@@ -25,9 +25,9 @@ namespace ErikTheCoder.Sandbox.Dapper.Contract
 
         public static async Task Main(string[] Arguments)
         {
-            (GetCallData getCallData, int minServiceCallId, int maxServiceCallId) = ParseCommandLine(Arguments);
-            Stopwatch stopWatch = Stopwatch.StartNew();
-            (Dictionary<int, int> serviceCallToTechnician, Dictionary<int, HashSet<int>> technicianToServiceCalls) = await getCallData(minServiceCallId, maxServiceCallId);
+            var(getCallData, minServiceCallId, maxServiceCallId) = ParseCommandLine(Arguments);
+            var stopWatch = Stopwatch.StartNew();
+            var (serviceCallToTechnician, technicianToServiceCalls) = await getCallData(minServiceCallId, maxServiceCallId);
             stopWatch.Stop();
             Console.WriteLine($"Loaded {serviceCallToTechnician.Count} calls in {nameof(serviceCallToTechnician)} dictionary.");
             Console.WriteLine($"Loaded {technicianToServiceCalls.Count} service technicians in {nameof(technicianToServiceCalls)} dictionary.");
@@ -37,11 +37,11 @@ namespace ErikTheCoder.Sandbox.Dapper.Contract
 
         private static async Task<(Dictionary<int, int> ServiceCallToTechnician, Dictionary<int, HashSet<int>> TechnicianToServiceCalls)> GetCallDataRegularDapper(int MinServiceCallId, int MaxServiceCallId)
         {
-            using (SqlConnection connection = new SqlConnection(_connection))
+            using (var connection = new SqlConnection(_connection))
             {
                 await connection.OpenAsync();
-                Dictionary<int, int> serviceCallToTechnician = new Dictionary<int, int>();
-                Dictionary<int, HashSet<int>> technicianToServiceCalls = new Dictionary<int, HashSet<int>>();
+                var serviceCallToTechnician = new Dictionary<int, int>();
+                var technicianToServiceCalls = new Dictionary<int, HashSet<int>>();
                 Func<int, int, int> map = (ServiceCallId, TechnicianId) =>
                 {
                     serviceCallToTechnician.Add(ServiceCallId, TechnicianId);
@@ -51,7 +51,7 @@ namespace ErikTheCoder.Sandbox.Dapper.Contract
                 };
                 var param = new {MinServiceCallId, MaxServiceCallId};
                 // ReSharper disable once UnusedVariable
-                IEnumerable<int> unusedReturnValues = await connection.QueryAsync(_sql, map, param, splitOn: "TechnicianId");
+                var unusedReturnValues = await connection.QueryAsync(_sql, map, param, splitOn: "TechnicianId");
                 return (serviceCallToTechnician, technicianToServiceCalls);
             }
         }
@@ -59,11 +59,11 @@ namespace ErikTheCoder.Sandbox.Dapper.Contract
 
         private static async Task<(Dictionary<int, int> ServiceCallToTechnician, Dictionary<int, HashSet<int>> TechnicianToServiceCalls)> GetCallDataDapperExtension(int MinServiceCallId, int MaxServiceCallId)
         {
-            using (SqlConnection connection = new SqlConnection(_connection))
+            using (var connection = new SqlConnection(_connection))
             {
                 await connection.OpenAsync();
-                Dictionary<int, int> serviceCallToTechnician = new Dictionary<int, int>();
-                Dictionary<int, HashSet<int>> technicianToServiceCalls = new Dictionary<int, HashSet<int>>();
+                var serviceCallToTechnician = new Dictionary<int, int>();
+                var technicianToServiceCalls = new Dictionary<int, HashSet<int>>();
                 Action<int, int> map = (ServiceCallId, TechnicianId) =>
                 {
                     serviceCallToTechnician.Add(ServiceCallId, TechnicianId);
@@ -81,21 +81,15 @@ namespace ErikTheCoder.Sandbox.Dapper.Contract
         {
             const string errorMessage = "Specify a technique, min service call ID, and max service call ID.";
             if (Arguments == null || Arguments.Count != 3) throw new ArgumentException(errorMessage);
-            GetCallData getCallData;
-            string argumentValue = Arguments[0];
-            switch (argumentValue?.ToLower())
+            var argumentValue = Arguments[0];
+            GetCallData getCallData = argumentValue?.ToLower() switch
             {
-                case "regular":
-                    getCallData = GetCallDataRegularDapper;
-                    break;
-                case "extension":
-                    getCallData = GetCallDataDapperExtension;
-                    break;
-                default:
-                    throw new ArgumentException($"{argumentValue} technique not supported.");
-            }
-            int minServiceCallId = int.Parse(Arguments[1]);
-            int maxServiceCallId = int.Parse(Arguments[2]);
+                "regular" => GetCallDataRegularDapper,
+                "extension" => GetCallDataDapperExtension,
+                _ => throw new ArgumentException($"{argumentValue} technique not supported.")
+            };
+            var minServiceCallId = int.Parse(Arguments[1]);
+            var maxServiceCallId = int.Parse(Arguments[2]);
             return (getCallData, minServiceCallId, maxServiceCallId);
         }
     }

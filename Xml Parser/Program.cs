@@ -24,13 +24,13 @@ namespace ErikTheCoder.Sandbox.XmlParser
 
         private static void Run(IReadOnlyList<string> Arguments)
         {
-            (string inputFilename, string xPath, ParsingTechnique ? parsingTechnique, string outputFilename, int? fileSizeMb) = ParseCommandLine(Arguments);
+            var (inputFilename, xPath, parsingTechnique, outputFilename, fileSizeMb) = ParseCommandLine(Arguments);
             IThreadsafeRandom random = new ThreadsafeRandom();
-            Stopwatch stopwatch = Stopwatch.StartNew();
+            var stopwatch = Stopwatch.StartNew();
             if (inputFilename != null)
             {
-                IParser parser = GetParser(parsingTechnique.Value);
-                int nodes = parser.CountNodes(inputFilename, xPath);
+                var parser = GetParser(parsingTechnique.Value);
+                var nodes = parser.CountNodes(inputFilename, xPath);
                 stopwatch.Stop();
                 fileSizeMb = (int?)((new FileInfo(inputFilename)).Length / (1024d * 1024d));
                 Console.WriteLine($"Found {nodes} nodes.");
@@ -38,7 +38,7 @@ namespace ErikTheCoder.Sandbox.XmlParser
             }
             if (outputFilename != null)
             {
-                XmlGenerator xmlGenerator = new XmlGenerator(random);
+                var xmlGenerator = new XmlGenerator(random);
                 xmlGenerator.CreateFile(outputFilename, fileSizeMb.Value);
                 stopwatch.Stop();
                 Console.WriteLine($"Creation of {fileSizeMb.Value} MB file took {stopwatch.Elapsed.TotalSeconds:0.000} seconds.");
@@ -55,11 +55,11 @@ namespace ErikTheCoder.Sandbox.XmlParser
             string outputFilename = null;
             int? fileSizeMb = null;
             if (Arguments.Count % 2 != 0) throw new ArgumentException("Invalid number of arguments.  Arguments must be passed in a pair: -argumentName argumentValue or /argumentName argumentValue.");
-            for (int index = 0; index < Arguments.Count; index++)
+            for (var index = 0; index < Arguments.Count; index++)
             {
-                string argumentName = Arguments[index];
+                var argumentName = Arguments[index];
                 index++;
-                string argumentValue = Arguments[index];
+                var argumentValue = Arguments[index];
                 switch (argumentName?.ToLower())
                 {
                     case "-i":
@@ -107,19 +107,14 @@ namespace ErikTheCoder.Sandbox.XmlParser
 
         private static IParser GetParser(ParsingTechnique ParsingTechnique)
         {
-            switch (ParsingTechnique)
+            return ParsingTechnique switch
             {
-                case ParsingTechnique.XmlDocument:
-                    return new XmlDocumentParser();
-                case ParsingTechnique.XPathDocument:
-                    return new XPathDocumentParser();
-                case ParsingTechnique.XmlReader:
-                    return new XmlReaderParser();
-                case ParsingTechnique.Char:
-                    return new CharParser();
-                default:
-                    throw new NotImplementedException($"{ParsingTechnique} parsing technique not supported.");
-            }
+                ParsingTechnique.XmlDocument => new XmlDocumentParser(),
+                ParsingTechnique.XPathDocument => new XPathDocumentParser(),
+                ParsingTechnique.XmlReader => new XmlReaderParser(),
+                ParsingTechnique.Char => new CharParser(),
+                _ => throw new NotImplementedException($"{ParsingTechnique} parsing technique not supported.")
+            };
         }
     }
 }

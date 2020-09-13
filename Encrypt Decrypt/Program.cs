@@ -17,7 +17,7 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
             catch (Exception exception)
             {
                 // This code is not thread safe.  But this program uses a single thread, so no issue.
-                ConsoleColor restoreColor = Console.ForegroundColor;
+                var restoreColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(exception.GetSummary(true, true));
                 Console.ForegroundColor = restoreColor;
@@ -28,11 +28,11 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
         private static void Run(IReadOnlyList<string> Arguments)
         {
             Console.WriteLine();
-            (Func<BigInteger, CipherBase> createCipher, int keyLength) = ParseCommandLine(Arguments);
+            var (createCipher, keyLength) = ParseCommandLine(Arguments);
             // Create client and server.
-            using (Client client = new Client(createCipher, keyLength))
+            using (var client = new Client(createCipher, keyLength))
             {
-                using (Server server = new Server(createCipher, keyLength))
+                using (var server = new Server(createCipher, keyLength))
                 {
                     // Perform Diffie-Hellman key exchange.
                     client.InitiateKeyExchange(server);
@@ -41,8 +41,8 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
                         // Prompt for message and send to server.
                         Console.WriteLine();
                         Console.Write("Enter a message to send to server:  ");
-                        string message = Console.ReadLine();
-                        if (string.IsNullOrEmpty(message)) return;
+                        var message = Console.ReadLine();
+                        if (message.IsNullOrEmpty()) return;
                         Console.WriteLine();
                         client.SendMessageToServer(message, server);
                     }
@@ -54,23 +54,19 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
         private static (Func<BigInteger, CipherBase> CreateCipher, int KeyLength) ParseCommandLine(IReadOnlyList<string> Arguments)
         {
             // Parse cipher name.
-            Func<BigInteger, CipherBase> createCipher;
-            string cipherName = (Arguments.Count > 0) ? Arguments[0].ToLower() : null;
-            switch (cipherName)
+            var cipherName = (Arguments.Count > 0) ? Arguments[0].ToLower() : null;
+            Func<BigInteger, CipherBase> createCipher = cipherName switch
             {
-                case "xor":
-                    createCipher = CreateXorCipher;
-                    break;
-                case "aes":
-                    createCipher = CreateAesCipher;
-                    break;
-                default:
-                    throw new ArgumentException(cipherName is null ? "Specify a cipher name." : $"{cipherName} Cipher not supported.");
-            }
+                "xor" => CreateXorCipher,
+                "aes" => CreateAesCipher,
+                _ => throw new ArgumentException(cipherName is null
+                    ? "Specify a cipher name."
+                    : $"{cipherName} Cipher not supported.")
+            };
             // Parse key length.
             if (Arguments.Count < 2) throw new ArgumentException("Specify a key length.");
-            string keyLengthText = Arguments[1];
-            if (!int.TryParse(keyLengthText, out int keyLength)) throw new ArgumentException($"Key length {keyLengthText} not supported.");
+            var keyLengthText = Arguments[1];
+            if (!int.TryParse(keyLengthText, out var keyLength)) throw new ArgumentException($"Key length {keyLengthText} not supported.");
             return (createCipher, keyLength);
         }
 

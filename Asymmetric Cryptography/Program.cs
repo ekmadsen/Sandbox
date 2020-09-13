@@ -40,12 +40,12 @@ namespace ErikTheCoder.Sandbox.AsymmetricCryptography
             Console.WriteLine();
             if (Args.Length > 0)
             {
-                string technique = Args[0].Trim();
+                var technique = Args[0].Trim();
                 if (string.Equals(technique, "small", StringComparison.CurrentCultureIgnoreCase))
                 {
                     if (Args.Length > 1)
                     {
-                        int maxValue = int.Parse(Args[1].Trim());
+                        var maxValue = int.Parse(Args[1].Trim());
                         TestWithSmallIntegers(maxValue);
                         return;
                     }
@@ -77,19 +77,19 @@ namespace ErikTheCoder.Sandbox.AsymmetricCryptography
                 // Send public key from A to B.
                 long a = GetRandomPositiveInteger(MaxValue);
                 Console.WriteLine($" a = {a.ToString(_integerFormat)}.  This is a random integer chosen by Principal A.");
-                Math.DivRem((long) Math.Pow(g, a), n, out long m1);
+                Math.DivRem((long) Math.Pow(g, a), n, out var m1);
                 Console.WriteLine($"m1 = {m1.ToString(_integerFormat)}.  This is a public key transmitted from Principal A to Principal B.");
                 Console.WriteLine();
                 // Send public key from B to A.
                 long b = GetRandomPositiveInteger(MaxValue);
                 Console.WriteLine($" b = {b.ToString(_integerFormat)}.  This is a random integer chosen by Principal B.");
-                Math.DivRem((long) Math.Pow(g, b), n, out long m2);
+                Math.DivRem((long) Math.Pow(g, b), n, out var m2);
                 Console.WriteLine($"m2 = {m2.ToString(_integerFormat)}.  This is a public key transmitted from Principal B to Principal A.");
                 Console.WriteLine();
                 // Compute shared keys.
-                Math.DivRem((long) Math.Pow(m2, a), n, out long ak);
+                Math.DivRem((long) Math.Pow(m2, a), n, out var ak);
                 Console.WriteLine($"ak = {ak.ToString(_integerFormat)}.  This is the shared key Principal A uses to encrypt and decrypt messages sent to / received from Principal B.");
-                Math.DivRem((long) Math.Pow(m1, b), n, out long bk);
+                Math.DivRem((long) Math.Pow(m1, b), n, out var bk);
                 Console.WriteLine($"bk = {bk.ToString(_integerFormat)}.  This is the shared key Principal B uses to encrypt and decrypt messages sent to / received from Principal A.");
                 Console.WriteLine();
                 Console.WriteLine(ak == bk ? "Shared keys (for use by Principals A and B using generator g) match." : "Shared keys (for generator g) do not match.");
@@ -102,28 +102,28 @@ namespace ErikTheCoder.Sandbox.AsymmetricCryptography
         {
             Console.WriteLine("Testing using big, positive integers.");
             Console.WriteLine();
-            BigInteger g = GetRandomPositiveBigInteger();
+            var g = GetRandomPositiveBigInteger();
             Console.WriteLine($"g = {g.ToString(_integerFormat)}.  This is the encryption generator.");
-            BigInteger n = GetRandomPositiveBigInteger();
+            var n = GetRandomPositiveBigInteger();
             Console.WriteLine($"n = {n.ToString(_integerFormat)}.  This is the block size of the generator.  Large messages are encrypted in multiple blocks.");
             Console.WriteLine();
             // Send public key from A to B.
-            BigInteger a = GetRandomPositiveBigInteger();
+            var a = GetRandomPositiveBigInteger();
             Console.WriteLine($"a = {a.ToString(_integerFormat)}.  This is a random integer chosen by Principal A.");
-            BigInteger m1 = BigInteger.ModPow(g, a, n);
+            var m1 = BigInteger.ModPow(g, a, n);
             Console.WriteLine($"m1 = {m1}.  This is a public key transmitted from Principal A to Principal B.");
             Console.WriteLine();
             // Send public key from B to A.
-            BigInteger b = GetRandomPositiveBigInteger();
+            var b = GetRandomPositiveBigInteger();
             Console.WriteLine($"b = {b.ToString(_integerFormat)}.  This is a random integer chosen by Principal B.");
-            BigInteger m2 = BigInteger.ModPow(g, b, n);
+            var m2 = BigInteger.ModPow(g, b, n);
             Console.WriteLine($"m2 = {m2}.  This is a public key transmitted from Principal B to Principal A.");
             Console.WriteLine();
             // Compute shared keys.
-            BigInteger ak = BigInteger.ModPow(m2, a, n);
+            var ak = BigInteger.ModPow(m2, a, n);
             Console.WriteLine($"ak = {ak}.  This is the shared key Principal A uses to encrypt and decrypt messages sent to / received from Principal B.");
             Console.WriteLine();
-            BigInteger bk = BigInteger.ModPow(m1, b, n);
+            var bk = BigInteger.ModPow(m1, b, n);
             Console.WriteLine($"bk = {bk}.  This is the shared key Principal B uses to encrypt and decrypt messages sent to / received from Principal A.");
             Console.WriteLine();
             Console.WriteLine(ak == bk ? "Shared keys (for use by Principals A and B using generator g) match." : "Shared keys (for generator g) do not match.");

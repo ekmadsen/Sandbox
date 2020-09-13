@@ -32,18 +32,18 @@ namespace ErikTheCoder.Sandbox.XmlParser
         public void CreateFile(string Filename, int FileSizeMb)
         {
 			Console.Write("Creating file... ");
-			int targetFileSizeBytes = FileSizeMb * 1024 * 1024;
-            using (FileStream fileStream = File.Open(Filename, FileMode.Create, FileAccess.Write, FileShare.Read))
+            var targetFileSizeBytes = FileSizeMb * 1024 * 1024;
+            using (var fileStream = File.Open(Filename, FileMode.Create, FileAccess.Write, FileShare.Read))
             {
-                using (StreamWriter streamWriter = new StreamWriter(fileStream))
+                using (var streamWriter = new StreamWriter(fileStream))
                 {
                     // Open root element.
-                    int fileSizeBytes = 0;
+                    var fileSizeBytes = 0;
                     OpenElement(streamWriter, ref fileSizeBytes, false);
                     while (fileSizeBytes < targetFileSizeBytes)
                     {
                         // Determine action.
-                        int actionPercent = _random.Next(100);
+                        var actionPercent = _random.Next(100);
                         if ((actionPercent < _actionPercentages[0]) && (_elementNames.Count > 1)) CloseElement(streamWriter, ref fileSizeBytes);
                         else if (actionPercent < _actionPercentages[1]) OpenElement(streamWriter, ref fileSizeBytes);
                         else WriteElement(streamWriter, ref fileSizeBytes);
@@ -59,15 +59,15 @@ namespace ErikTheCoder.Sandbox.XmlParser
         {
             StreamWriter.WriteLine();
             FileSizeBytes += 2;  // Carriage Return + Line Feed
-            string elementName = GetRandomText(_elementNameMinLength, _elementNameMaxLength);
-            int indent = _elementNames.Count * _indentSpaces;
-            string xml = $"{new string(' ', indent)}<{elementName}>";
+            var elementName = GetRandomText(_elementNameMinLength, _elementNameMaxLength);
+            var indent = _elementNames.Count * _indentSpaces;
+            var xml = $"{new string(' ', indent)}<{elementName}>";
             StreamWriter.Write(xml);
             FileSizeBytes += xml.Length;
-            int words = _random.Next(_elementValueMinWords, _elementValueMaxWords);
+            var words = _random.Next(_elementValueMinWords, _elementValueMaxWords);
             while (words > 0)
             {
-                string space = words == 1 ? "" : " ";
+                var space = words == 1 ? "" : " ";
                 xml = $"{GetRandomText(_wordMinLength, _wordMaxLength)}{space}";
                 StreamWriter.Write(xml);
                 FileSizeBytes += xml.Length;
@@ -86,10 +86,10 @@ namespace ErikTheCoder.Sandbox.XmlParser
                 StreamWriter.WriteLine();
                 FileSizeBytes += 2; // Carriage Return + Line Feed
             }
-            string elementName = GetRandomText(_elementNameMinLength, _elementNameMaxLength);
-            int indent = _elementNames.Count * _indentSpaces;
+            var elementName = GetRandomText(_elementNameMinLength, _elementNameMaxLength);
+            var indent = _elementNames.Count * _indentSpaces;
             _elementNames.Push(elementName);
-            string xml = $"{new string(' ', indent)}<{elementName}>";
+            var xml = $"{new string(' ', indent)}<{elementName}>";
             StreamWriter.Write(xml);
             FileSizeBytes += xml.Length;
             // Guarantee element contains at least one child element with content.
@@ -101,9 +101,9 @@ namespace ErikTheCoder.Sandbox.XmlParser
         {
             StreamWriter.WriteLine();
             FileSizeBytes += 2; // Carriage Return + Line Feed
-            string elementName = _elementNames.Pop();
-            int indent = _elementNames.Count * _indentSpaces;
-            string xml = $"{new string(' ', indent)}</{elementName}>";
+            var elementName = _elementNames.Pop();
+            var indent = _elementNames.Count * _indentSpaces;
+            var xml = $"{new string(' ', indent)}</{elementName}>";
             StreamWriter.Write(xml);
             FileSizeBytes += xml.Length;
         }
@@ -117,9 +117,9 @@ namespace ErikTheCoder.Sandbox.XmlParser
 
         private string GetRandomText(int MinLength, int MaxLength)
         {
-            int length = _random.Next(MinLength, MaxLength + 1);
-            char[] textChars = new char[length];
-            for (int index = 0; index < textChars.Length; index++) textChars[index] = _lowercaseChars[_random.Next(_lowercaseChars.Length)];
+            var length = _random.Next(MinLength, MaxLength + 1);
+            var textChars = new char[length];
+            for (var index = 0; index < textChars.Length; index++) textChars[index] = _lowercaseChars[_random.Next(_lowercaseChars.Length)];
             return new string(textChars);
         }
     }

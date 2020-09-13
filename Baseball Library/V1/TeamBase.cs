@@ -25,8 +25,8 @@
 //        public IEnumerable<ITeamMember> GetAllTeamMembers()
 //        {
 //            if (HeadCoach != null) yield return HeadCoach;
-//            foreach (ICoach assistantCoach in AssistantCoaches) yield return assistantCoach;
-//            foreach (IPlayer player in Players) yield return player;
+//            foreach (var assistantCoach in AssistantCoaches) yield return assistantCoach;
+//            foreach (var player in Players) yield return player;
 //        }
 
 
@@ -61,10 +61,10 @@
 //                List<ITeamMember> teamMembers = GetAllTeamMembers().ToList();
 //                do
 //                {
-//                    decimal totalSalaries = teamMembers.Sum(TeamMember => TeamMember?.Salary ?? 0);
+//                    var totalSalaries = teamMembers.Sum(TeamMember => TeamMember?.Salary ?? 0);
 //                    if (totalSalaries <= SalaryCap) return;
-//                    decimal requiredReduction = totalSalaries - SalaryCap;
-//                    ITeamMember lowestPaidPlayer = GetLowestPaidTeamMember(teamMembers);
+//                    var requiredReduction = totalSalaries - SalaryCap;
+//                    var lowestPaidPlayer = GetLowestPaidTeamMember(teamMembers);
 //                    lowestPaidPlayer.Salary -= Math.Min(lowestPaidPlayer.Salary, requiredReduction); // Player's salary cannot be reduced below zero.
 //                } while (true);
 //            }
@@ -79,7 +79,7 @@
 //        {
 //            // Get lowest paid team member that actually earns a salary.
 //            TeamMembers.Sort((TeamMember1, TeamMember2) => TeamMember1.Salary.CompareTo(TeamMember2.Salary));
-//            foreach (ITeamMember teamMember in TeamMembers) if (teamMember.Salary > 0) return teamMember;
+//            foreach (var teamMember in TeamMembers) if (teamMember.Salary > 0) return teamMember;
 //            throw new Exception("No team member earns a salary.");
 //        }
 //    }

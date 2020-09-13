@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>ErikTheCoder.Sandbox.AsyncParallelPerformance</AssemblyName>
     <RootNamespace>ErikTheCoder.Sandbox.AsyncParallelPerformance</RootNamespace>
   </PropertyGroup>

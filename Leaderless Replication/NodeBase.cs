@@ -34,12 +34,12 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
         {
             // Create connections to other nodes.
             Connections = new Dictionary<string, List<Connection>>();
-            foreach (NodeBase node in Nodes)
+            foreach (var node in Nodes)
             {
                 if (node.Id == Id) continue; // Don't connect node to itself.
                 if (!Connections.ContainsKey(node.RegionName)) Connections.Add(node.RegionName, new List<Connection>());
-                (TimeSpan minLatency, TimeSpan maxLatency) = Latency ?? LeaderlessReplication.Latency.Get(Id, node.Id);
-                Connection connection = new Connection(Random, this, node, minLatency, maxLatency);
+                var (minLatency, maxLatency) = Latency ?? LeaderlessReplication.Latency.Get(Id, node.Id);
+                var connection = new Connection(Random, this, node, minLatency, maxLatency);
                 Connections[node.RegionName].Add(connection);
             }
         }
@@ -50,7 +50,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
 
         public string GetValue(string Key)
         {
-            string returnValue = Values.TryGetValue(Key, out string value) ? value : null;
+            var returnValue = Values.TryGetValue(Key, out var value) ? value : null;
             return returnValue;
         }
 
