@@ -14,11 +14,11 @@ namespace ErikTheCoder.Sandbox.Covariance.V3
         public override object ReadJson(JsonReader Reader, Type ObjectType, object ExistingValue, JsonSerializer Serializer)
         {
             // Deserialize as type.
-            Dictionary<TKey, TValue> dictionary = Serializer.Deserialize<Dictionary<TKey, TValue>>(Reader);
+            var dictionary = Serializer.Deserialize<Dictionary<TKey, TValue>>(Reader);
             if (dictionary == null) return null;
             // Convert to interface.
-            Dictionary<IKey, IValue> returnDictionary = new Dictionary<IKey, IValue>();
-            foreach ((TKey key, TValue value) in dictionary) returnDictionary.Add(key, value);
+            var returnDictionary = new Dictionary<IKey, IValue>();
+            foreach (var (key, value) in dictionary) returnDictionary.Add(key, value);
             return returnDictionary;
         }
 

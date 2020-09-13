@@ -19,13 +19,13 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
             ConsoleWriter.WriteLine();
             ConsoleWriter.WriteLine(_stopwatch, "Main: Called CountWidgetsAsync.");
             ConsoleWriter.WriteLine(_stopwatch, "Main: Awaiting CountWidgetsAsync.");
-            int widgets = await CountWidgetsAsync();
+            var widgets = await CountWidgetsAsync();
             ConsoleWriter.WriteLine(_stopwatch, $"Main: CountWidgetsAsync returned {widgets}.");
             ConsoleWriter.WriteLine(_stopwatch, "Main: Called CountSprocketsAsync.");
             ConsoleWriter.WriteLine(_stopwatch, "Main: Awaiting CountSprocketsAsync.");
-            int sprockets = await CountSprocketsAsync();
+            var sprockets = await CountSprocketsAsync();
             ConsoleWriter.WriteLine(_stopwatch, $"Main: CountSprocketsAsync returned {sprockets}.");
-            int items = widgets + sprockets;
+            var items = widgets + sprockets;
             ConsoleWriter.WriteLine(_stopwatch, $"Main: Found {items} items.");
         }
 

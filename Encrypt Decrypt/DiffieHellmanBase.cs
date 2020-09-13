@@ -75,7 +75,7 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
         protected void WriteLine(string Message, ConsoleColor Color)
         {
             // This code is not thread safe.  But this program uses a single thread, so no issue.
-            ConsoleColor restoreColor = Console.ForegroundColor;
+            var restoreColor = Console.ForegroundColor;
             Console.ForegroundColor = Color;
             Console.WriteLine($"{GetType().Name}:  {Message}{Environment.NewLine}");
             Console.ForegroundColor = restoreColor;

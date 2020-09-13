@@ -21,14 +21,14 @@ namespace ErikTheCoder.Sandbox.Dapper.Service.Controllers
         [HttpGet("/mapping/getopenservicecalls")]
         public async Task<GetOpenServiceCallsResponse> GetOpenServiceCallsAsync()
         {
-            GetOpenServiceCallsResponse response = new GetOpenServiceCallsResponse();
+            var response = new GetOpenServiceCallsResponse();
             // Each row in SQL result represents a unique service call but may contain duplicate customers and technicians.
             const string sql = @"select sc.Id, sc.Scheduled, sc.[Open], c.Id, c.Name, c.Address, c.City, c.State, c.ZipCode, t.Id, t.Name
                 from ServiceCalls sc
                 inner join Customers c on sc.CustomerId = c.Id
                 inner join Technicians t on sc.TechnicianId = t.Id
                 where sc.[Open] = 1";
-            using (SqlConnection connection = new SqlConnection(_appSettings.Database))
+            using (var connection = new SqlConnection(_appSettings.Database))
             {
                 await connection.OpenAsync();
                 await connection.QueryAsync<ServiceCall, Customer, Technician, ServiceCall>(sql, (ServiceCall, Customer, Technician) =>
@@ -36,13 +36,13 @@ namespace ErikTheCoder.Sandbox.Dapper.Service.Controllers
                     // This lambda method runs once per row in SQL result.
                     response.ServiceCalls.Add(ServiceCall);
                     // Reference existing customers and technicians or add to collection if first time encountered.
-                    if (!response.Customers.TryGetValue(Customer.Id, out Customer customer))
+                    if (!response.Customers.TryGetValue(Customer.Id, out var customer))
                     {
                         // Customer mapped by Dapper not in collection.
                         customer = Customer;
                         response.Customers.Add(customer);
                     }
-                    if (!response.Technicians.TryGetValue(Technician.Id, out Technician technician))
+                    if (!response.Technicians.TryGetValue(Technician.Id, out var technician))
                     {
                         // Technician mapped by Dapper not in collection.
                         technician = Technician;

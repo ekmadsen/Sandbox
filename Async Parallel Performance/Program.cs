@@ -34,7 +34,7 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
             Console.WriteLine();
             _directory = Path.GetDirectoryName(typeof(Program).Assembly.Location) ?? string.Empty;
             // Build collection of web pages to download.
-            List<string> urls =  new List<string>
+            var urls =  new List<string>
             {
                 "https://www.cs.cornell.edu/courses/cs5430/2013sp/TL04.asymmetric.html",
                 "https://en.wikipedia.org/wiki/Transport_Layer_Security",
@@ -53,23 +53,23 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
                 "http://www.irs.gov/statistics/soi-tax-stats-individual-income-tax-statistics-zip-code-data-soi"
             };
             _webPageDownloads = new Dictionary<string, WebPageDownload>();
-            foreach (string url in urls) _webPageDownloads[url] = new WebPageDownload(url);
+            foreach (var url in urls) _webPageDownloads[url] = new WebPageDownload(url);
             // Create sequential directory or purge files.
-            DirectoryInfo directory = new DirectoryInfo(Path.Combine(_directory, "Sequential"));
+            var directory = new DirectoryInfo(Path.Combine(_directory, "Sequential"));
             Console.Write($"Purging files from {directory} directory...  ");
             if (!directory.Exists) directory.Create();
-            foreach (FileInfo file in directory.EnumerateFiles()) file.Delete();
+            foreach (var file in directory.EnumerateFiles()) file.Delete();
             Console.WriteLine("completed.");
             Console.WriteLine();
             // Download web pages sequentially.
             _totalDownloadedBytes = 0L;
             Console.WriteLine($"Downloading {_webPageDownloads.Count} web pages sequentially.");
             Console.WriteLine();
-            Stopwatch stopwatch = Stopwatch.StartNew();
+            var stopwatch = Stopwatch.StartNew();
             DownloadSequentially(directory);
             stopwatch.Stop();
             Console.WriteLine($"Downloads completed in {stopwatch.Elapsed.TotalSeconds:0.000} seconds.");
-            double throughput = 8d * _totalDownloadedBytes / (stopwatch.Elapsed.TotalSeconds * 1024d * 1024d);
+            var throughput = 8d * _totalDownloadedBytes / (stopwatch.Elapsed.TotalSeconds * 1024d * 1024d);
             Console.WriteLine($"Throughput = {throughput:0.000} Mbps.");
             Console.WriteLine();
             Console.WriteLine();
@@ -77,7 +77,7 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
             directory = new DirectoryInfo(Path.Combine(_directory, "Concurrent"));
             Console.Write($"Purging files from {directory} directory...  ");
             if (!directory.Exists) directory.Create();
-            foreach (FileInfo file in directory.EnumerateFiles()) file.Delete();
+            foreach (var file in directory.EnumerateFiles()) file.Delete();
             Console.WriteLine("completed.");
             Console.WriteLine();
             // Download web pages concurrently.
@@ -97,20 +97,20 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
 
         private static void DownloadSequentially(FileSystemInfo Directory)
         {
-            using (HttpClient httpClient = new HttpClient())
+            using (var httpClient = new HttpClient())
             {
-                foreach (WebPageDownload webPageDownload in _webPageDownloads.Values)
+                foreach (var webPageDownload in _webPageDownloads.Values)
                 {
-                    string cacheBustingUrl = GetCacheBustingUrl(webPageDownload.Url);
+                    var cacheBustingUrl = GetCacheBustingUrl(webPageDownload.Url);
                     Console.Write($"Downloading {webPageDownload.Url} web page...  ");
                     // Get website response headers.
-                    using (HttpResponseMessage response = httpClient.GetAsync(cacheBustingUrl, HttpCompletionOption.ResponseHeadersRead).Result)
+                    using (var response = httpClient.GetAsync(cacheBustingUrl, HttpCompletionOption.ResponseHeadersRead).Result)
                     {
-                        string filename = Path.Combine(Directory.FullName, SanitizeFilename(webPageDownload.Url));
-                        using (Stream responseStream = response.Content.ReadAsStreamAsync().Result)
+                        var filename = Path.Combine(Directory.FullName, SanitizeFilename(webPageDownload.Url));
+                        using (var responseStream = response.Content.ReadAsStreamAsync().Result)
                         {
                             // Stream response body from web server directly to file.
-                            using (Stream fileStream = File.OpenWrite(filename))
+                            using (var fileStream = File.OpenWrite(filename))
                             {
                                 responseStream.CopyTo(fileStream);
                                 // Increment downloaded bytes.
@@ -127,25 +127,25 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
 
         private static async Task DownloadConcurrentlyAsync(FileSystemInfo Directory)
         {
-            using (HttpClient httpClient = new HttpClient())
+            using (var httpClient = new HttpClient())
             {
                 // Monitor status.
-                Task monitorStatus = MonitorStatusAsync();
+                var monitorStatus = MonitorStatusAsync();
                 // Download website response headers asynchronously.
-                Dictionary<string, Task<HttpResponseMessage>> headerDownloads = new Dictionary<string, Task<HttpResponseMessage>>(_webPageDownloads.Count);
-                foreach (WebPageDownload webPageDownload in _webPageDownloads.Values)
+                var headerDownloads = new Dictionary<string, Task<HttpResponseMessage>>(_webPageDownloads.Count);
+                foreach (var webPageDownload in _webPageDownloads.Values)
                 {
-                    string cacheBustingUrl = GetCacheBustingUrl(webPageDownload.Url);
-                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, cacheBustingUrl);
+                    var cacheBustingUrl = GetCacheBustingUrl(webPageDownload.Url);
+                    var request = new HttpRequestMessage(HttpMethod.Get, cacheBustingUrl);
                     request.Properties[_originalUrl] = webPageDownload.Url;
                     headerDownloads[webPageDownload.Url] = httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
                 }
                 // Monitor header downloads.
-                Dictionary<string, Task<HttpResponseMessage>> bodyDownloads = new Dictionary<string, Task<HttpResponseMessage>>(_webPageDownloads.Count);
+                var bodyDownloads = new Dictionary<string, Task<HttpResponseMessage>>(_webPageDownloads.Count);
                 while (headerDownloads.Count > 0)
                 {
                     // As web servers respond with header data, download the HTTP body asynchronously.
-                    Task<HttpResponseMessage> task = await Task.WhenAny(headerDownloads.Values);
+                    var task = await Task.WhenAny(headerDownloads.Values);
                     if (task.IsFaulted)
                     {
                         // Display error message and halt program execution.
@@ -153,10 +153,11 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
                         Environment.Exit(-1);
                     }
                     // Remove task from header downloads collection.
-                    string url = task.Result.RequestMessage.Properties[_originalUrl].ToString();
+                    var url = task.Result.RequestMessage.Properties[_originalUrl]?.ToString();
+                    if (url is null) throw new Exception("URL is null.");
                     headerDownloads.Remove(url);
                     // Update status.
-                    WebPageDownload webPageDownload = _webPageDownloads[url];
+                    var webPageDownload = _webPageDownloads[url];
                     webPageDownload.Bytes = task.Result.Content.Headers.ContentLength;
                     // Update downloaded header count in a thread-safe manner.
                     Interlocked.Increment(ref _downloadedHeaders);
@@ -167,7 +168,7 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
                 while (bodyDownloads.Count > 0)
                 {
                     // As web servers respond with body data, update status.
-                    Task<HttpResponseMessage> task = await Task.WhenAny(bodyDownloads.Values);
+                    var task = await Task.WhenAny(bodyDownloads.Values);
                     if (task.IsFaulted)
                     {
                         // Display error message and halt program execution.
@@ -175,10 +176,11 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
                         Environment.Exit(-1);
                     }
                     // Remove task from body downloads collection.
-                    string url = task.Result.RequestMessage.Properties[_originalUrl].ToString();
+                    var url = task.Result.RequestMessage.Properties[_originalUrl]?.ToString();
+                    if (url is null) throw new Exception("URL is null.");
                     bodyDownloads.Remove(url);
                     // Update status.
-                    WebPageDownload webPageDownload = _webPageDownloads[url];
+                    var webPageDownload = _webPageDownloads[url];
                     webPageDownload.BodyDownloaded = true;
                     // Update downloaded body count in a thread-safe manner.
                     Interlocked.Increment(ref _downloadedBodies);
@@ -201,8 +203,8 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
 
         private static async Task MonitorStatusAsync()
         {
-            int column = Console.CursorLeft;
-            int row = Console.CursorTop;
+            var column = Console.CursorLeft;
+            var row = Console.CursorTop;
             while (_downloadedBodies < _webPageDownloads.Count)
             {
                 UpdateStatus(column, row);
@@ -217,22 +219,22 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
             Console.SetCursorPosition(Column, Row);
             Console.WriteLine($"Downloaded {_downloadedHeaders} of {_webPageDownloads.Count} web page headers.");
             Console.WriteLine();
-            int webPageNumber = 1;
-            foreach (WebPageDownload webPageDownload in _webPageDownloads.Values)
+            var webPageNumber = 1;
+            foreach (var webPageDownload in _webPageDownloads.Values)
             {
-                string urlPreview = webPageDownload.Url.Length > _urlPreviewLength
+                var urlPreview = webPageDownload.Url.Length > _urlPreviewLength
                     ? webPageDownload.Url.Substring(0, _urlPreviewLength).PadRight(_urlPreviewLength)
                     : webPageDownload.Url.PadRight(_urlPreviewLength);
-                string downloadedBytes = webPageDownload.DownloadedBytes.ToString("#,#").PadLeft(11);
-                string bytes = (webPageDownload.Bytes?.ToString("#,#") ?? "?").PadLeft(11);
-                double percentComplete = webPageDownload.BodyDownloaded
+                var downloadedBytes = webPageDownload.DownloadedBytes.ToString("#,#").PadLeft(11);
+                var bytes = (webPageDownload.Bytes?.ToString("#,#") ?? "?").PadLeft(11);
+                var percentComplete = webPageDownload.BodyDownloaded
                     ? 1d
                     : webPageDownload.Bytes.HasValue
                         ? (double)webPageDownload.DownloadedBytes / webPageDownload.Bytes.Value
                         : 0d;
-                string percentCompleteFormatted = (100 * percentComplete).ToString("0").PadLeft(3);
-                string downloadProgress = new string('\u2588', (int)(percentComplete * _progressBarWidth)).PadRight(_progressBarWidth, '\u2591');
-                string complete = webPageDownload.BodyDownloaded ? "  (Completed)" : string.Empty;
+                var percentCompleteFormatted = (100 * percentComplete).ToString("0").PadLeft(3);
+                var downloadProgress = new string('\u2588', (int)(percentComplete * _progressBarWidth)).PadRight(_progressBarWidth, '\u2591');
+                var complete = webPageDownload.BodyDownloaded ? "  (Completed)" : string.Empty;
                 Console.WriteLine($"{webPageNumber:00}  {urlPreview}  {percentCompleteFormatted}%  {downloadProgress}  {downloadedBytes} of {bytes} bytes{complete}");
                 webPageNumber++;
             }
@@ -244,14 +246,14 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
 
         private static string GetCacheBustingUrl(string Url)
         {
-            char separator = Url.IndexOf('?') > -1 ? '&' : '?';
+            var separator = Url.IndexOf('?') > -1 ? '&' : '?';
             return $"{Url}{separator}param={Guid.NewGuid()}";
         }
 
 
         private static string SanitizeFilename(string Filename)
         {
-            string filename = Filename.Replace("https://", null, StringComparison.CurrentCultureIgnoreCase);
+            var filename = Filename.Replace("https://", null, StringComparison.CurrentCultureIgnoreCase);
             filename = filename.Replace("http://", null, StringComparison.CurrentCultureIgnoreCase);
             filename = filename.Replace("/", "-", StringComparison.CurrentCultureIgnoreCase);
             filename = filename.Replace("?", "-", StringComparison.CurrentCultureIgnoreCase);
@@ -269,12 +271,12 @@ namespace ErikTheCoder.Sandbox.AsyncParallelPerformance
 
         private static async Task<HttpResponseMessage> DownloadWebPageAsync(WebPageDownload WebPageDownload, FileSystemInfo Directory, HttpResponseMessage HeaderResponse)
         {
-            string url = HeaderResponse.RequestMessage.Properties[_originalUrl].ToString();
-            string filename = Path.Combine(Directory.FullName, SanitizeFilename(url));
-            using (Stream responseStream = await HeaderResponse.Content.ReadAsStreamAsync())
+            var url = HeaderResponse.RequestMessage.Properties[_originalUrl].ToString();
+            var filename = Path.Combine(Directory.FullName, SanitizeFilename(url));
+            using (var responseStream = await HeaderResponse.Content.ReadAsStreamAsync())
             {
                 // Stream response body from web server directly to file.
-                byte[] buffer = new byte[_bufferSize];
+                var buffer = new byte[_bufferSize];
                 using (Stream fileStream = File.OpenWrite(filename))
                 {
                     int bytesRead;

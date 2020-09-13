@@ -12,16 +12,16 @@ namespace ErikTheCoder.Sandbox.XmlParser
 
         public int CountNodes(string Filename, string XPath)
         {
-            int count = 0;
-            string[] xPathNames = XPath.StartsWith('/')
+            var count = 0;
+            var xPathNames = XPath.StartsWith('/')
                 ? XPath.Substring(1).Split('/')
                 : XPath.Split('/');
-            int depth = 0;
-            int xPathDepth = xPathNames.Length - 1;
-            string[] elementNames = new string[_maxDepth];
-            using (FileStream fileStream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+            var depth = 0;
+            var xPathDepth = xPathNames.Length - 1;
+            var elementNames = new string[_maxDepth];
+            using (var fileStream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                using (XmlReader xmlReader = XmlReader.Create(fileStream))
+                using (var xmlReader = XmlReader.Create(fileStream))
                 {
                     while (xmlReader.Read())
                     {
@@ -47,8 +47,8 @@ namespace ErikTheCoder.Sandbox.XmlParser
         // ReSharper disable SuggestBaseTypeForParameter
         private static bool PathsMatch(string[] ElementNames, string[] XPathNames)
         {
-            int length = Math.Min(ElementNames.Length, XPathNames.Length);
-            for (int index = 0; index < length; index++) if (ElementNames[index] != XPathNames[index]) return false;
+            var length = Math.Min(ElementNames.Length, XPathNames.Length);
+            for (var index = 0; index < length; index++) if (ElementNames[index] != XPathNames[index]) return false;
             return true;
         }
         // ReSharper restore SuggestBaseTypeForParameter

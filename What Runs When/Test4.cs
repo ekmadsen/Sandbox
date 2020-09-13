@@ -31,22 +31,22 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
                 {"M", new Widget(_stopwatch, "M", 13)}
             };
             // Use initial input to frob the widgets asynchronously.
-            Dictionary<string, Task<int>> frobRequests = new Dictionary<string, Task<int>>(_widgets.Count);
-            foreach (Widget widget in _widgets.Values) frobRequests[widget.Name] = widget.Frob4(InitialInput);
+            var frobRequests = new Dictionary<string, Task<int>>(_widgets.Count);
+            foreach (var widget in _widgets.Values) frobRequests[widget.Name] = widget.Frob4(InitialInput);
             await Task.WhenAll(frobRequests.Values);
             // Use the output of each widget's frob method to bork the widget asynchronously.
-            Dictionary<string, Task<int>> borkRequests = new Dictionary<string, Task<int>>(_widgets.Count);
-            foreach (Widget widget in _widgets.Values)
+            var borkRequests = new Dictionary<string, Task<int>>(_widgets.Count);
+            foreach (var widget in _widgets.Values)
             {
-                int frobValue = frobRequests[widget.Name].Result;
+                var frobValue = frobRequests[widget.Name].Result;
                 borkRequests[widget.Name] = widget.Bork4(frobValue);
             }
             await Task.WhenAll(borkRequests.Values);
             // Use the output of each widget's bork method to zap the widget asynchronously.
-            Dictionary<string, Task<int>> zapRequests = new Dictionary<string, Task<int>>(_widgets.Count);
-            foreach (Widget widget in _widgets.Values)
+            var zapRequests = new Dictionary<string, Task<int>>(_widgets.Count);
+            foreach (var widget in _widgets.Values)
             {
-                int borkValue = borkRequests[widget.Name].Result;
+                var borkValue = borkRequests[widget.Name].Result;
                 zapRequests[widget.Name] = widget.Zap4(borkValue);
             }
             // Await zapping.

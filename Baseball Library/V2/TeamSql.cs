@@ -40,28 +40,28 @@ namespace ErikTheCoder.Sandbox.Baseball.Library.V2
                 from tblCoaches c
                 where c.TeamId = @TeamId
                 ";
-            IDataReader dataReader = GetDataReader(sql);
+            var dataReader = GetDataReader(sql);
             while (dataReader.Read())
             {
                 // Add everyone to the players list.
                 // The point of this code is not to implement a working solution.  The point is to demonstrate the player salary side effect.
-                PlayerRecord playerRecord = new PlayerRecord
+                var playerRecord = new PlayerRecord
                 {
                     Team = Record,
                     Name = dataReader["Name"]?.ToString(),
                     Salary = decimal.Parse(dataReader["Salary"]?.ToString() ?? "0")
                 };
-                IPlayer player = _repo.CreatePlayer(playerRecord);
+                var player = _repo.CreatePlayer(playerRecord);
                 Players.Add(player);
             }
         }
 
         private static IDataReader GetDataReader(string Sql)
         {
-            Mock<IDataReader> moqDataReader = new Mock<IDataReader>();
-            List<Dictionary<string, object>> data = GetData();
-            int rowNumber = -1;
-            int maxRowNumber = data.Count - 1;
+            var moqDataReader = new Mock<IDataReader>();
+            var data = GetData();
+            var rowNumber = -1;
+            var maxRowNumber = data.Count - 1;
             moqDataReader.Setup(Instance => Instance.Read())
                 .Returns(() => rowNumber < maxRowNumber)
                 .Callback(() => rowNumber++);

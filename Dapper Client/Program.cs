@@ -30,7 +30,7 @@ namespace ErikTheCoder.Sandbox.Dapper.Client
             catch (Exception exception)
             {
                 // This code is not thread safe.  But this program uses a single thread, so no issue.
-                ConsoleColor restoreColor = Console.ForegroundColor;
+                var restoreColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(exception.GetSummary(true, true));
                 Console.ForegroundColor = restoreColor;
@@ -51,53 +51,43 @@ namespace ErikTheCoder.Sandbox.Dapper.Client
                 // Preserve cyclical object references.
                 PreserveReferencesHandling = PreserveReferencesHandling.All
             };
-            Func<Task<GetOpenServiceCallsResponse>> getOpenServiceCalls = ParseCommandLine(Arguments);
+            var getOpenServiceCalls = ParseCommandLine(Arguments);
             do
             {
                 // Call web service using specified function, then verify object references are preserved.
-                Stopwatch stopwatch = Stopwatch.StartNew();
-                GetOpenServiceCallsResponse response = await getOpenServiceCalls();
+                var stopwatch = Stopwatch.StartNew();
+                var response = await getOpenServiceCalls();
                 stopwatch.Stop();
                 Console.WriteLine($"Retrieved {response.ServiceCalls.Count} service calls, {response.Customers.Count} customers, and {response.Technicians.Count} technicians in {stopwatch.Elapsed.TotalSeconds:0.000} seconds.");
                 VerifyObjectReferencesPreserved(response);
-            } while (string.IsNullOrWhiteSpace(Console.ReadLine()));
+            } while (Console.ReadLine() == Environment.NewLine);
         }
 
 
         private static Func<Task<GetOpenServiceCallsResponse>> ParseCommandLine(IReadOnlyList<string> Arguments)
         {
             // Parse deserializer.
-            Func<Task<GetOpenServiceCallsResponse>> getOpenServiceCalls;
-            string deserializer = (Arguments.Count > 0) ? Arguments[0].ToLower() : null;
-            switch (deserializer)
+            var deserializer = (Arguments.Count > 0) ? Arguments[0].ToLower() : null;
+            Func<Task<GetOpenServiceCallsResponse>>  getOpenServiceCalls = deserializer switch
             {
-                case "json.net":
-                    getOpenServiceCalls = GetOpenServiceCallsViaJsonNet;
-                    break;
-                case "refit":
-                    getOpenServiceCalls = GetOpenServiceCallsViaRefit;
-                    break;
-                default:
-                    throw new ArgumentException(deserializer is null ? "Specify a deserialzer." : $"{deserializer} not supported.");
-            }
+                "json.net" => GetOpenServiceCallsViaJsonNet,
+                "refit" => GetOpenServiceCallsViaRefit,
+                _ => throw new ArgumentException(deserializer is null
+                    ? "Specify a deserialzer."
+                    : $"{deserializer} not supported.")
+            };
             return getOpenServiceCalls;
         }
 
 
         private static async Task<GetOpenServiceCallsResponse> GetOpenServiceCallsViaJsonNet()
         {
-            using (HttpResponseMessage responseMessage = await _httpClient.GetAsync(new Uri(_mappingServiceUrl)))
+            using (var responseMessage = await _httpClient.GetAsync(new Uri(_mappingServiceUrl)))
+            using (var responseStream = await responseMessage.Content.ReadAsStreamAsync())
+            using (var streamReader = new StreamReader(responseStream))
+            using (var jsonReader = new JsonTextReader(streamReader))
             {
-                using (Stream responseStream = await responseMessage.Content.ReadAsStreamAsync())
-                {
-                    using (StreamReader streamReader = new StreamReader(responseStream))
-                    {
-                        using (JsonTextReader jsonReader = new JsonTextReader(streamReader))
-                        {
-                            return _jsonSerializer.Deserialize<GetOpenServiceCallsResponse>(jsonReader);
-                        }
-                    }
-                }
+                return _jsonSerializer.Deserialize<GetOpenServiceCallsResponse>(jsonReader);
             }
         }
 
@@ -110,9 +100,9 @@ namespace ErikTheCoder.Sandbox.Dapper.Client
             const int technicianId = 3276;
             const int customerId = 75904;
             const int serviceCallId = 8949862;
-            Technician technician = Response.Technicians[technicianId];
-            Customer customer = Response.Customers[customerId];
-            ServiceCall serviceCall = Response.ServiceCalls[serviceCallId];
+            var technician = Response.Technicians[technicianId];
+            var customer = Response.Customers[customerId];
+            var serviceCall = Response.ServiceCalls[serviceCallId];
             Trace.Assert(ReferenceEquals(technician, customer.Technicians[technicianId]));
             Trace.Assert(ReferenceEquals(technician, serviceCall.Technician));
             Trace.Assert(ReferenceEquals(customer, technician.Customers[customerId]));

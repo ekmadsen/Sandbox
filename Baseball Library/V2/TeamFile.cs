@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using ErikTheCoder.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -32,7 +33,7 @@ namespace ErikTheCoder.Sandbox.Baseball.Library.V2
 
         protected override void CreateInternal()
         {
-            string filename = GetFilename();
+            var filename = GetFilename();
             if (File.Exists(filename)) throw new Exception($"{filename} file already exists.");
             // Add logic here that auto-increments IDs.  For this demo, just hard-code a new ID.
             Id = 1;
@@ -43,10 +44,10 @@ namespace ErikTheCoder.Sandbox.Baseball.Library.V2
         protected override void ReadInternal()
         {
             // Deserialize team record from JSON saved in text file.
-            string filename = GetFilename();
-            if (string.IsNullOrEmpty(filename) || !File.Exists(filename)) throw new FileNotFoundException(filename);
-            string json = File.ReadAllText(filename);
-            if (string.IsNullOrWhiteSpace(json)) throw new FileLoadException(filename);
+            var filename = GetFilename();
+            if (filename.IsNullOrEmpty() || !File.Exists(filename)) throw new FileNotFoundException(filename);
+            var json = File.ReadAllText(filename);
+            if (json.IsNullOrWhiteSpace()) throw new FileLoadException(filename);
             Record = JsonConvert.DeserializeObject<TeamRecord>(json, _jsonSerializerSettings);
             Initialize();
         }
@@ -55,15 +56,15 @@ namespace ErikTheCoder.Sandbox.Baseball.Library.V2
         protected override void UpdateInternal()
         {
             // Serialize to JSON and save to text file.
-            string json = JsonConvert.SerializeObject(Record, Record.GetType(), _jsonSerializerSettings);
-            string filename = GetFilename();
+            var json = JsonConvert.SerializeObject(Record, Record.GetType(), _jsonSerializerSettings);
+            var filename = GetFilename();
             File.WriteAllText(filename, json);
         }
 
 
         protected override void DeleteInternal()
         {
-            string filename = GetFilename();
+            var filename = GetFilename();
             if (File.Exists(filename)) File.Delete(filename);
         }
 
@@ -77,11 +78,11 @@ namespace ErikTheCoder.Sandbox.Baseball.Library.V2
         {
             protected override IList<JsonProperty> CreateProperties(Type Type, MemberSerialization MemberSerialization)
             {
-                List<JsonProperty> jsonProperties = new List<JsonProperty>();
-                FieldInfo[] fields = Type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-                foreach (FieldInfo field in fields)
+                var jsonProperties = new List<JsonProperty>();
+                var fields = Type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+                foreach (var field in fields)
                 {
-                    JsonProperty jsonProperty = base.CreateProperty(field, MemberSerialization);
+                    var jsonProperty = base.CreateProperty(field, MemberSerialization);
                     jsonProperty.Ignored = false;
                     jsonProperty.Readable = true;
                     jsonProperty.Writable = true;

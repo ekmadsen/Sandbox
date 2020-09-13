@@ -8,13 +8,13 @@ namespace ErikTheCoder.Sandbox.XmlParser
     {
         public int CountNodes(string Filename, string XPath)
         {
-            int count = 0;
-            using (FileStream fileStream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+            var count = 0;
+            using (var fileStream = File.Open(Filename, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                XPathDocument xPathDocument = new XPathDocument(fileStream);
-                XPathNavigator xPathNavigator = xPathDocument.CreateNavigator();
+                var xPathDocument = new XPathDocument(fileStream);
+                var xPathNavigator = xPathDocument.CreateNavigator();
                 // ReSharper disable once PossibleNullReferenceException
-                XPathNodeIterator xPathNodeIterator = xPathNavigator.Select(XPath);
+                var xPathNodeIterator = xPathNavigator.Select(XPath);
                 while (xPathNodeIterator.MoveNext()) count++;
                 return count;
             }

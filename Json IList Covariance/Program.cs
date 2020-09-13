@@ -34,16 +34,16 @@ namespace ErikTheCoder.Sandbox.Covariance
         private static void Run(IReadOnlyList<string> Arguments)
         {
             // Run a particular version of the code.
-            int version = int.Parse(Arguments[0]);
+            var version = int.Parse(Arguments[0]);
             // Create and populate toolbox record.
-            (IToolboxRecord toolboxRecord, JsonSerializerSettings jsonSerializerSettings) = CreateToolboxRecord(version);
-            Type toolboxType = toolboxRecord.GetType();
+            var (toolboxRecord, jsonSerializerSettings) = CreateToolboxRecord(version);
+            var toolboxType = toolboxRecord.GetType();
             PopulateToolboxRecord(toolboxRecord);
             // Serialize toolbox record as JSON and save to local disk.
-            string jsonToWrite = JsonConvert.SerializeObject(toolboxRecord, jsonSerializerSettings);
+            var jsonToWrite = JsonConvert.SerializeObject(toolboxRecord, jsonSerializerSettings);
             File.WriteAllText(_filename, jsonToWrite);
             // Read JSON from local disk and de-serialize to toolbox record.
-            string jsonRead = File.ReadAllText(_filename);
+            var jsonRead = File.ReadAllText(_filename);
             try
             {
                 toolboxRecord = (IToolboxRecord)JsonConvert.DeserializeObject(jsonRead, toolboxType, jsonSerializerSettings);

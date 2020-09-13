@@ -37,20 +37,20 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
         public void InitiateKeyExchange(Server Server)
         {
             // Send public key to server.
-            BigInteger g = GetRandomPositiveBigInteger();
-            BigInteger n = GetRandomPositiveBigInteger();
-            BigInteger a = GetRandomPositiveBigInteger();
-            BigInteger m1 = BigInteger.ModPow(g, a, n);
-            PublicKey clientPublicKey = new PublicKey
+            var g = GetRandomPositiveBigInteger();
+            var n = GetRandomPositiveBigInteger();
+            var a = GetRandomPositiveBigInteger();
+            var m1 = BigInteger.ModPow(g, a, n);
+            var clientPublicKey = new PublicKey
             {
                 G = g,
                 N = n,
                 M = m1
             };
             WriteLine(clientPublicKey.ToString(), ConsoleColor.Yellow);
-            PublicKey serverPublicKey = Server.ReceiveClientPublicKey(clientPublicKey);
+            var serverPublicKey = Server.ReceiveClientPublicKey(clientPublicKey);
             // Compute shared key and create cipher.
-            BigInteger sharedKey = ComputeSharedKey(serverPublicKey.M, a, n);
+            var sharedKey = ComputeSharedKey(serverPublicKey.M, a, n);
             WriteLine($"Shared Key = {sharedKey}.");
             Cipher = _createCipher(sharedKey);
         }
@@ -58,11 +58,11 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
 
         public void SendMessageToServer(string Message, Server Server)
         {
-            string encryptedMessage = EncryptMessage(Message);
+            var encryptedMessage = EncryptMessage(Message);
             WriteLine($"Sending encrypted message  \"{encryptedMessage}\"", ConsoleColor.Yellow);
-            string encryptedResponseMessage = Server.ReceiveClientMessage(encryptedMessage);
+            var encryptedResponseMessage = Server.ReceiveClientMessage(encryptedMessage);
             WriteLine($"Received encrypted message \"{encryptedResponseMessage}\"");
-            string responseMessage = DecryptMessage(encryptedResponseMessage);
+            var responseMessage = DecryptMessage(encryptedResponseMessage);
             WriteLine($"Decrypted message is       \"{responseMessage}\"");
         }
     }

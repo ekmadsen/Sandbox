@@ -31,10 +31,10 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
                 {"M", new Widget(_stopwatch, "M", 13)}
             };
             // Use initial input to frob the widgets asynchronously.
-            Dictionary<string, Task<(string WidgetName, int FrobValue)>> frobRequests = new Dictionary<string, Task<(string, int)>>(_widgets.Count);
-            foreach (Widget widget in _widgets.Values) frobRequests[widget.Name] = widget.Frob5(InitialInput);
+            var frobRequests = new Dictionary<string, Task<(string WidgetName, int FrobValue)>>(_widgets.Count);
+            foreach (var widget in _widgets.Values) frobRequests[widget.Name] = widget.Frob5(InitialInput);
             // Monitor frobbing.
-            Dictionary<string, Task<(string WidgetName, int BorkValue)>> borkRequests = new Dictionary<string, Task<(string, int)>>(_widgets.Count);
+            var borkRequests = new Dictionary<string, Task<(string WidgetName, int BorkValue)>>(_widgets.Count);
             while (frobRequests.Count > 0)
             {
                 var task = await Task.WhenAny(frobRequests.Values);
@@ -44,7 +44,7 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
                 borkRequests[task.Result.WidgetName] = _widgets[task.Result.WidgetName].Bork5(task.Result.FrobValue);
             }
             // Monitor borking.
-            Dictionary<string, Task<(string WidgetName, int ZapValue)>> zapRequests = new Dictionary<string, Task<(string, int)>>(_widgets.Count);
+            var zapRequests = new Dictionary<string, Task<(string, int)>>(_widgets.Count);
             while ((frobRequests.Count + borkRequests.Count) > 0)
             {
                 if (borkRequests.Count == 0) continue;

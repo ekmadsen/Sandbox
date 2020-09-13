@@ -12,7 +12,7 @@
 
 //        public ITeam GetTeam(int Id)
 //        {
-//            ITeam team = CreateTeam();
+//            var team = CreateTeam();
 //            team.Id = Id;
 //            team.Load();
 //            return team;

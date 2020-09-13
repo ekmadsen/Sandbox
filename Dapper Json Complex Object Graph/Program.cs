@@ -19,10 +19,10 @@ namespace ErikTheCoder.Sandbox.Dapper.Service
             // Parse configuration file.
             AppSettings = ParseConfigurationFile();
             // Build and run web host.
-            IWebHostBuilder webHostBuilder = WebHost.CreateDefaultBuilder(Args);
+            var webHostBuilder = WebHost.CreateDefaultBuilder(Args);
             webHostBuilder.UseKestrel();
             webHostBuilder.UseStartup<Startup>();
-            IWebHost webHost = webHostBuilder.Build();
+            var webHost = webHostBuilder.Build();
             webHost.Run();
         }
 
@@ -30,11 +30,11 @@ namespace ErikTheCoder.Sandbox.Dapper.Service
         private static IAppSettings ParseConfigurationFile()
         {
             const string environmentalVariableName = "ASPNETCORE_ENVIRONMENT";
-            string environment = Environment.GetEnvironmentVariable(environmentalVariableName) ?? "Dev";
-            string directory = Path.GetDirectoryName(typeof(Program).Assembly.Location) ?? string.Empty;
-            string configurationFile = Path.Combine(directory, "appSettings.json");
+            var environment = Environment.GetEnvironmentVariable(environmentalVariableName) ?? "Dev";
+            var directory = Path.GetDirectoryName(typeof(Program).Assembly.Location) ?? string.Empty;
+            var configurationFile = Path.Combine(directory, "appSettings.json");
             if (!File.Exists(configurationFile)) throw new Exception($"Configuration file not found at {configurationFile}.");
-            JObject configuration = JObject.Parse(File.ReadAllText(configurationFile));
+            var configuration = JObject.Parse(File.ReadAllText(configurationFile));
             return configuration.GetValue(environment)?.ToObject<AppSettings>();
         }
     }

@@ -22,25 +22,25 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
         public override async Task<string> ReadValueAsync(string Key)
         {
             // Track which nodes voted for which values.  Initialize with this node's value.
-            Dictionary<string, HashSet<int>> votes = new Dictionary<string, HashSet<int>> {[Values[Key]] = new HashSet<int> {Id}};
+            var votes = new Dictionary<string, HashSet<int>> {[Values[Key]] = new HashSet<int> {Id}};
             // Get value from connected nodes in same region.
-            HashSet<Task<(string Value, int ToNodeId)>> regionTasks = new HashSet<Task<(string Value, int ToNodeId)>>();
+            var regionTasks = new HashSet<Task<(string Value, int ToNodeId)>>();
 
 
             //HashSet<Task<(string Value, int ToNodeId)>> regionTasks = Connections[RegionName].Select(async Connection =>
             //{
-            //    string value = await Connection.GetValueAsync(Key);
+            //    var value = await Connection.GetValueAsync(Key);
             //    return (value, Connection.ToNode.Id);
             //}).ToHashSet();
 
 
-            foreach (Connection connection in Connections[RegionName])
+            foreach (var connection in Connections[RegionName])
             {
                 // Fails to compile in C# (but works in VB.NET).
                 //regionTasks.Add(async () =>
                 //{
                 //    // Calling connection.ReadValueAsync would create an infinite loop of reads from all regional nodes to all regional nodes.
-                //    string value = await connection.GetValueAsync(Key);
+                //    var value = await connection.GetValueAsync(Key);
                 //    return (value, connection.ToNode.Id);
                 //}());
 
@@ -49,7 +49,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
                 //async Task<(string Value, int ToNodeId)> GetValueAndToNodeIdAsync(Connection Connection)
                 //{
                 //    // Calling connection.ReadValueAsync would create an infinite loop of reads from all regional nodes to all regional nodes.
-                //    string value = await Connection.GetValueAsync(Key);
+                //    var value = await Connection.GetValueAsync(Key);
                 //    return (value, Connection.ToNode.Id);
                 //}
                 //regionTasks.Add(GetValueAndToNodeIdAsync(connection));
@@ -59,7 +59,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
                 //Func<Task<(string Value, int ToNodeId)>> getValueAndToNodeIdAsync = async () =>
                 //{
                 //    // Calling connection.ReadValueAsync would create an infinite loop of reads from all regional nodes to all regional nodes.
-                //    string value = await connection.GetValueAsync(Key);
+                //    var value = await connection.GetValueAsync(Key);
                 //    return (value, connection.ToNode.Id);
                 //};
                 //regionTasks.Add(getValueAndToNodeIdAsync());
@@ -69,7 +69,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
                 //regionTasks.Add(((Func<Task<(string Values, int ToNodeId)>>)(async () =>
                 //{
                 //    // Calling connection.ReadValueAsync would create an infinite loop of reads from all regional nodes to all regional nodes.
-                //    string value = await connection.GetValueAsync(Key);
+                //    var value = await connection.GetValueAsync(Key);
                 //    return (value, connection.ToNode.Id);
                 //}))());
 
@@ -78,7 +78,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
                 regionTasks.Add(AsyncHelper.MaterializeTask(async () =>
                 {
                     // Calling connection.ReadValueAsync would create an infinite loop of reads from all regional nodes to all regional nodes.
-                    string value = await connection.GetValueAsync(Key);
+                    var value = await connection.GetValueAsync(Key);
                     return (value, connection.ToNode.Id);
                 }));
             }
@@ -87,7 +87,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             while (regionTasks.Count > 0)
             {
                 // Tally votes as they arrive.
-                Task<(string Value, int ToNodeId)> task = await Task.WhenAny(regionTasks);
+                var task = await Task.WhenAny(regionTasks);
                 regionTasks.Remove(task);
                 string value;
                 int toNodeId;
@@ -100,8 +100,8 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
                     // Ignore offline node.
                     continue;
                 }
-                string voteKey = value ?? _nullValue;
-                if (!votes.TryGetValue(voteKey, out HashSet<int> nodes)) nodes = new HashSet<int>();
+                var voteKey = value ?? _nullValue;
+                if (!votes.TryGetValue(voteKey, out var nodes)) nodes = new HashSet<int>();
                 nodes.Add(toNodeId);
                 votes[voteKey] = nodes;
                 if (_readRepair)
@@ -122,10 +122,10 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
         private string ReadValueAndRepairNodes(string Key, Dictionary<string, HashSet<int>> Votes)
         {
             // Determine correct value.
-            bool quorumReached = false;
+            var quorumReached = false;
             string correctValue = null;
             HashSet<int> correctNodes = null;
-            foreach ((string value, HashSet<int> nodes) in Votes)
+            foreach (var (value, nodes) in Votes)
             {
                 if (nodes.Count >= _requiredVotes)
                 {
@@ -139,7 +139,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             if (Votes.Count > 1)
             {
                 // Repair nodes that have wrong value or were offline.  Don't wait for writes to complete.
-                foreach (Connection connection in Connections[RegionName]) if (!correctNodes.Contains(connection.ToNode.Id)) _ = connection.WriteValueAsync(Key, correctValue);
+                foreach (var connection in Connections[RegionName]) if (!correctNodes.Contains(connection.ToNode.Id)) _ = connection.WriteValueAsync(Key, correctValue);
             }
             return correctValue;
         }
@@ -151,13 +151,13 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
             Values[Key] = Value;
             // Put value to all connected nodes in same region.
             // Calling connection.WriteValueAsync would create an infinite loop of writes from all global nodes to all global nodes.
-            List<Task> regionTasks = new List<Task>();
-            foreach (Connection connection in Connections[RegionName]) regionTasks.Add(connection.PutValueAsync(Key, Value));
+            var regionTasks = new List<Task>();
+            foreach (var connection in Connections[RegionName]) regionTasks.Add(connection.PutValueAsync(Key, Value));
             // Put value to all other connected nodes.
-            foreach ((string regionName, List<Connection> connections) in Connections)
+            foreach (var (regionName, connections) in Connections)
             {
                 if (regionName == RegionName) continue; // Already have put value to nodes in same region.
-                foreach (Connection connection in connections) _ = connection.PutValueAsync(Key, Value);
+                foreach (var connection in connections) _ = connection.PutValueAsync(Key, Value);
             }
             // Wait for nodes in same region to respond.
             try

@@ -8,10 +8,10 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
     {
         public static async Task Main(string[] Args)
         {
-            Stopwatch stopwatch = Stopwatch.StartNew();
+            var stopwatch = Stopwatch.StartNew();
             ConsoleWriter.WriteLine();
             const int initialInput = 5;
-            int test = Args.Length > 0 ? int.Parse(Args[0]) : 1;
+            var test = Args.Length > 0 ? int.Parse(Args[0]) : 1;
             switch (test)
             {
                 default:

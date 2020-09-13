@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ErikTheCoder.Utilities" Version="1.0.9" />
+    <PackageReference Include="ErikTheCoder.Utilities" Version="1.0.11" />
   </ItemGroup>
 
 </Project>

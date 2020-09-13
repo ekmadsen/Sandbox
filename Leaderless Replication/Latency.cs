@@ -41,7 +41,7 @@ namespace ErikTheCoder.Sandbox.LeaderlessReplication
 
         public static (TimeSpan Min, TimeSpan Max) Get(int FromNodeId, int ToNodeId)
         {
-            (int minMs, int maxMs) = _values[FromNodeId, ToNodeId];
+            var (minMs, maxMs) = _values[FromNodeId, ToNodeId];
             return (TimeSpan.FromMilliseconds(minMs), TimeSpan.FromMilliseconds(maxMs));
         }
     }

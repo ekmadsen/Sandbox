@@ -1,6 +1,7 @@
 ﻿//using System;
 //using System.Collections.Generic;
 //using System.IO;
+//using ErikTheCoder.Utilities;
 //using Newtonsoft.Json;
 
 
@@ -25,7 +26,7 @@
 
 //        protected override void CreateInternal()
 //        {
-//            string filename = GetFilename();
+//            var filename = GetFilename();
 //            if (File.Exists(filename)) throw new Exception($"{filename} file already exists.");
 //            // Add logic here that auto-increments IDs.  For this demo, just hard-code a new ID.
 //            Id = 1;
@@ -36,11 +37,11 @@
 //        protected override void ReadInternal()
 //        {
 //            // Deserialize team from JSON saved in text file.
-//            string filename = GetFilename();
-//            if (string.IsNullOrEmpty(filename) || !File.Exists(filename)) throw new FileNotFoundException(filename);
-//            string json = File.ReadAllText(filename);
-//            if (string.IsNullOrWhiteSpace(json)) throw new FileLoadException(filename);
-//            TeamFile team = JsonConvert.DeserializeObject<TeamFile>(json, _jsonSerializerSettings);
+//            var filename = GetFilename();
+//            if (filename.IsNullOrEmpty() || !File.Exists(filename)) throw new FileNotFoundException(filename);
+//            var json = File.ReadAllText(filename);
+//            if (json.IsNullOrWhiteSpace()) throw new FileLoadException(filename);
+//            var team = JsonConvert.DeserializeObject<TeamFile>(json, _jsonSerializerSettings);
 //            if (team == null) throw new FileLoadException(filename);
 //            Id = team.Id;
 //            Name = team.Name;
@@ -53,15 +54,15 @@
 //        protected override void UpdateInternal()
 //        {
 //            // Serialize to JSON and save to text file.
-//            string json = JsonConvert.SerializeObject(this, GetType(), _jsonSerializerSettings);
-//            string filename = GetFilename();
+//            var json = JsonConvert.SerializeObject(this, GetType(), _jsonSerializerSettings);
+//            var filename = GetFilename();
 //            File.WriteAllText(filename, json);
 //        }
 
 
 //        protected override void DeleteInternal()
 //        {
-//            string filename = GetFilename();
+//            var filename = GetFilename();
 //            if (File.Exists(filename)) File.Delete(filename);
 //        }
 

@@ -15,7 +15,7 @@ namespace ErikTheCoder.Sandbox.Baseball.Library.V2
             if (Records != null)
             {
                 // Add to list of domain classes without triggering InsertItem (which would add duplicate record).
-                foreach (CoachRecord record in Records) Items.Add(new Coach(record));
+                foreach (var record in Records) Items.Add(new Coach(record));
             }
         }
 

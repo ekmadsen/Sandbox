@@ -37,13 +37,13 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
         public PublicKey ReceiveClientPublicKey(PublicKey ClientPublicKey)
         {
             // Compute shared key and create cipher.
-            BigInteger b = GetRandomPositiveBigInteger();
-            BigInteger m2 = BigInteger.ModPow(ClientPublicKey.G, b, ClientPublicKey.N);
-            BigInteger sharedKey = ComputeSharedKey(ClientPublicKey.M, b, ClientPublicKey.N);
+            var b = GetRandomPositiveBigInteger();
+            var m2 = BigInteger.ModPow(ClientPublicKey.G, b, ClientPublicKey.N);
+            var sharedKey = ComputeSharedKey(ClientPublicKey.M, b, ClientPublicKey.N);
             WriteLine($"Shared Key = {sharedKey}.");
             Cipher = _createCipher(sharedKey);
             // Send public key to client.
-            PublicKey serverPublicKey = new PublicKey
+            var serverPublicKey = new PublicKey
             {
                 G = ClientPublicKey.G,
                 N = ClientPublicKey.N,
@@ -57,10 +57,10 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
         public string ReceiveClientMessage(string EncryptedMessage)
         {
             WriteLine($"Received encrypted message \"{EncryptedMessage}\"");
-            string message = DecryptMessage(EncryptedMessage);
+            var message = DecryptMessage(EncryptedMessage);
             WriteLine($"Decrypted message is       \"{message}\"");
-            string responseMessage = GetResponseMessage(message);
-            string encryptedResponseMessage = EncryptMessage(responseMessage);
+            var responseMessage = GetResponseMessage(message);
+            var encryptedResponseMessage = EncryptMessage(responseMessage);
             WriteLine($"Sending encrypted message  \"{encryptedResponseMessage}\"", ConsoleColor.Yellow);
             return encryptedResponseMessage;
         }
@@ -68,19 +68,14 @@ namespace ErikTheCoder.Sandbox.EncryptDecrypt
 
         private static string GetResponseMessage(string Message)
         {
-            switch (Message)
+            return Message switch
             {
-                case "Roger.":
-                    return "Huh?";
-                case "Request vector.  Over.":
-                    return "What?";
-                case "We have clearance, Clarence.":
-                    return "Roger, Roger.  What's our vector, Victor?";
-                case "Surely you can't be serious?":
-                    return "I am serious.  And don't call me Shirley.";
-                default:
-                    return $"{Message}  Airplane!";
-            }
+                "Roger." => "Huh?",
+                "Request vector.  Over." => "What?",
+                "We have clearance, Clarence." => "Roger, Roger.  What's our vector, Victor?",
+                "Surely you can't be serious?" => "I am serious.  And don't call me Shirley.",
+                _ => $"{Message}  Airplane!"
+            };
         }
     }
 }

@@ -29,12 +29,12 @@ namespace ErikTheCoder.Sandbox.WhatRunsWhen
                 {"L", new Widget(_stopwatch, "L", 12)},
                 {"M", new Widget(_stopwatch, "M", 13)}
             };
-            foreach (Widget widget in _widgets.Values)
+            foreach (var widget in _widgets.Values)
             {
                 // Use initial input to frob the widget.
-                int frobValue = widget.Frob3(InitialInput);
+                var frobValue = widget.Frob3(InitialInput);
                 // Use the output of the widget's frob method to bork the widget.
-                int borkValue = widget.Bork3(frobValue);
+                var borkValue = widget.Bork3(frobValue);
                 // Use the output of the widget's bork method to zap the widget.
                 widget.Zap3(borkValue);
             }

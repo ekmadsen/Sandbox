@@ -12,7 +12,7 @@ namespace ErikTheCoder.Sandbox.PasswordHash
             const int iterations = 10000;
             // ReSharper disable once StringLiteralTypo
             const string password = @"Password";
-            (string salt, string hash) = Password.Hash(password, saltLength, hashLength, iterations);
+            var (salt, hash) = Password.Hash(password, saltLength, hashLength, iterations);
             Console.WriteLine($"Salt = {salt}.");
             Console.WriteLine($"Hash = {hash}.");
             Console.WriteLine($"Password valid = {Password.Validate(password, "Salt", "Hash", iterations)}.");
